@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MotoLove | Tüm İlanlar</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/static/images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: {} }
+        }
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        /* Ana sayfadan kopyalanan tüm stiller */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1F2937;
+            background: linear-gradient(-45deg, #f8fafb, #fff7f7, #ffeaea, #f8fafb);
+            background-size: 400% 400%;
+            animation: gradient-background-animation 15s ease infinite;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* === YENİ: DARK MODE STİLLERİ (Ana sayfadan kopyalandı) === */
+        .dark body {
+            color: #E5E7EB;
+            background: linear-gradient(-45deg, #111827, #1f2937, #111827);
+            background-size: 400% 400%;
+            animation: gradient-background-animation 15s ease infinite;
+        }
+
+        .dark .navbar-scrolled {
+            background-color: rgba(17, 24, 39, 0.85);
+            border-bottom: 1px solid #374151;
+        }
+
+        .dark .nav-link {
+            color: #D1D5DB;
+        }
+
+        .dark .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .dark #mobile-menu-button {
+            color: #F9FAFB;
+        }
+
+        .dark #mobile-menu {
+            background-color: rgba(31, 41, 55, 0.95);
+            border-color: #374151;
+        }
+
+        .dark #mobile-menu a {
+            color: #F9FAFB;
+        }
+
+        .dark #mobile-menu a:hover,
+        .dark #mobile-menu a.bg-gray-100 {
+            background-color: #374151;
+        }
+
+        .dark h1,
+        .dark h2,
+        .dark h3,
+        .dark h4 {
+            color: #FFFFFF;
+        }
+
+        .dark p,
+        .dark section p,
+        .dark .text-gray-600 {
+            color: #9CA3AF;
+        }
+
+        .dark .text-gray-700,
+        .dark .text-gray-500 {
+            color: #D1D5DB;
+        }
+
+        .dark .bike-card {
+            background-color: #1F2937;
+            border-color: #374151;
+        }
+
+        .dark .bike-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 15px 30px -10px rgba(225, 29, 72, 0.25);
+        }
+
+        .dark .bike-card h3 {
+            color: #FFFFFF;
+        }
+
+        .dark .bike-card p {
+            color: #9CA3AF;
+        }
+
+        /* Filtre Dark Mode */
+        .dark .filter-aside,
+        .dark .filter-select {
+            background-color: #1F2937;
+            /* dark:bg-gray-800 */
+            border-color: #374151;
+            /* dark:border-gray-700 */
+        }
+
+        .dark .filter-label {
+            color: #D1D5DB;
+        }
+
+        .dark .filter-input {
+            background-color: #374151;
+            /* dark:bg-gray-700 */
+            border-color: #4B5563;
+            /* dark:border-gray-600 */
+            color: #FFFFFF;
+        }
+
+        .dark .filter-checkbox-label {
+            color: #9CA3AF;
+        }
+
+        .dark .filter-checkbox:focus {
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.4);
+        }
+
+        .dark .filter-block {
+            border-color: #374151;
+        }
+
+        .dark #price-range-values {
+            color: #E5E7EB;
+        }
+
+        /* Pagination Dark Mode */
+        .dark #pagination a {
+            color: #9CA3AF;
+        }
+
+        .dark #pagination a:hover {
+            background-color: #374151;
+        }
+
+        .dark #pagination a.bg-\[\!var\(--accent-color\)\] {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+        }
+
+        /* Modal Dark Mode */
+        .dark .modal-content {
+            background-color: #1F2937;
+            border-color: #374151;
+        }
+
+        .dark .modal-content h3,
+        .dark .modal-content h4,
+        .dark .modal-content #modalPrice {
+            color: #FFFFFF;
+        }
+
+        .dark .modal-content pre {
+            color: #D1D5DB;
+        }
+
+        .dark .modal-content #closeModal {
+            color: #9CA3AF;
+        }
+
+        .dark .modal-content #closeModal:hover {
+            color: #FFFFFF;
+        }
+
+        /* Compare Bar Dark Mode */
+        .dark .compare-btn {
+            background-color: rgba(31, 41, 55, 0.8);
+            color: #E5E7EB;
+        }
+
+        .dark .compare-btn:hover {
+            background-color: #374151;
+        }
+
+        .dark .compare-btn.selected {
+            color: #FFFFFF;
+        }
+
+        .dark #compareBar {
+            background-color: #1F2937;
+            border-color: #374151;
+        }
+
+        .dark #compareBar span {
+            color: #FFFFFF;
+        }
+
+        .dark #compareItemsList span {
+            background-color: #374151;
+            color: #E5E7EB;
+        }
+
+        /* === / DARK MODE BİTİŞİ === */
+
+
+        @keyframes gradient-background-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        :root {
+            --accent-color: #E11D48;
+            --accent-color-hover: #BE123C;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #E5E7EB;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #374151;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 5px;
+            border: 2px solid #E5E7EB;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            border-color: #374151;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color-hover);
+        }
+
+        ::selection {
+            background: var(--accent-color);
+            color: #FFFFFF;
+        }
+
+        .hero-bg {
+            background-color: transparent;
+            background-image: none;
+        }
+
+        .navbar-scrolled {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 10px -1px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--accent-color), #f87171, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradient-flow 6s linear infinite;
+        }
+
+        @keyframes gradient-flow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .bike-card {
+            background-color: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+        }
+
+        .bike-card:hover {
+            /* transform: translateY(-10px); */
+            /* Tilt varken bu daha iyi */
+            border-color: var(--accent-color);
+            box-shadow: 0 15px 30px -10px rgba(225, 29, 72, 0.15);
+        }
+
+        .card-image-wrapper {
+            overflow: hidden;
+            border-radius: 0.75rem 0.75rem 0 0;
+            transform: translateZ(20px);
+        }
+
+        .card-image {
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .bike-card:hover .card-image {
+            transform: scale(1.08);
+        }
+
+        .bike-card .p-6 {
+            transform: translateZ(10px);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px -5px rgba(225, 29, 72, 0.4);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-color-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px -5px rgba(225, 29, 72, 0.5);
+        }
+
+        .btn-pulse {
+            animation: pulse-glow 2.5s infinite ease-out;
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.6);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(225, 29, 72, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(225, 29, 72, 0);
+            }
+        }
+
+        .btn-secondary {
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-gray {
+            background-color: #FFFFFF;
+            border: 1px solid #D1D5DB;
+            color: #374151;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-gray:hover {
+            border-color: #4B5563;
+            color: #1F2937;
+        }
+
+        .dark .btn-outline-gray {
+            background-color: #1F2937;
+            border-color: #4B5563;
+            color: #D1D5DB;
+        }
+
+        .dark .btn-outline-gray:hover {
+            background-color: #374151;
+        }
+
+        .dark .btn-outline-gray.active {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #FFFFFF;
+        }
+
+        .animate-in {
+            opacity: 0;
+            transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: opacity, transform;
+        }
+
+        .animate-up {
+            transform: translateY(40px);
+        }
+
+        .animate-left {
+            transform: translateX(-40px);
+        }
+
+        .animate-right {
+            transform: translateX(40px);
+        }
+
+        .animate-in.is-visible {
+            opacity: 1;
+            transform: translateY(0) translateX(0);
+        }
+
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .modal.hidden .modal-content {
+            transform: scale(0.95) translateY(20px);
+        }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+            color: #374151;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent-color);
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .header-hidden {
+            transform: translateY(-100%);
+        }
+
+        .top-bar-hidden {
+            max-height: 0px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            opacity: 0;
+        }
+
+        /* YENİ: Filtre select kutuları için özel stil */
+        .filter-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .dark .filter-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        }
+
+        /* YENİ: Sol Filtre Stilleri */
+        .filter-block {
+            border-bottom: 1px solid #E5E7EB;
+            padding-bottom: 1.5rem;
+        }
+
+        .filter-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .filter-input {
+            width: 100%;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.5rem;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.875rem;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+        }
+
+        .filter-checkbox-label {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            color: #4B5563;
+            cursor: pointer;
+        }
+
+        .filter-checkbox {
+            height: 1rem;
+            width: 1rem;
+            border-radius: 0.25rem;
+            border-color: #D1D5DB;
+            color: var(--accent-color);
+            margin-right: 0.5rem;
+            transition: all 0.2s;
+            accent-color: var(--accent-color);
+        }
+
+        .filter-checkbox:focus {
+            ring: 0;
+            outline: 0;
+            ring-offset: 0;
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+        }
+
+        /* YENİ: Compare & Favorite Butonları (Ana sayfadan) */
+        .card-action-btn {
+            position: absolute;
+            top: 16px;
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            border-radius: 9999px;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #374151;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .dark .card-action-btn {
+            background-color: rgba(31, 41, 55, 0.8);
+            color: #E5E7EB;
+        }
+
+        .card-action-btn:hover {
+            background-color: #FFFFFF;
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        .dark .card-action-btn:hover {
+            background-color: #374151;
+        }
+
+        .card-action-btn.selected {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+        }
+
+        .compare-btn {
+            right: 16px;
+        }
+
+        .fav-btn {
+            right: 64px;
+        }
+
+        /* Compare'in soluna */
+        .fav-btn.selected {
+            color: #FFFFFF;
+            background-color: #EF4444;
+            /* Kırmızı kalp */
+        }
+
+        .fav-btn:hover {
+            color: #EF4444;
+            /* Kırmızı kalp */
+        }
+
+        .dark .fav-btn:hover {
+            color: #F87171;
+        }
+
+        #compareBar {
+            position: fixed;
+            bottom: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        #compareBar.show {
+            bottom: 24px;
+        }
+
+        /* YENİ: Fiyat Aralığı Kaydırıcısı (noUiSlider) Stilleri */
+        .noUi-target {
+            background: #F3F4F6;
+            /* dark:bg-gray-700 */
+            border: none;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .noUi-target {
+            background: #374151;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .noUi-connect {
+            background: var(--accent-color);
+        }
+
+        .noUi-handle {
+            border: 3px solid #FFFFFF;
+            /* dark:border-gray-900 */
+            border-radius: 50%;
+            background: var(--accent-color);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .dark .noUi-handle {
+            border-color: #1F2937;
+        }
+
+        .noUi-handle:focus {
+            outline: none;
+        }
+
+        .noUi-handle:after,
+        .noUi-handle:before {
+            display: none;
+        }
+
+        .noUi-horizontal {
+            height: 10px;
+        }
+
+        .noUi-horizontal .noUi-handle {
+            width: 22px;
+            height: 22px;
+            right: -11px;
+            top: -6px;
+        }
+
+        /* YENİ: Grid / List View Stilleri */
+        .list-view .bike-card {
+            flex-direction: row;
+            align-items: center;
+            transform: none !important;
+            /* Tilt'i devre dışı bırak */
+        }
+
+        .list-view .bike-card:hover {
+            transform: none !important;
+        }
+
+        .list-view .card-image-wrapper {
+            width: 33.3333%;
+            /* w-1/3 */
+            height: 200px;
+            /* Sabit yüksekli */
+            border-radius: 0.75rem 0 0 0.75rem;
+            transform: none;
+            /* Tilt'i devre dışı bırak */
+        }
+
+        .list-view .card-image {
+            height: 100%;
+            transform: none !important;
+            /* Zoom'u devre dışı bırak */
+        }
+
+        .list-view .bike-card .p-6 {
+            width: 66.6666%;
+            /* w-2/3 */
+            transform: none;
+            /* Tilt'i devre dışı bırak */
+        }
+
+        /* YENİ: Yükleniyor (Spinner) Stili */
+        #listing-loader {
+            display: none;
+            /* Başlangıçta gizli */
+            width: 100%;
+            min-height: 400px;
+            /* Kart alanı kadar yer kapla */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            grid-column: 1 / -1;
+            /* Grid'de tam satır kapla */
+        }
+
+        #listing-loader svg {
+            width: 60px;
+            height: 60px;
+            color: var(--accent-color);
+            animation: spin 1s linear infinite;
+        }
+
+        .dark #listing-loader svg {
+            color: #F9FAFB;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+</head>
+
+<body class="text-gray-800 dark:bg-gray-900">
+
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-transform duration-300 ease-out">
+
+        <div id="top-bar"
+            class="bg-rose-100 text-[var(--accent-color)] text-sm font-medium text-center py-2.5 px-6 transition-all duration-300 overflow-hidden max-h-12 opacity-100 dark:bg-rose-900/50 dark:text-rose-300">
+            <p class="flex items-center justify-center">
+                <ion-icon name="sparkles-outline" class="mr-2"></ion-icon>
+                Yeni Sezon Fırsatları! Elektrikli modellerde %15 indirim.
+            </p>
+        </div>
+
+        <nav id="navbar" class="transition-all duration-300 bg-transparent dark:bg-transparent">
+            <div class="container mx-auto px-6 py-5 flex justify-between items-center"> <img
+                    src="/static/images/motolove.png"
+                    onerror="this.src='https://placehold.co/200x60/f8fafb/e11d48?text=MotoLove'" alt="MotoLove Logo"
+                    class="h-14 md:h-20 w-auto">
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="font-medium nav-link">Ana Sayfa</a>
+                    <a href="/ilanlar" class="font-medium nav-link active">İlanlar</a>
+                    <a href="/ilanver" class="font-medium nav-link">İlan Ver</a>
+                    <a href="/ihale" class="font-medium nav-link">İhale</a>
+                    <a href="/forum" class="font-medium nav-link">Forum</a>
+                    <a href="/mesajlarim" class="font-medium nav-link">Mesajlar</a>
+                    {% if user_name %}
+                    <a href="/profile" class="font-medium nav-link flex items-center space-x-2">
+                        <img src="{{ user_image_url or '/static/images/default-avatar.png' }}" alt="{{ user_name }}"
+                            class="w-8 h-8 rounded-full object-cover">
+                        <span>{{ user_name }}</span>
+                    </a>
+                    <a href="/logout" class="btn-secondary font-semibold px-5 py-2 rounded-lg text-sm ml-4">Çıkış
+                        Yap</a>
+                    {% else %}
+                    <a href="/login" class="btn-primary font-semibold px-5 py-2 rounded-lg text-sm ml-4">Giriş Yap</a>
+                    {% endif %}
+
+                    <button id="theme-toggle"
+                        class="text-xl text-gray-700 dark:text-gray-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)] transition-colors duration-200">
+                        <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                        <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                    </button>
+                </div>
+
+                <div class="md:hidden flex items-center space-x-4">
+                    <button id="theme-toggle-mobile" class="text-2xl text-gray-900 dark:text-gray-100">
+                        <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                        <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                    </button>
+                    <button id="mobile-menu-button" class="text-3xl text-gray-900 dark:text-gray-100">
+                        <ion-icon name="menu-outline"></ion-icon>
+                    </button>
+                </div>
+
+            </div>
+        </nav>
+
+        <div id="mobile-menu"
+            class="hidden md:hidden bg-white/95 backdrop-blur-sm shadow-xl border-t border-gray-200 dark:bg-gray-800/95 dark:border-gray-700">
+            <a href="/" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">Ana
+                Sayfa</a>
+            <a href="/ilanlar"
+                class="block px-6 py-3 text-lg font-semibold bg-gray-100 text-[var(--accent-color)] dark:bg-gray-700">İlanlar</a>
+            <a href="/ilanver"
+                class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">İlan Ver</a>
+            <a href="/ihale"
+                class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">İhale</a>
+            <a href="/forum"
+                class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">Forum</a>
+
+            {% if user_name %}
+            <a href="/profile"
+                class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">Profilim ({{ user_name }})</a>
+            <a href="/logout" class="block px-6 py-4">
+                <span class="btn-secondary w-full block text-center font-semibold px-5 py-3 rounded-lg">Çıkış Yap</span>
+            </a>
+            {% else %}
+            <a href="/login" class="block px-6 py-4">
+                <span class="btn-primary w-full block text-center font-semibold px-5 py-3 rounded-lg">Giriş Yap</span>
+            </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main>
+
+        <section class="pt-48 pb-24 text-center relative hero-bg">
+            <div class="container mx-auto px-6">
+                <h1
+                    class="text-5xl md:text-6xl font-black uppercase tracking-tighter animate-in animate-up is-visible dark:text-white">
+                    Hayalindeki <span class="gradient-text">Motoru Bul</span>
+                </h1>
+                <p class="text-lg text-gray-600 mt-6 max-w-xl mx-auto animate-in animate-up is-visible dark:text-gray-400"
+                    style="transition-delay: 100ms;">
+                    Tutkunu olduğunuz tasarımlar, en son teknolojiyle buluştu. Tüm ilanları görmek için filtreleri
+                    kullanın veya aşağı kaydırın.
+                </p>
+            </div>
+        </section>
+
+        <div class="container mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-4 gap-12">
+
+            <aside
+                class="filter-aside lg:col-span-1 space-y-6 lg:sticky lg:top-40 self-start bg-white p-6 rounded-2xl shadow-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+
+                <div class="flex justify-between items-center pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Filtrele</h3>
+                    <button id="clear-filters-btn"
+                        class="text-sm font-medium text-gray-500 hover:text-[var(--accent-color)] transition-colors dark:text-gray-400">Temizle</button>
+                </div>
+
+                <div class="filter-block">
+                    <label for="filter-search" class="filter-label dark:text-gray-300">Arama Yap</label>
+                    <input type="search" id="filter-search" placeholder="Model, marka veya kelime..."
+                        class="filter-input w-full text-sm dark:bg-gray-700 dark:border-gray-600">
+                </div>
+
+                <div class="filter-block">
+                    <label for="filter-category" class="filter-label dark:text-gray-300">Kategori</label>
+                    <select id="filter-category"
+                        class="filter-select w-full filter-input dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="">Tümü</option>
+                        <option value="Satılık">Satılık</option>
+                        <option value="Kiralık">Kiralık</option>
+                    </select>
+                </div>
+
+                <div class="filter-block">
+                    <label class="filter-label dark:text-gray-300">Durum</label>
+                    <div class="space-y-2">
+                        <label class="filter-checkbox-label dark:text-gray-400">
+                            <input type="checkbox" id="cond-new" value="Sıfır" class="filter-checkbox">
+                            <span>Sıfır</span>
+                        </label>
+                        <label class="filter-checkbox-label dark:text-gray-400">
+                            <input type="checkbox" id="cond-used" value="İkinci El" class="filter-checkbox">
+                            <span>İkinci El</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-block">
+                    <label class="filter-label dark:text-gray-300">Fiyat Aralığı (TL)</label>
+                    <div id="price-slider" class="mt-4 mb-3"></div>
+                    <div id="price-range-values"
+                        class="flex justify-between text-sm text-gray-700 dark:text-gray-300 font-medium">
+                        <span id="price-min-val">0 TL</span>
+                        <span id="price-max-val">1.000.000+ TL</span>
+                    </div>
+                </div>
+
+                <div class="filter-block">
+                    <label class="filter-label dark:text-gray-300">Yıl</label>
+                    <div class="flex items-center space-x-2">
+                        <input type="number" id="year-min" placeholder="Min"
+                            class="filter-input w-1/2 text-sm dark:bg-gray-700 dark:border-gray-600">
+                        <span class="text-gray-400">-</span>
+                        <input type="number" id="year-max" placeholder="Maks"
+                            class="filter-input w-1/2 text-sm dark:bg-gray-700 dark:border-gray-600">
+                    </div>
+                </div>
+
+                <div class="filter-block" style="border-bottom: none; padding-bottom: 0;">
+                    <label class="filter-label dark:text-gray-300">Kilometre</label>
+                    <div class="flex items-center space-x-2">
+                        <input type="number" id="km-min" placeholder="Min"
+                            class="filter-input w-1/2 text-sm dark:bg-gray-700 dark:border-gray-600">
+                        <span class="text-gray-400">-</span>
+                        <input type="number" id="km-max" placeholder="Maks"
+                            class="filter-input w-1/2 text-sm dark:bg-gray-700 dark:border-gray-600">
+                    </div>
+                </div>
+
+                <button id="apply-filters-btn"
+                    class="btn-primary w-full py-3 font-semibold text-base rounded-lg !mt-8">Filtreleri Uygula</button>
+            </aside>
+
+            <div class="lg:col-span-3">
+
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+                    <span class="text-lg text-gray-700 font-medium dark:text-gray-300">
+                        <span id="listing-count" class="font-bold text-[var(--accent-color)]">0</span> adet ilan
+                        bulundu.
+                    </span>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-1">
+                            <button id="grid-view-btn" class="btn-outline-gray p-2 rounded-lg active"
+                                title="Izgara Görünümü">
+                                <ion-icon name="grid-outline" class="text-xl block"></ion-icon>
+                            </button>
+                            <button id="list-view-btn" class="btn-outline-gray p-2 rounded-lg" title="Liste Görünümü">
+                                <ion-icon name="list-outline" class="text-xl block"></ion-icon>
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <label for="filter-sort"
+                                class="text-sm font-medium text-gray-700 dark:text-gray-300">Sırala:</label>
+                            <select id="filter-sort"
+                                class="filter-select filter-input py-2 pr-8 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="newest">En Yeniler</option>
+                                <option value="price_asc">Fiyata Göre (Artan)</option>
+                                <option value="price_desc">Fiyata Göre (Azalan)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <section id="listings" class="">
+                    <div id="list-view-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+                        <div id="listing-loader">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section id="pagination" class="py-12 pt-16 flex justify-center items-center space-x-2">
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <footer
+        class="bg-white text-gray-600 py-16 px-6 mt-0 border-t border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <a href="/" class="text-3xl font-bold tracking-tighter text-gray-900 dark:text-white">
+                    Moto<span style="color: var(--accent-color);">Love</span>
+                </a>
+                <p class="mt-4 mb-6 dark:text-gray-400">Geleceğin sürüş deneyimi, bugün.</p>
+                <div class="flex space-x-4 text-2xl">
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon
+                            name="logo-instagram"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon
+                            name="logo-facebook"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon
+                            name="logo-youtube"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon
+                            name="logo-twitter"></ion-icon></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4 dark:text-white">Hızlı Linkler</h4>
+                <ul class="space-y-2">
+                    <li><a href="/" class="hover:text-gray-900 dark:hover:text-white">Ana Sayfa</a></li>
+                    <li><a href="/ilanlar" class="hover:text-gray-900 dark:hover:text-white">İlanlar</a></li>
+                    <li><a href="/#featured-sale" class="hover:text-gray-900 dark:hover:text-white">Satılık Modeller</a>
+                    </li>
+                    <li><a href="/#featured-rent" class="hover:text-gray-900 dark:hover:text-white">Kiralık Filo</a>
+                    </li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">Hakkımızda</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4 dark:text-white">Destek</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">S.S.S.</a></li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">İletişim</a></li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">Gizlilik Politikası</a></li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">Kullanım Şartları</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4 dark:text-white">İletişim</h4>
+                <ul class="space-y-2">
+                    <li><a href="mailto:info@motolove.com"
+                            class="hover:text-gray-900 dark:hover:text-white">emresynsd@gmail.com</a></li>
+                    <li><a href="tel:+905551234567" class="hover:text-gray-900 dark:hover:text-white">+90 552 886 34
+                            42</a></li>
+                    <li>
+                        <p>Love Plaza, İstanbul, Türkiye</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div
+            class="text-center text-gray-500 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 dark:text-gray-400">
+            &copy; 2025 MotoLove. Tüm hakları saklıdır.
+        </div>
+    </footer>
+
+
+    <div id="bikeModal"
+        class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div
+            class="modal-content w-full max-w-4xl rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+            <div class="flex justify-between items-center p-5 border-b border-gray-200 dark:border-gray-700">
+                <h3 id="modalTitle" class="text-2xl font-bold text-gray-900 dark:text-white">Model Detayları</h3>
+                <button id="closeModal"
+                    class="text-3xl text-gray-400 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2">
+                <img id="modalImage" src="https://placehold.co/600x400/f3f4f6/e11d48?text=Model" alt="Model Detayı"
+                    class="w-full h-96 object-cover">
+
+                <div class="p-8 flex flex-col justify-between">
+                    <div>
+                        <span id="modalType"
+                            class="inline-block bg-rose-100 text-[var(--accent-color)] text-sm font-bold px-3 py-1 rounded-full mb-4 dark:bg-gray-700 dark:text-rose-300">Satılık</span>
+                        <h4 class="text-xl font-bold text-gray-900 mb-3 dark:text-white">Özellikler</h4>
+                        <div id="modalSpecs"
+                            class="text-gray-600 font-sans text-base leading-relaxed dark:text-gray-300 space-y-1">
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <p class="text-4xl font-bold text-gray-900 mb-5 dark:text-white" id="modalPrice">120.000 TL</p>
+                        <a id="modalAction" href="#"
+                            class="btn-primary btn-pulse text-lg font-semibold px-8 py-4 rounded-lg w-full text-center block">
+                            Hemen Satın Al
+                        </a>
+
+                        <button id="modalMessageBtn"
+                            class="btn-secondary font-semibold px-8 py-3 rounded-lg w-full text-center block mt-3">
+                            <ion-icon name="chatbubble-ellipses-outline"
+                                class="mr-2 -ml-1 inline-block align-text-bottom"></ion-icon>
+                            Satıcıya Mesaj Gönder
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="compareBar"
+        class="w-11/12 max-w-2xl bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-4 flex items-center justify-between dark:border dark:border-gray-700">
+        <div class="flex items-center space-x-3">
+            <span class="font-semibold text-gray-900 dark:text-white">Karşılaştır:</span>
+            <div id="compareItemsList" class="flex space-x-2"></div>
+        </div>
+        <button id="compareNowBtn" class="btn-primary font-semibold px-5 py-2 rounded-lg text-sm" disabled>
+            Karşılaştır (<span id="compareCount">0</span>/3)
+        </button>
+    </div>
+
+    <div id="compareModal"
+        class="modal hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div
+            class="modal-content w-full max-w-5xl rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+            <div class="flex justify-between items-center p-5 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Modelleri Karşılaştır</h3>
+                <button id="closeCompareModal"
+                    class="text-3xl text-gray-400 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+            <div id="compareContent" class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Temel Global Değişkenler ---
+            let currentPage = 1;
+            const listingsContainer = document.getElementById('listings');
+            const listingLoader = document.getElementById('listing-loader');
+            const listingCount = document.getElementById('listing-count');
+            const paginationContainer = document.getElementById('pagination');
+            const listViewContainer = document.getElementById('list-view-container');
+            // const brandSelect = document.getElementById('filter-brand'); // KALDIRILDI
+            const priceSliderEl = document.getElementById('price-slider');
+            let priceSlider; // noUiSlider instance
+
+            // --- Para Formatlayıcı ---
+            const currencyFormatter = new Intl.NumberFormat('tr-TR', {
+                style: 'currency',
+                currency: 'TRY',
+                maximumFractionDigits: 0,
+                minimumFractionDigits: 0
+            });
+
+            /**
+             * YENİ: Fiyat kaydırıcısını başlatan fonksiyon
+             * @param {number} maxPrice - API'den gelen maksimum fiyat
+             */
+            function initPriceSlider(maxPrice = 1000000) {
+                const priceMinVal = document.getElementById('price-min-val');
+                const priceMaxVal = document.getElementById('price-max-val');
+
+                if (priceSlider) {
+                    priceSlider.destroy(); // Varsa eskisini yok et
+                }
+
+                const maxPriceRounded = Math.ceil(maxPrice / 10000) * 10000; // En yakın 10.000'e yuvarla
+
+                priceSlider = noUiSlider.create(priceSliderEl, {
+                    start: [0, maxPriceRounded],
+                    connect: true,
+                    range: {
+                        'min': 0,
+                        'max': maxPriceRounded
+                    },
+                    step: 10000,
+                    format: {
+                        to: (value) => `${Math.round(value).toLocaleString('tr-TR')} TL`,
+                        from: (value) => Number(value.replace(' TL', '').replace(/\./g, ''))
+                    }
+                });
+
+                priceSlider.on('update', (values) => {
+                    priceMinVal.textContent = values[0];
+                    const maxValString = `${maxPriceRounded.toLocaleString('tr-TR')} TL`;
+                    priceMaxVal.textContent = values[1] === maxValString
+                        ? `${maxValString}+`
+                        : values[1];
+                });
+            }
+
+            /**
+             * YENİ: Filtre verilerini (maks. fiyat) API'den çeker
+             */
+            async function loadFilterData() {
+                try {
+                    const response = await fetch('/api/filtre-verisi');
+                    if (!response.ok) throw new Error('Filtre verisi alınamadı');
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // Marka select'ini doldurma kısmı KALDIRILDI
+
+                        // Fiyat slider'ını güncelle
+                        if (data.max_price && priceSliderEl) {
+                            initPriceSlider(data.max_price);
+                        } else {
+                            initPriceSlider(); // Varsayılan ile başlat
+                        }
+                    } else {
+                        initPriceSlider(); // Hata olursa varsayılan ile başlat
+                    }
+                } catch (error) {
+                    console.error("Filtre verisi yüklenemedi:", error);
+                    initPriceSlider(); // Hata olursa varsayılan ile başlat
+                }
+            }
+
+
+            // --- Navbar Scroll Efekti (index.html'den) ---
+            const mainHeader = document.getElementById('main-header');
+            const navbar = document.getElementById('navbar');
+            const topBar = document.getElementById('top-bar');
+            let lastScrollY = window.scrollY;
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('navbar-scrolled');
+                    topBar.classList.add('top-bar-hidden');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                    topBar.classList.remove('top-bar-hidden');
+                }
+                if (window.scrollY > lastScrollY && window.scrollY > 200) {
+                    mainHeader.classList.add('header-hidden');
+                } else {
+                    mainHeader.classList.remove('header-hidden');
+                }
+                lastScrollY = window.scrollY;
+            });
+
+            // --- Mobil Menu Toggle (index.html'den) ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuIcon = mobileMenuButton.querySelector('ion-icon');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                mobileMenuIcon.setAttribute('name', mobileMenu.classList.contains('hidden') ? 'menu-outline' : 'close-outline');
+            });
+
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuIcon.setAttribute('name', 'menu-outline');
+                });
+            });
+
+            // --- Kaydırma ile Animasyon (Sadece statik elemanlar için) ---
+            const scrollElements = document.querySelectorAll('.animate-in');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            scrollElements.forEach(el => observer.observe(el));
+
+            // --- Modal (Detay) İşlevselliği (GÜNCELLENDİ: Event Delegation) ---
+            const modal = document.getElementById('bikeModal');
+            const closeModalButton = document.getElementById('closeModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalType = document.getElementById('modalType');
+            const modalSpecs = document.getElementById('modalSpecs');
+            const modalPrice = document.getElementById('modalPrice');
+            const modalAction = document.getElementById('modalAction');
+
+            // GÜNCELLENDİ: Dinamik eklenen kartlar için event delegation
+            listingsContainer.addEventListener('click', (e) => {
+                const button = e.target.closest('.open-modal');
+                if (button) {
+                    const type = button.dataset.type;
+                    const price = button.dataset.price;
+
+                    // GÜNCELLENDİ: Veritabanından gelen ham verileri kullan
+                    // Veritabanı (örn: 'description' ve 'specs' sütunları varsa)
+                    // const specs = (button.dataset.specs || "Detay yok").split('|').join('<br>');
+
+                    // Backend'de 'specs' sütunu yoksa, mevcut olanları kullanalım
+                    const specs = [
+                        `Yıl: ${button.dataset.year || 'Belirtilmemiş'}`,
+                        `KM: ${button.dataset.km || 'Belirtilmemiş'}`,
+                        `Konum: ${button.dataset.location || 'Belirtilmemiş'}`,
+                        `Durum: ${button.dataset.condition || 'Belirtilmemiş'}`
+                    ].join('<br>');
+
+                    modalImage.src = button.dataset.image;
+                    modalImage.onerror = () => { modalImage.src = 'https://placehold.co/600x400/f3f4f6/e11d48?text=Resim+Yok'; };
+                    modalTitle.textContent = button.dataset.title;
+                    modalType.textContent = type;
+                    modalPrice.textContent = price; // Bu zaten formatlı gelmeli
+                    modalSpecs.innerHTML = specs;
+
+                    modalAction.textContent = type.toLowerCase() === 'satılık' ? 'Hemen Satın Al' : 'Hemen Kirala';
+
+                    // GÜNCELLENDİ: Ödeme sayfasına yönlendirme
+                    // /odeme?id=5&type=Satılık&title=...&price=...&image=...
+                    const orderParams = new URLSearchParams({
+                        id: button.dataset.id,
+                        type: type,
+                        title: button.dataset.title,
+                        price: price, // Formatlı fiyat
+                        image: button.dataset.image
+                    });
+                    modalAction.href = `/odeme?${orderParams.toString()}`;
+
+                    // ============================================
+                    // === YENİ: 3. ADIM (JS Logic - Bölüm 1) ===
+                    // ============================================
+                    const modalMessageBtn = document.getElementById('modalMessageBtn');
+
+                    // Butona gerekli ID'leri ata
+                    modalMessageBtn.dataset.listingId = button.dataset.id;
+                    modalMessageBtn.dataset.sellerId = button.dataset.sellerId;
+
+                    // Kullanıcının kendi ilanı olup olmadığını kontrol et
+                    const currentUserId = {{ user_id | tojson }};
+
+            if (String(button.dataset.sellerId) === String(currentUserId)) {
+                modalMessageBtn.style.display = 'none'; // Kendi ilanıysa butonu gizle
+            } else {
+                modalMessageBtn.style.display = 'block'; // Değilse göster
+            }
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+            });
+
+        const closeModal = (modalEl) => {
+            if (modalEl) modalEl.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        };
+
+        closeModalButton.addEventListener('click', () => closeModal(modal));
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal(modal);
+        });
+
+        // ====================================================
+        // === YENİ: 3. ADIM (JS Logic - Bölüm 2: Ana Olay Dinleyici) ===
+        // ====================================================
+        document.getElementById('modalMessageBtn').addEventListener('click', async (e) => {
+            const btn = e.currentTarget;
+            const listingId = btn.dataset.listingId;
+            const sellerId = btn.dataset.sellerId;
+            const currentUserId = {{ user_id | tojson }};
+
+        if (currentUserId == null || currentUserId == 'null') {
+            alert('Mesaj göndermek için lütfen giriş yapın.');
+            window.location.href = '/login';
+            return;
+        }
+
+        const messageContent = prompt('Satıcıya göndermek istediğiniz mesajı yazın:');
+
+        if (messageContent && messageContent.trim() !== '') {
+            try {
+                btn.disabled = true;
+                btn.textContent = 'Gönderiliyor...';
+
+                // 1. Önce konuşmayı başlat/getir
+                const startResponse = await fetch('/api/messages/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        receiver_id: parseInt(sellerId, 10),
+                        listing_id: parseInt(listingId, 10)
+                    })
+                });
+
+                const startData = await startResponse.json();
+                if (!startData.success) throw new Error(startData.message || 'Konuşma başlatılamadı.');
+
+                const conversationId = startData.conversation_id;
+
+                // 2. Mesajı gönder
+                const sendResponse = await fetch('/api/messages/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        conversation_id: conversationId,
+                        content: messageContent
+                    })
+                });
+
+                const sendData = await sendResponse.json();
+
+                if (sendData.success) {
+                    alert('Mesajınız başarıyla gönderildi! Yanıtlar için "Profil > Mesajlarım" kutunuzu kontrol edebilirsiniz.');
+                    closeModal(modal);
+                } else {
+                    throw new Error(sendData.message || 'Mesaj gönderilemedi.');
+                }
+            } catch (error) {
+                console.error('Mesaj gönderme hatası:', error);
+                alert('Hata: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<ion-icon name="chatbubble-ellipses-outline" class="mr-2 -ml-1 inline-block align-text-bottom"></ion-icon> Satıcıya Mesaj Gönder';
+            }
+        } else if (messageContent !== null) {
+            alert('Mesaj içeriği boş olamaz.');
+        }
+        });
+
+        // --- YENİ EKLENEN ÖZELLİKLER ---
+
+        // --- YENİ: Night Mode Toggle (index.html'den) ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleMobileBtn = document.getElementById('theme-toggle-mobile');
+
+        const handleThemeToggle = () => {
+            const isDarkMode = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('color-theme', isDarkMode ? 'dark' : 'light');
+        };
+        if (themeToggleBtn) themeToggleBtn.addEventListener('click', handleThemeToggle);
+        if (themeToggleMobileBtn) themeToggleMobileBtn.addEventListener('click', handleThemeToggle);
+
+        // --- YENİ: 3D Kart "Tilt" Efekti (index.html'den) ---
+        const initTilt = () => {
+            // Sadece grid view'da tilt'i etkinleştir
+            if (!listViewContainer.classList.contains('list-view')) {
+                const tiltCards = document.querySelectorAll('.bike-card[data-tilt]');
+                if (tiltCards.length > 0) {
+                    VanillaTilt.init(tiltCards, {
+                        max: 10, speed: 400, glare: true, "max-glare": 0.2
+                    });
+                }
+            }
+        };
+        // initTilt(); // İlk yükleme fetchListings'den sonra yapılacak
+
+        // GÜNCELLENDİ: Tone.js (hover sesi) ile ilgili tüm kodlar kaldırıldı.
+
+        // --- YENİ: Karşılaştırma (Compare) Mantığı (index.html'den) ---
+        let compareItems = [];
+        const compareBar = document.getElementById('compareBar');
+        const compareItemsList = document.getElementById('compareItemsList');
+        const compareCount = document.getElementById('compareCount');
+        const compareNowBtn = document.getElementById('compareNowBtn');
+        const compareModal = document.getElementById('compareModal');
+        const closeCompareModal = document.getElementById('closeCompareModal');
+        const compareContent = document.getElementById('compareContent');
+        const maxCompare = 3;
+
+        const addCompareEvents = (elements) => {
+            elements.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const id = btn.dataset.id;
+                    if (compareItems.find(item => item.id === id)) {
+                        compareItems = compareItems.filter(item => item.id !== id);
+                        btn.classList.remove('selected');
+                        btn.innerHTML = '<ion-icon name="git-compare-outline"></ion-icon>';
+                    } else {
+                        if (compareItems.length < maxCompare) {
+                            compareItems.push({
+                                id: id, title: btn.dataset.title, image: btn.dataset.image,
+                                price: btn.dataset.price, specs: btn.dataset.specs,
+                                year: btn.dataset.year, km: btn.dataset.km,
+                                location: btn.dataset.location, condition: btn.dataset.condition
+                            });
+                            btn.classList.add('selected');
+                            btn.innerHTML = '<ion-icon name="checkmark-outline"></ion-icon>';
+                        } else { console.warn('Maksimum 3 ürün karşılaştırılabilir.'); }
+                    }
+                    updateCompareBar();
+                });
+            });
+        };
+
+        function updateCompareBar() {
+            compareCount.textContent = compareItems.length;
+            compareItemsList.innerHTML = '';
+            compareItems.forEach(item => {
+                compareItemsList.innerHTML += `<span class="text-sm bg-gray-100 dark:bg-gray-700 dark:text-gray-200 px-2 py-1 rounded">${item.title.split(' ')[0]}</span>`;
+            });
+            compareBar.classList.toggle('show', compareItems.length > 0);
+            compareNowBtn.disabled = compareItems.length < 2;
+        }
+
+        compareNowBtn.addEventListener('click', () => {
+            compareContent.innerHTML = '';
+            compareItems.forEach(item => {
+                // GÜNCELLENDİ: specs verisini ayrıştırma
+                const specsArray = [
+                    `Yıl: ${item.year || 'N/A'}`,
+                    `KM: ${item.km || 'N/A'}`,
+                    `Konum: ${item.location || 'N/A'}`,
+                    `Durum: ${item.condition || 'N/A'}`
+                ];
+                const specsHtml = specsArray.map(spec => `<li class="text-sm dark:text-gray-400">${spec}</li>`).join('');
+
+                compareContent.innerHTML += `
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <img src="${item.image}" alt="${item.title}" class="w-full h-40 object-cover rounded-lg mb-4" onerror="this.src='https://placehold.co/400x300/f3f4f6/e11d48?text=Resim+Yok'">
+                            <h4 class="text-lg font-bold mb-2 dark:text-white">${item.title}</h4>
+                            <p class="text-xl font-semibold text-[var(--accent-color)] mb-4">${item.price}</p>
+                            <ul class="space-y-2 list-disc list-inside">
+                                ${specsHtml}
+                            </ul>
+                        </div>`;
+            });
+            for (let i = 0; i < (maxCompare - compareItems.length); i++) {
+                compareContent.innerHTML += `<div class="border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-lg p-4 flex items-center justify-center"><span class="text-gray-400 dark:text-gray-500">Slot boş</span></div>`;
+            }
+            compareModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+        closeCompareModal.addEventListener('click', () => closeModal(compareModal));
+        compareModal.addEventListener('click', (e) => {
+            if (e.target === compareModal) closeModal(compareModal);
+        });
+
+        // --- YENİ: Favori Butonu Mantığı (GÜNCELLENDİ: API Bağlantılı) ---
+
+        // Backend'e favori ekleme/kaldırma isteği gönderen fonksiyon
+        async function handleFavoriteToggle(btn, motorcycleId) {
+            // Giriş yapılmamışsa (Jinja2 ile user_id kontrolü)
+            // '{{ user_id or '' }}' boş string döner
+            // BU KISIM '{{ user_id }}' OLARAK KULLANILDIĞINDA JINJA RENDER ETMEZSE
+            // BİR DEĞİŞKENE ATAYIP KONTROL ETMEK GEREKEBİLİR.
+            // Şimdilik template içinde {{ user_id }} olduğunu varsayıyoruz.
+            const userId = "{{ user_id or '' }}";
+            if (!userId) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const isFavorited = btn.classList.contains('selected');
+            const url = isFavorited
+                ? `/api/favorite/remove/${motorcycleId}`
+                : '/api/favorite/add';
+            const method = isFavorited ? 'DELETE' : 'POST';
+
+            try {
+                const fetchOptions = {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' }
+                };
+                if (method === 'POST') {
+                    fetchOptions.body = JSON.stringify({ motorcycle_id: motorcycleId });
+                }
+
+                const response = await fetch(url, fetchOptions);
+                const data = await response.json();
+
+                if (data.success) {
+                    btn.classList.toggle('selected');
+                    const icon = btn.querySelector('ion-icon');
+                    icon.setAttribute('name', isFavorited ? 'heart-outline' : 'heart');
+                } else {
+                    console.error(data.message);
+                    // Hata mesajı gösterilebilir
+                    if (data.message.includes("giriş yapmalısınız")) {
+                        window.location.href = '/login';
+                    }
+                }
+            } catch (error) {
+                console.error('Favori işlemi başarısız:', error);
+            }
+        }
+
+        // Dinamik eklenen favori butonlarına event listener ekler
+        const addFavoriteEvents = (elements) => {
+            elements.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const motorcycleId = btn.dataset.id;
+                    handleFavoriteToggle(btn, motorcycleId);
+                });
+            });
+        };
+        // addFavoriteEvents(document.querySelectorAll('.fav-btn')); // İlk yükleme fetchListings'den sonra yapılacak
+
+        // GÜNCELLENDİ: Fiyat Aralığı Kaydırıcısı (noUiSlider)
+        // Başlatma işlemi `loadFilterData` fonksiyonuna taşındı.
+
+        // --- YENİ: Grid / List View Toggle ---
+        const gridViewBtn = document.getElementById('grid-view-btn');
+        const listViewBtn = document.getElementById('list-view-btn');
+
+        if (gridViewBtn && listViewBtn && listViewContainer) {
+            gridViewBtn.addEventListener('click', () => {
+                listViewContainer.classList.remove('list-view', 'md:grid-cols-1', 'xl:grid-cols-1');
+                listViewContainer.classList.add('md:grid-cols-2', 'xl:grid-cols-3');
+                gridViewBtn.classList.add('active');
+                listViewBtn.classList.remove('active');
+                // Tilt'i yeniden başlat
+                initTilt();
+            });
+
+            listViewBtn.addEventListener('click', () => {
+                // Tilt'i devredışı bırak
+                const tiltCards = document.querySelectorAll('[data-tilt]');
+                tiltCards.forEach(card => {
+                    if (card.vanillaTilt) {
+                        card.vanillaTilt.destroy();
+                    }
+                });
+
+                listViewContainer.classList.add('list-view', 'md:grid-cols-1', 'xl:grid-cols-1');
+                listViewContainer.classList.remove('md:grid-cols-2', 'xl:grid-cols-3');
+                listViewBtn.classList.add('active');
+                gridViewBtn.classList.remove('active');
+            });
+        }
+
+        // ==========================================================
+        // === YENİ: DİNAMİK VERİ ÇEKME VE RENDER ETME FONKSİYONLARI ===
+        // ==========================================================
+
+        /**
+         * API'den ilanları çeker ve listeler
+         * @param {number} page - İstenen sayfa numarası
+         */
+        async function fetchListings(page) {
+            currentPage = page;
+            listingLoader.style.display = 'flex'; // Yükleniyor ikonunu göster
+            listViewContainer.innerHTML = ''; // Eski kartları temizle
+
+            // 1. Filtre değerlerini topla
+            const params = new URLSearchParams();
+            params.set('page', page);
+            params.set('limit', 9);
+            params.set('sort', document.getElementById('filter-sort').value);
+
+            // YENİ: Arama çubuğu değerini al
+            const searchQuery = document.getElementById('filter-search').value;
+            if (searchQuery) {
+                params.set('q', searchQuery);
+            }
+
+            // const brand = document.getElementById('filter-brand').value; // KALDIRILDI
+            // if (brand) params.set('brand', brand); // KALDIRILDI
+
+            // YENİ: Kategori filtresini oku
+            const category = document.getElementById('filter-category').value;
+            if (category) params.set('category', category);
+
+            const yearMin = document.getElementById('year-min').value;
+            if (yearMin) params.set('year_min', yearMin);
+
+            const yearMax = document.getElementById('year-max').value;
+            if (yearMax) params.set('year_max', yearMax);
+
+            const kmMin = document.getElementById('km-min').value;
+            if (kmMin) params.set('km_min', kmMin);
+
+            const kmMax = document.getElementById('km-max').value;
+            if (kmMax) params.set('km_max', kmMax);
+
+            if (document.getElementById('cond-new').checked) params.append('condition', 'Sıfır');
+            if (document.getElementById('cond-used').checked) params.append('condition', 'İkinci El');
+
+            if (priceSlider) {
+                const priceRange = priceSlider.get(true); // Sayısal değerleri al
+                if (priceRange[0] > 0) params.set('price_min', priceRange[0]);
+
+                const maxSliderVal = priceSlider.options.range.max;
+                if (priceRange[1] < maxSliderVal) {
+                    params.set('price_max', priceRange[1]);
+                }
+            }
+
+            try {
+                // 2. API'ye istek at
+                const response = await fetch(`/api/ilanlar?${params.toString()}`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+
+                // 3. Render fonksiyonlarını çağır
+                if (data.success) {
+                    listingCount.textContent = data.pagination.total_items;
+                    renderListings(data.items);
+                    renderPagination(data.pagination);
+                } else {
+                    throw new Error(data.message || "API'den başarısız yanıt alındı.");
+                }
+
+            } catch (error) {
+                console.error("İlanlar çekilirken hata oluştu:", error);
+                listViewContainer.innerHTML = `<p class="text-center text-red-500 col-span-full">İlanlar yüklenirken bir hata oluştu. Lütfen tekrar deneyin.</p>`;
+            } finally {
+                listingLoader.style.display = 'none'; // Yükleniyor ikonunu gizle
+            }
+        }
+
+        /**
+         * Gelen 'items' dizisine göre ilan kartlarını HTML'e basar
+         * @param {Array} items - İlan objeleri dizisi
+         */
+        function renderListings(items) {
+            listViewContainer.innerHTML = ''; // Önce temizle (loader'ı da kaldırır)
+
+            if (items.length === 0) {
+                listViewContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full dark:text-gray-400">Aradığınız kriterlere uygun ilan bulunamadı.</p>`;
+                return;
+            }
+
+            let cardsHtml = '';
+            items.forEach(item => {
+                // item.user_id burada mevcuttur (çünkü app.py 'm.*' çeker)
+                const formattedPrice = currencyFormatter.format(item.price);
+                const priceSuffix = item.category === 'Kiralık' ? `<span class="text-base text-gray-500 dark:text-gray-400">/gün</span>` : '';
+
+                const isFavorited = item.is_favorited;
+                const favClass = isFavorited ? 'selected' : '';
+                const favIcon = isFavorited ? 'heart' : 'heart-outline';
+
+                // GÜNCELLENDİ: 'specs' için fallback
+                const specs = item.specs || `Yıl: ${item.year || 'N/A'} | KM: ${item.km || 'N/A'} | Konum: ${item.location || 'N/A'}`;
+
+                // GÜNCELLENDİ: Backend'den 'condition' (Sıfır/İkinci El) ve 'location' (İstanbul vb.)
+                // sütunlarının geldiğini varsayıyoruz.
+                const detailsHtml = `
+                        <div class="hidden text-sm text-gray-500 dark:text-gray-400 space-y-2 my-4">
+                            <div class="flex items-center"><ion-icon name="calendar-outline" class="mr-2 text-base"></ion-icon>Yıl: ${item.year || 'N/A'}</div>
+                            <div class="flex items-center"><ion-icon name="speedometer-outline" class="mr-2 text-base"></ion-icon>KM: ${item.km ? item.km.toLocaleString('tr-TR') : 'N/A'}</div>
+                            <div class="flex items-center"><ion-icon name="location-outline" class="mr-2 text-base"></ion-icon>Konum: ${item.location || 'N/A'}</div>
+                        </div>
+                    `;
+
+                cardsHtml += `
+                        <div class="bike-card rounded-xl overflow-hidden animate-in animate-up is-visible relative flex flex-col" data-tilt>
+                            <button class="card-action-btn fav-btn ${favClass}" title="Favorilere Ekle" data-id="${item.id}">
+                                <ion-icon name="${favIcon}"></ion-icon>
+                            </button>
+                            <button class="card-action-btn compare-btn" 
+                                data-id="${item.id}" 
+                                data-title="${item.title}" 
+                                data-image="${item.image_url}" 
+                                data-price="${formattedPrice} ${item.category === 'Kiralık' ? '/gün' : ''}"
+                                data-year="${item.year}"
+                                data-km="${item.km}"
+                                data-location="${item.location}"
+                                data-condition="${item.condition}"
+                            >
+                                <ion-icon name="git-compare-outline"></ion-icon>
+                            </button>
+
+                            <div class="card-image-wrapper">
+                                <a href="/ilan/${item.id}">
+                                    <img src="${item.image_url || 'https://placehold.co/600x400/f3f4f6/e11d48?text=Resim+Yok'}" 
+                                         onerror="this.src='https://placehold.co/600x400/f3f4f6/e11d48?text=Resim+Yok'"
+                                         alt="${item.title}" class="w-full h-64 object-cover card-image transition-transform duration-500 group-hover:scale-105">
+                                </a>
+                            </div>
+                            <div class="p-6 flex flex-col flex-grow">
+                                <a href="/ilan/${item.id}">
+                                    <h3 class="text-2xl font-bold mb-2 dark:text-white hover:text-[var(--accent-color)] transition-colors">${item.title}</h3>
+                                </a>
+                                <p class="text-gray-600 mb-4 text-sm dark:text-gray-400">${item.description || 'Açıklama yok'}</p>
+                                
+                                ${detailsHtml}
+                                
+                                <div class="flex justify-between items-center mt-auto pt-4">
+                                    <span class="text-2xl font-bold" style="color: var(--accent-color);">${formattedPrice}${priceSuffix}</span>
+                                    <a href="/ilan/${item.id}" class="btn-secondary font-semibold px-4 py-2 rounded-lg text-sm block text-center">
+                                        İncele
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            });
+
+            listViewContainer.innerHTML = cardsHtml;
+
+            // Dinamik eklenen kartlar için event'leri ve tilt'i yeniden başlat
+            addFavoriteEvents(listViewContainer.querySelectorAll('.fav-btn'));
+            addCompareEvents(listViewContainer.querySelectorAll('.compare-btn'));
+            // GÜNCELLENDİ: addSoundEvents kaldırıldı
+            initTilt();
+        }
+
+        /**
+         * Gelen 'pagination' objesine göre sayfalama linklerini basar
+         * @param {object} pagination - {total_pages, current_page, ...}
+         */
+        function renderPagination(pagination) {
+            paginationContainer.innerHTML = ''; // Temizle
+
+            const { total_pages, current_page } = pagination;
+            if (total_pages <= 1) return; // Tek sayfaysa gösterme
+
+            let paginationHtml = '';
+
+            // Önceki Butonu
+            paginationHtml += `
+                    <a href="#" class="px-4 py-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors duration-200 dark:text-gray-400 dark:hover:bg-gray-700 ${current_page === 1 ? 'opacity-50 pointer-events-none' : ''}"
+                       data-page="${current_page - 1}">&laquo; Önceki</a>
+                `;
+
+            // Sayfa Numaraları (Basit versiyon)
+            // Daha gelişmiş bir '...' mantığı eklenebilir
+            for (let i = 1; i <= total_pages; i++) {
+                if (i === current_page) {
+                    paginationHtml += `<a href="#" class="px-4 py-2 rounded-lg bg-[var(--accent-color)] text-white font-semibold shadow-md btn-primary" data-page="${i}">${i}</a>`;
+                } else {
+                    paginationHtml += `<a href="#" class="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 dark:text-gray-300 dark:hover:bg-gray-700" data-page="${i}">${i}</a>`;
+                }
+            }
+
+            // Sonraki Butonu
+            paginationHtml += `
+                    <a href="#" class="px-4 py-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors duration-200 dark:text-gray-400 dark:hover:bg-gray-700 ${current_page === total_pages ? 'opacity-50 pointer-events-none' : ''}"
+                       data-page="${current_page + 1}">Sonraki &raquo;</a>
+                `;
+
+            paginationContainer.innerHTML = paginationHtml;
+        }
+
+        // --- YENİ: Filtre Temizleme Fonksiyonu ---
+        function clearFilters() {
+            document.getElementById('filter-search').value = ''; // Arama çubuğunu temizle
+            document.getElementById('filter-category').selectedIndex = 0; // GÜNCELLENDİ
+            document.getElementById('cond-new').checked = false;
+            document.getElementById('cond-used').checked = false;
+            document.getElementById('year-min').value = '';
+            document.getElementById('year-max').value = '';
+            document.getElementById('km-min').value = '';
+            document.getElementById('km-max').value = '';
+            document.getElementById('filter-sort').selectedIndex = 0;
+
+            if (priceSlider) {
+                const maxSliderVal = priceSlider.options.range.max;
+                priceSlider.set([0, maxSliderVal]);
+            }
+
+            fetchListings(1); // Filtreleri temizledikten sonra ilk sayfayı getir
+        }
+
+        // ===================================
+        // === YENİ: EVENT LISTENERS (OLAY DİNLEYİCİLER) ===
+        // ===================================
+
+        // 1. Filtrele Butonu
+        document.getElementById('apply-filters-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            fetchListings(1); // Filtreleri uygula ve 1. sayfaya git
+        });
+
+        // 2. Sıralama Değişikliği
+        document.getElementById('filter-sort').addEventListener('change', () => {
+            fetchListings(1); // Sıralamayı uygula ve 1. sayfaya git
+        });
+
+        // 3. Filtre Temizle Butonu
+        document.getElementById('clear-filters-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            clearFilters();
+        });
+
+        // 4. Sayfalama Linkleri (Event Delegation)
+        paginationContainer.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = e.target.closest('a');
+            if (target && target.dataset.page) {
+                const page = parseInt(target.dataset.page, 10);
+                if (page !== currentPage) {
+                    fetchListings(page);
+                    window.scrollTo({ top: listingsContainer.offsetTop - 150, behavior: 'smooth' });
+                }
+            }
+        });
+
+        // --- SAYFA İLK YÜKLENDİĞİNDE ---
+        // GÜNCELLENDİ: Önce filtreleri doldur, sonra ilanları çek
+        loadFilterData().then(() => {
+            fetchListings(1); // Sayfa açılır açılmaz ilk verileri çek
+        });
+
+        });
+    </script>
+</body>
+
+</html>

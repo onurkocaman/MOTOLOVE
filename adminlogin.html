@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Girişi - MotoLove</title>
+    
+    <!-- Tailwind CSS CDN --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- SVG İkonları için (Ionicons) --><script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+        // Dark mode'u localStorage'dan kontrol et
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafb; /* bg-gray-50 */
+        }
+        .dark body {
+            background-color: #111827; /* dark:bg-gray-900 */
+        }
+        :root {
+            --accent-color: #E11D48; /* Tailwind: rose-600 */
+        }
+        .btn-primary { background-color: var(--accent-color); color: #FFFFFF; transition: all 0.3s ease; }
+        .btn-primary:hover { background-color: #BE123C; }
+    </style>
+</head>
+<body class="dark:bg-gray-900 dark:text-gray-200">
+
+    <!-- Arka Plan Görseli -->
+    <div class="absolute inset-0 z-[-1]">
+        <img src="https://images.unsplash.com/photo-1558981403-c5f9899a28bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3B&auto=format&fit=crop&w=1740&q=80" 
+             alt="Motosiklet Arka Plan" 
+             class="w-full h-full object-cover opacity-10 dark:opacity-20">
+        <div class="absolute inset-0 bg-gradient-to-t from-gray-50 via-transparent to-gray-50 dark:from-gray-900 dark:to-gray-900"></div>
+    </div>
+
+    <!-- Night Mode Toggle (Sayfanın sağ üstü) -->
+    <div class="absolute top-6 right-6">
+        <button id="theme-toggle" class="text-2xl text-gray-700 dark:text-gray-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)] transition-colors duration-200">
+            <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+            <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+        </button>
+    </div>
+    
+    <div class="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+        <div class="max-w-md w-full space-y-8">
+            
+            <!-- Logo -->
+            <div>
+                <a href="/">
+                    <img class="mx-auto h-20 w-auto" 
+                         src="/static/images/motolove.png" 
+                         alt="MotoLove Logo">
+                </a>
+                <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    Admin Paneli Girişi
+                </h2>
+                <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+                    Lütfen yönetici hesabınızla giriş yapın.
+                </p>
+            </div>
+            
+            <!-- Giriş Formu -->
+            <form id="admin-login-form" class="mt-8 space-y-6" onsubmit="handleAdminLogin(event)">
+                
+                <!-- Hata Mesajı Alanı -->
+                <p id="error-message" class="hidden text-center text-sm text-red-600 dark:text-red-400 p-3 bg-red-100 dark:bg-red-900/30 rounded-lg"></p>
+
+                <div class="rounded-lg shadow-sm -space-y-px">
+                    <!-- E-posta -->
+                    <div>
+                        <label for="email-address" class="sr-only">E-posta</label>
+                        <input id="email-address" name="email" type="email" autocomplete="email" required
+                               class="relative block w-full appearance-none rounded-t-lg border border-gray-300 dark:border-gray-600 px-3 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] focus:z-10 sm:text-sm"
+                               placeholder="E-posta adresi">
+                    </div>
+                    <!-- Şifre -->
+                    <div>
+                        <label for="password" class="sr-only">Şifre</label>
+                        <input id="password" name="password" type="password" autocomplete="current-password" required
+                               class="relative block w-full appearance-none rounded-b-lg border border-gray-300 dark:border-gray-600 px-3 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] focus:z-10 sm:text-sm"
+                               placeholder="Şifre">
+                    </div>
+                </div>
+
+                <!-- Giriş Butonu -->
+                <div>
+                    <button type="submit" id="submit-button"
+                            class="group relative flex w-full justify-center rounded-lg border border-transparent btn-primary py-3 px-4 text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:ring-offset-2 dark:focus:ring-offset-gray-900">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <ion-icon name="lock-closed-outline" class="h-5 w-5 text-rose-300 group-hover:text-rose-100" aria-hidden="true"></ion-icon>
+                        </span>
+                        Giriş Yap
+                    </button>
+                </div>
+            </form>
+
+            <p class="text-center text-sm">
+                <a href="/login" class="font-medium text-gray-600 hover:text-[var(--accent-color)] dark:text-gray-400 dark:hover:text-[var(--accent-color)] transition-colors">
+                    Kullanıcı girişi için buraya tıklayın.
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // --- Night Mode Toggle Script ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            
+            const handleThemeToggle = () => {
+                const isDarkMode = document.documentElement.classList.toggle('dark');
+                if (isDarkMode) {
+                    localStorage.setItem('color-theme', 'dark');
+                } else {
+                    localStorage.setItem('color-theme', 'light');
+                }
+            };
+            if (themeToggleBtn) themeToggleBtn.addEventListener('click', handleThemeToggle);
+        });
+
+        // --- Admin Login Form Script ---
+        async function handleAdminLogin(event) {
+            event.preventDefault(); // Formun normal submit olmasını engelle
+            
+            const form = document.getElementById('admin-login-form');
+            const errorMessage = document.getElementById('error-message');
+            const submitButton = document.getElementById('submit-button');
+            
+            const email = form.email.value;
+            const password = form.password.value;
+            
+            // Butonu kilitle ve hata mesajını temizle
+            submitButton.disabled = true;
+            submitButton.textContent = "Giriş yapılıyor...";
+            errorMessage.classList.add('hidden');
+            errorMessage.textContent = '';
+
+            try {
+                const response = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: email, password: password }),
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Başarılı giriş
+                    errorMessage.classList.remove('hidden', 'text-red-600', 'dark:text-red-400', 'bg-red-100', 'dark:bg-red-900/30');
+                    errorMessage.classList.add('text-green-600', 'dark:text-green-400', 'bg-green-100', 'dark:bg-green-900/30');
+                    errorMessage.textContent = data.message;
+                    
+                    // Yönlendirme
+                    setTimeout(() => {
+                        window.location.href = data.redirect_url || '/admin';
+                    }, 1000); // 1 saniye bekle
+
+                } else {
+                    // Başarısız giriş
+                    errorMessage.textContent = data.message || 'Bilinmeyen bir hata oluştu.';
+                    errorMessage.classList.remove('hidden');
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Giriş Yap';
+                }
+
+            } catch (error) {
+                // Sunucu hatası veya ağ hatası
+                console.error('Admin giriş hatası:', error);
+                errorMessage.textContent = 'Sunucuya bağlanırken bir hata oluştu. Lütfen tekrar deneyin.';
+                errorMessage.classList.remove('hidden');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Giriş Yap';
+            }
+        }
+    </script>
+</body>
+</html>

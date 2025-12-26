@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Başlık güncellendi -->
+    <title>MotoLove | Giriş & Kayıt</title>
+    
+    <!-- Tailwind CSS CDN --><script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/static/images/favicon.png" type="image/png">
+    <!-- Google Fonts: Inter --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- SVG İkonları için (Ionicons) --><script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <!-- index.html'den kopyalanan stil bloğu -->
+    <style>
+        /* * TEMA: MotoLove
+         * ... (Mevcut stilleriniz burada) ...
+         */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1F2937; /* Tailwind: text-gray-800 */
+            /* Animasyonlu Gradient Arka Plan */
+            background: linear-gradient(-45deg, #f8fafb, #fff7f7, #ffeaea, #f8fafb);
+            background-size: 400% 400%;
+            animation: gradient-background-animation 15s ease infinite;
+            
+            /* YENİ: Formun ortalanması için */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        @keyframes gradient-background-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        :root {
+            --accent-color: #E11D48; /* Tailwind: rose-600 (Tutkulu Gül) */
+            --accent-color-hover: #BE123C; /* Tailwind: rose-700 */
+        }
+
+        /* ... (Mevcut scrollbar, selection, navbar stilleri) ... */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #E5E7EB; }
+        ::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 5px; border: 2px solid #E5E7EB; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-color-hover); }
+        ::selection { background: var(--accent-color); color: #FFFFFF; }
+        .navbar-scrolled { background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); box-shadow: 0 4px 10px -1px rgba(0, 0, 0, 0.05); border-bottom: 1px solid #E5E7EB; }
+        .gradient-text { background: linear-gradient(90deg, var(--accent-color), #f87171, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: gradient-flow 6s linear infinite; }
+        @keyframes gradient-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        /* ... (Mevcut buton, nav-link, header-hidden stilleri) ... */
+        .btn-primary { background-color: var(--accent-color); color: #FFFFFF; transition: all 0.3s ease; box-shadow: 0 4px 15px -5px rgba(225, 29, 72, 0.4); }
+        .btn-primary:hover { background-color: var(--accent-color-hover); transform: translateY(-3px); box-shadow: 0 7px 20px -5px rgba(225, 29, 72, 0.5); }
+        .btn-secondary { border: 1px solid var(--accent-color); color: var(--accent-color); transition: all 0.3s ease; }
+        .btn-secondary:hover { background-color: var(--accent-color); color: #FFFFFF; transform: translateY(-2px); }
+        .nav-link { position: relative; transition: color 0.3s ease; color: #374151; }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 50%; transform: translateX(-50%); background-color: var(--accent-color); transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .nav-link:hover { color: var(--accent-color); }
+        .nav-link:hover::after { width: 100%; }
+        .header-hidden { transform: translateY(-100%); }
+        .top-bar-hidden { max-height: 0px; padding-top: 0px; padding-bottom: 0px; opacity: 0; }
+
+        /* ===== YENİ: Gelişmiş Giriş Formu Stilleri ===== */
+        
+        /* Ana container'ı header ve footer'dan ayır */
+        main {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 120px; /* Header için boşluk */
+            padding-bottom: 40px; /* Footer için boşluk */
+        }
+        
+        .login-register-container {
+            background-color: #fff;
+            border-radius: 1.5rem; /* 2xl */
+            box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px; /* Genişletildi */
+            min-height: 600px;
+            border: 1px solid #E5E7EB;
+        }
+
+        .form-container {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            transition: all 0.6s ease-in-out;
+        }
+
+        .sign-in-container {
+            left: 0;
+            width: 50%;
+            z-index: 2;
+        }
+
+        .sign-up-container {
+            left: 0;
+            width: 50%;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .login-register-container.right-panel-active .sign-in-container {
+            transform: translateX(100%);
+        }
+
+        .login-register-container.right-panel-active .sign-up-container {
+            transform: translateX(100%);
+            opacity: 1;
+            z-index: 5;
+            animation: show 0.6s;
+        }
+
+        @keyframes show {
+            0%, 49.99% { opacity: 0; z-index: 1; }
+            50%, 100% { opacity: 1; z-index: 5; }
+        }
+
+        .overlay-container {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            transition: transform 0.6s ease-in-out;
+            z-index: 100;
+        }
+
+        .login-register-container.right-panel-active .overlay-container {
+            transform: translateX(-100%);
+        }
+
+        .overlay {
+            /* Tema Rengi: Gül Kırmızısı Gradient */
+            background: var(--accent-color);
+            background: linear-gradient(90deg, var(--accent-color-hover), var(--accent-color));
+            color: #FFFFFF;
+            position: relative;
+            left: -100%;
+            height: 100%;
+            width: 200%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .login-register-container.right-panel-active .overlay {
+            transform: translateX(50%);
+        }
+
+        .overlay-panel {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 40px;
+            text-align: center;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .overlay-left {
+            /* transform: translateX(-20%); DÜZELTME: Parallax efekti kaldırıldı */
+        }
+
+        .login-register-container.right-panel-active .overlay-left {
+            transform: translateX(0); /* DÜZELTME: Bu zaten varsayılan durumdu, ancak .overlay-left'teki -%20'yi sildiğimiz için artık düzgün çalışacak */
+        }
+
+        .overlay-right {
+            right: 0;
+            transform: translateX(0);
+        }
+
+        .login-register-container.right-panel-active .overlay-right {
+            /* transform: translateX(20%); DÜZELTME: Parallax efekti kaldırıldı */
+            transform: translateX(0);
+        }
+        
+        .overlay-panel h1 {
+            font-size: 2.25rem; /* 3xl */
+            font-weight: 900; /* black */
+            margin-bottom: 1rem;
+        }
+        
+        .overlay-panel p {
+            font-size: 1.125rem; /* xl */
+            font-weight: 400;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Formların iç stili */
+        .form-container form {
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 50px;
+            height: 100%;
+            text-align: center;
+        }
+        
+        .form-container h1 {
+            font-size: 2.25rem; /* 3xl */
+            font-weight: 700; /* bold */
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .social-container {
+            margin: 15px 0;
+        }
+
+        .social-container a {
+            border: 1px solid #E5E7EB;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 5px;
+            height: 40px;
+            width: 40px;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        .social-container a:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+        
+        .form-container span {
+            font-size: 0.875rem; /* sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 10px;
+        }
+
+        .form-container input {
+            background-color: #F3F4F6; /* gray-100 */
+            border: none;
+            padding: 14px 15px;
+            margin: 8px 0;
+            width: 100%;
+            border-radius: 0.5rem; /* lg */
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .form-container input:focus {
+            outline: none;
+            background-color: #fff;
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.2);
+        }
+        
+        .form-container a {
+            color: #6B7280;
+            font-size: 0.875rem;
+            text-decoration: none;
+            margin: 15px 0;
+            transition: color 0.2s ease;
+        }
+        .form-container a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        /* Butonları form genişliğine uydur */
+        .form-container button, .overlay-panel button { /* DÜZELTME: .overlay-panel button eklendi */
+            border-radius: 0.5rem; /* lg */
+            font-size: 0.875rem; /* sm */
+            font-weight: 600; /* semibold */
+            padding: 12px 45px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        /* Overlay'deki butonlar için özel "Ghost" stili (btn-secondary'yi uyarlayalım) */
+        button.ghost {
+            background-color: transparent;
+            border-color: #FFFFFF;
+            color: #FFFFFF;
+            border-width: 2px; /* YENİ: Kenarlık kalınlaştırıldı */
+            transition: all 0.3s ease; /* YENİ: Geçiş eklendi */
+        }
+        button.ghost:hover {
+            background-color: #FFFFFF;
+            color: var(--accent-color);
+            border-color: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px -5px rgba(255, 255, 255, 0.3); /* YENİ: Beyaz glow efekti */
+        }
+
+        /* ===== YENİ: Mesaj Alanı Stili ===== */
+        .form-message {
+            font-size: 0.875rem; /* sm */
+            font-weight: 500;
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            width: 100%;
+            display: none; /* Varsayılan olarak gizli */
+        }
+        .form-message.success {
+            background-color: #D1FAE5; /* green-100 */
+            color: #065F46; /* green-800 */
+            display: block;
+        }
+        .form-message.error {
+            background-color: #FEE2E2; /* red-100 */
+            color: #991B1B; /* red-800 */
+            display: block;
+        }
+        /* Yükleniyor butonu stili */
+        .btn-loading {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .btn-loading::after {
+            content: '...';
+            animation: loading-dots 1s infinite;
+        }
+        @keyframes loading-dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+
+        /* ===== YENİ: Mobil Uyumluluk ===== */
+        @media (max-width: 900px) {
+            .login-register-container {
+                max-width: 90vw;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                /* Mobil için dikey scroll'a izin ver */
+                display: block;
+                min-height: 0;
+            }
+            main {
+                padding-top: 100px;
+                padding-bottom: 20px;
+                min-height: 0; /* min-height'i main'den kaldır */
+                align-items: flex-start; /* Üste hizala */
+            }
+            .login-register-container {
+                min-height: 0; /* Min-height'i kaldır */
+                border-radius: 1rem;
+                max-width: 450px;
+                /* Animasyonun çalışması için bu yapı kalmalı */
+            }
+            
+            /* YENİ Mobil Yöntem: Animasyonu koru, ancak overlay metnini gizle */
+            .overlay-panel p {
+                display: none; /* Metni gizle */
+            }
+             .overlay-panel h1 {
+                font-size: 1.5rem; /* 2xl */
+                margin-bottom: 1rem;
+            }
+            .overlay-panel button {
+                padding: 10px 25px;
+            }
+            .form-container {
+                padding: 0 25px;
+            }
+            .form-container form {
+                padding: 0 25px;
+            }
+            .form-container h1 {
+                font-size: 1.75rem; /* 2xl */
+            }
+        }
+
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- ===== Header / Navbar (index.html'den kopyalandı) ===== -->
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-transform duration-300 ease-out">
+        
+        <!-- Top Bar (Haber Bandı) -->
+        <div id="top-bar" class="bg-rose-100 text-[var(--accent-color)] text-sm font-medium text-center py-2.5 px-6 transition-all duration-300 overflow-hidden max-h-12 opacity-100">
+            <p class="flex items-center justify-center">
+                <ion-icon name="sparkles-outline" class="mr-2"></ion-icon>
+                Yeni Sezon Fırsatları! Elektrikli modellerde %15 indirim.
+            </p>
+        </div>
+
+        <!-- Ana Navigasyon Barı -->
+        <nav id="navbar" class="transition-all duration-300 bg-transparent">
+            <div class="container mx-auto px-6 py-5 flex justify-between items-center">
+                <!-- Logo -->
+               <a href="/"><img src="static/images/motolove.png" alt="MotoLove Logo" class="h-20 w-auto"></a>
+                
+                <!-- Mobil Menu Butonu -->
+                <button id="mobile-menu-button" class="md:hidden text-3xl text-gray-900">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </button>
+                
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="font-medium nav-link">Ana Sayfa</a>
+                    <a href="ilan.html" class="font-medium nav-link">İlanlar</a>
+                    <a href="ilanver.html" class="font-medium nav-link">İlan Ver</a>
+                    <a href="ihale.html" class="font-medium nav-link active">İhale</a>
+                    <a href="forum.html" class="font-medium nav-link active">Forum</a>
+                    <!-- YENİ: Burası dinamik olarak değişebilir, şimdilik login.html'e gider -->
+                    <a href="/login" class="btn-primary font-semibold px-5 py-2 rounded-lg text-sm ml-4">Giriş Yap</a>
+                    <!-- YENİ: Giriş yapınca bu görünebilir: <a href="/logout" class="btn-secondary font-semibold px-5 py-2 rounded-lg text-sm ml-4">Çıkış Yap</a> -->
+                </div>
+            </div>
+            
+        </nav>
+        
+        <!-- Mobil Menu (Gizli) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur-sm shadow-xl border-t border-gray-200">
+            <a href="/" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100">Ana Sayfa</a>
+            <a href="ilan.html" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100">İlanlar</a>
+            <a href="ilanver.html" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100">İlan Ver</a>
+            <a href="ihale.html" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100">İhale</a>
+            <a href="forum.html" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100">Forum</a>
+            <a href="/login" class="block px-6 py-4">
+                <span class="btn-primary w-full block text-center font-semibold px-5 py-3 rounded-lg">Giriş Yap</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- ===== YENİ BÖLÜM: Gelişmiş Giriş Formu ===== -->
+    <main>
+        
+        <!-- Gelişmiş Giriş/Kayıt Kartı -->
+        <div class="login-register-container" id="container">
+            
+            <!-- Kayıt Ol Formu -->
+            <div class="form-container sign-up-container">
+                <!-- YENİ: action kaldırıldı, id eklendi -->
+                <form id="sign-up-form">
+                    <h1>Hesap Oluştur</h1>
+                    <div class="social-container">
+                        <a href="#" class="social"><ion-icon name="logo-google"></ion-icon></a>
+                        <a href="#" class="social"><ion-icon name="logo-facebook"></ion-icon></a>
+                        <a href="#" class="social"><ion-icon name="logo-github"></ion-icon></a>
+                    </div>
+                    <span>veya kayıt için e-postanızı kullanın</span>
+                    <!-- YENİ: name attribute'ları eklendi -->
+                    <input type="text" name="name" placeholder="İsim" required />
+                    <input type="email" name="email" placeholder="Email" required />
+                    <input type="password" name="password" placeholder="Şifre" required />
+                    <!-- YENİ: Mesaj alanı eklendi -->
+                    <div id="sign-up-message" class="form-message"></div>
+                    <button type="submit" class="btn-primary mt-4">Kayıt Ol</button>
+                </form>
+            </div>
+            
+            <!-- Giriş Yap Formu -->
+            <div class="form-container sign-in-container">
+                 <!-- YENİ: action kaldırıldı, id eklendi -->
+                <form id="sign-in-form">
+                    <h1>Giriş Yap</h1>
+                    <div class="social-container">
+                        <a href="#" class="social"><ion-icon name="logo-google"></ion-icon></a>
+                        <a href="#" class="social"><ion-icon name="logo-facebook"></ion-icon></a>
+                        <a href="#" class="social"><ion-icon name="logo-github"></ion-icon></a>
+                    </div>
+                    <span>veya hesabınızı kullanın</span>
+                     <!-- YENİ: name attribute'ları eklendi -->
+                    <input type="email" name="email" placeholder="Email" required />
+                    <input type="password" name="password" placeholder="Şifre" required />
+                    <!-- DÜZELTME: Link /sifresifirlama olarak güncellendi -->
+                    <a href="/sifresifirlama">Şifrenizi mi unuttunuz?</a>
+                    <!-- YENİ: Mesaj alanı eklendi -->
+                    <div id="sign-in-message" class="form-message"></div>
+                    <button type="submit" class="btn-primary">Giriş Yap</button>
+                </form>
+            </div>
+            
+            <!-- Geçiş (Overlay) Paneli -->
+            <div class="overlay-container">
+                <div class="overlay">
+                    <!-- Sol Panel (Kayıt Ol'dan Giriş'e Geçiş) -->
+                    <div class="overlay-panel overlay-left">
+                        <h1>Tekrar Hoş Geldin!</h1>
+                        <p>Bizimle bağda kalmak için lütfen kişisel bilgilerinle giriş yap.</p>
+                        <button class="ghost btn-secondary" id="signIn">Giriş Yap</button>
+                    </div>
+                    <!-- Sağ Panel (Giriş'ten Kayıt Ol'a Geçiş) -->
+                    <div class="overlay-panel overlay-right">
+                        <h1>Merhaba, Dostum!</h1>
+                        <p>Kişisel bilgilerini gir ve bizimle bu yolculuğa başla.</p>
+                        <button class="ghost btn-secondary" id="signUp">Kayıt Ol</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+    </main>
+    <!-- ===== YENİ BÖLÜM SONU ===== -->
+
+
+    <!-- ===== Footer (Sayfanın altına sabitlendi) ===== -->
+    <footer class="bg-white text-gray-600 py-16 px-6 border-t border-gray-200 w-full mt-auto">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Logo & Sosyal --><div>
+                <a href="/" class="text-3xl font-bold tracking-tighter text-gray-900">
+                    Moto<span style="color: var(--accent-color);">Love</span>
+                </a>
+                <p class="mt-4 mb-6">Geleceğin sürüş deneyimi, bugün.</p>
+                <div class="flex space-x-4 text-2xl">
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-instagram"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-facebook"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-youtube"></ion-icon></a>
+                    <a href="#" class_disabled="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-twitter"></ion-icon></a>
+                </div>
+            </div>
+            
+            <!-- Hızlı Linkler --><div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4">Hızlı Linkler</h4>
+                <ul class="space-y-2">
+                    <li><a href="/" class="hover:text-gray-900">Ana Sayfa</a></li>
+                    <li><a href="index.html#categories" class="hover:text-gray-900">Kategoriler</a></li>
+                    <li><a href="index.html#featured-sale" class="hover:text-gray-900">Satılık Modeller</a></li>
+                    <li><a href="index.html#featured-rent" class="hover:text-gray-900">Kiralık Filo</a></li>
+                    <li><a href="#" class="hover:text-gray-900">Hakkımızda</a></li>
+                </ul>
+            </div>
+            
+            <!-- Destek --><div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4">Destek</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-gray-900">S.S.S.</a></li>
+                    <li><a href="#" class="hover:text-gray-900">İletişim</a></li>
+                    <li><a href="#" class="hover:text-gray-900">Gizlilik Politikası</a></li>
+                    <li><a href="#" class="hover:text-gray-900">Kullanım Şartları</a></li>
+                </ul>
+            </div>
+
+            <!-- İletişim --><div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4">İletişim</h4>
+                <ul class="space-y-2">
+                    <li><a href="mailto:info@motolove.com" class="hover:text-gray-900">info@motolove.com</a></li>
+                    <li><a href="tel:+905551234567" class="hover:text-gray-900">+90 555 123 45 67</a></li>
+                    <li><p>Love Plaza, İstanbul, Türkiye</p></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center text-gray-500 mt-12 pt-8 border-t border-gray-200">
+            &copy; 2025 MotoLove. Tüm hakları saklıdır.
+        </div>
+    </footer>
+    
+    <!-- ===== JavaScript (GÜNCELLENDİ) ===== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Navbar Scroll Efekti ---
+            const mainHeader = document.getElementById('main-header'); // Ana header container
+            const navbar = document.getElementById('navbar'); // Sadece nav bar
+            const topBar = document.getElementById('top-bar'); // Sadece top bar
+            let lastScrollY = window.scrollY;
+
+            window.addEventListener('scroll', () => {
+                // body'ye 'scroll' class'ı ekle, böylece body flex ayarları bozulmaz
+                document.body.classList.toggle('scroll', window.scrollY > 0);
+
+                if (window.scrollY > 50) {
+                    navbar.classList.add('navbar-scrolled');
+                    topBar.classList.add('top-bar-hidden');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                    topBar.classList.remove('top-bar-hidden');
+                }
+                if (window.scrollY > lastScrollY && window.scrollY > 200) {
+                    mainHeader.classList.add('header-hidden');
+                } else {
+                    mainHeader.classList.remove('header-hidden');
+                }
+                lastScrollY = window.scrollY;
+            });
+
+            // --- Mobil Menu Toggle ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuIcon = mobileMenuButton.querySelector('ion-icon');
+            
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    if (mobileMenu.classList.contains('hidden')) {
+                        mobileMenuIcon.setAttribute('name', 'menu-outline');
+                    } else {
+                        mobileMenuIcon.setAttribute('name', 'close-outline');
+                    }
+                });
+            }
+            
+            if (mobileMenu) {
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuIcon.setAttribute('name', 'menu-outline');
+                    });
+                });
+            }
+
+            // --- Gelişmiş Form Geçiş (Toggle) JS ---
+            const signUpButton = document.getElementById('signUp');
+            const signInButton = document.getElementById('signIn');
+            const container = document.getElementById('container');
+
+            if (signUpButton && signInButton && container) {
+                signUpButton.addEventListener('click', () => {
+                    container.classList.add('right-panel-active');
+                });
+
+                signInButton.addEventListener('click', () => {
+                    container.classList.remove('right-panel-active');
+                });
+            }
+
+            // --- YENİ: Form Gönderme (Submission) JS ---
+
+            const signUpForm = document.getElementById('sign-up-form');
+            const signInForm = document.getElementById('sign-in-form');
+            const signUpMessage = document.getElementById('sign-up-message');
+            const signInMessage = document.getElementById('sign-in-message');
+
+            // --- Kayıt Ol Formu ---
+            if (signUpForm) {
+                signUpForm.addEventListener('submit', async (e) => {
+                    e.preventDefault(); // Formun normal submit olmasını engelle
+                    
+                    const button = signUpForm.querySelector('button[type="submit"]');
+                    toggleButtonLoading(button, true, "Kayıt Ol");
+
+                    // Form verilerini al
+                    const formData = new FormData(signUpForm);
+                    const data = Object.fromEntries(formData.entries());
+
+                    // Mesajı temizle
+                    showMessage(signUpMessage, '', 'error'); // error class'ını kaldır
+
+                    try {
+                        const response = await fetch('/api/register', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(data),
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            showMessage(signUpMessage, result.message, 'success');
+                            // Başarılıysa 2 saniye sonra ana sayfaya yönlendir
+                            setTimeout(() => {
+                                window.location.href = '/'; // Ana sayfaya yönlendir
+                            }, 2000);
+                        } else {
+                            showMessage(signUpMessage, result.message || 'Bir hata oluştu.', 'error');
+                            toggleButtonLoading(button, false, "Kayıt Ol");
+                        }
+
+                    } catch (error) {
+                        console.error('Kayıt hatası:', error);
+                        showMessage(signUpMessage, 'Sunucuya bağlanırken bir hata oluştu.', 'error');
+                        toggleButtonLoading(button, false, "Kayıt Ol");
+                    }
+                });
+            }
+
+            // --- Giriş Yap Formu ---
+            if (signInForm) {
+                signInForm.addEventListener('submit', async (e) => {
+                    e.preventDefault(); // Formun normal submit olmasını engelle
+                    
+                    const button = signInForm.querySelector('button[type="submit"]');
+                    toggleButtonLoading(button, true, "Giriş Yap");
+
+                    // Form verilerini al
+                    const formData = new FormData(signInForm);
+                    const data = Object.fromEntries(formData.entries());
+
+                    // Mesajı temizle
+                    showMessage(signInMessage, '', 'error'); // error class'ını kaldır
+
+                    try {
+                        const response = await fetch('/api/login', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(data),
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            showMessage(signInMessage, result.message, 'success');
+                            // Başarılıysa 2 saniye sonra ana sayfaya yönlendir
+                            setTimeout(() => {
+                                window.location.href = '/'; // Ana sayfaya yönlendir
+                            }, 2300);
+                        } else {
+                            showMessage(signInMessage, result.message || 'Bir hata oluştu.', 'error');
+                            toggleButtonLoading(button, false, "Giriş Yap");
+                        }
+
+                    } catch (error) {
+                        console.error('Giriş hatası:', error);
+                        showMessage(signInMessage, 'Sunucuya bağlanırken bir hata oluştu.', 'error');
+                        toggleButtonLoading(button, false, "Giriş Yap");
+                    }
+                });
+            }
+            
+            // --- Yardımcı Fonksiyonlar ---
+            document.addEventListener('DOMContentLoaded', () => {
+    
+        // ... (Mevcut Navbar, Mobil Menu, Night Mode kodların) ...
+
+        // --- YENİ: Profil Sekme (Tab) Yönetimi ---
+        const tabButtons = document.querySelectorAll('.profile-tab');
+        const tabPanes = document.querySelectorAll('.profile-tab-pane');
+
+        tabButtons.forEach(button => {
+            // ... (Mevcut tab yönetimi kodun) ...
+        });
+
+        // --- YENİ: Profil Güncelleme Formu Yönetimi ---
+        const profileForm = document.getElementById('profile-update-form');
+        const profileMessage = document.getElementById('profile-message');
+
+        if (profileForm) {
+            profileForm.addEventListener('submit', (e) => {
+                e.preventDefault(); // Formun sayfayı yenilemesini engelle
+                
+                const name = document.getElementById('prof-name').value;
+                const phone = document.getElementById('prof-phone').value;
+                
+                // Mesaj alanını temizle
+                profileMessage.textContent = 'Kaydediliyor...';
+                profileMessage.className = 'text-sm mt-4 text-gray-500';
+
+                fetch('/api/profile/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ name: name, phone: phone })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        profileMessage.textContent = data.message;
+                        profileMessage.className = 'text-sm mt-4 text-green-600';
+                        // Header'daki ismi de değiştirebiliriz (sayfa yenilemeden)
+                        // document.getElementById('desktop-user-name').textContent = name;
+                    } else {
+                        profileMessage.textContent = 'Hata: ' + data.message;
+                        profileMessage.className = 'text-sm mt-4 text-red-600';
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch hatası:', error);
+                    profileMessage.textContent = 'Ağ hatası. Lütfen tekrar deneyin.';
+                    profileMessage.className = 'text-sm mt-4 text-red-600';
+                });
+            });
+        }
+
+    });
+            /**
+             * Form mesaj alanını günceller.
+             * @param {HTMLElement} element Mesajın gösterileceği HTML elementi
+             * @param {string} message Gösterilecek mesaj
+             * @param {'success' | 'error'} type Mesaj tipi
+             */
+            function showMessage(element, message, type) {
+                if (!element) return;
+                element.textContent = message;
+                element.className = 'form-message'; // Önce sıfırla
+                if (type === 'success') {
+                    element.classList.add('success');
+                } else if (type === 'error') {
+                    element.classList.add('error');
+                }
+            }
+            
+            /**
+             * Butonun yükleniyor durumunu ayarlar.
+             * @param {HTMLButtonElement} button Buton elementi
+             * @param {boolean} isLoading Yükleniyor mu?
+             * @param {string} defaultText Butonun varsayılan metni
+             */
+            function toggleButtonLoading(button, isLoading, defaultText) {
+                if (!button) return;
+                if (isLoading) {
+                    button.disabled = true;
+                    button.classList.add('btn-loading');
+                    button.textContent = 'İşleniyor'; // '...' stilden gelecek
+                } else {
+                    button.disabled = false;
+                    button.classList.remove('btn-loading');
+                    button.textContent = defaultText;
+                }
+            }
+
+        });
+    </script>
+</body>
+</html>
+

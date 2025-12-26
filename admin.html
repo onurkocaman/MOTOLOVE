@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Paneli - MotoLove</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- icon kütüphanesi -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    
+    <!-- YENİ: Grafikler için Chart.js kütüphanesi -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@2.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'accent': {
+                            'light': '#F87171',
+                            'DEFAULT': '#E11D48', // Ana Vurgu Rengi
+                            'dark': '#BE123C',
+                        }
+                    }
+                }
+            }
+        }
+        // Karanlık Mod Kontrolü
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <style>
+        /* Kaydırma çubuğu stilleri */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a0aec0; }
+        .dark ::-webkit-scrollbar-thumb { background: #4a5568; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #718096; }
+
+        /* Aktif sidebar linki */
+        .sidebar-link-active {
+            background-color: #fef2f2; /* light mode */
+            color: #E11D48;
+            font-weight: 600;
+        }
+        .dark .sidebar-link-active {
+            background-color: #4b1b25; /* dark mode */
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-100 dark:bg-gray-900 dark:text-gray-200 antialiased">
+
+    <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
+        
+        <!-- ===== Sol Sidebar ===== -->
+        <aside id="sidebar" class="z-40 w-64 flex-shrink-0 space-y-6 bg-white dark:bg-gray-800 shadow-lg fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out lg:static lg:inset-0">
+            <!-- Logo -->
+            <div class="flex items-center justify-center h-20 border-b dark:border-gray-700">
+                <a href="/admin">
+                    <img src="/static/images/motolove.png" alt="MotoLove Logo" class="h-16 w-auto"> 
+                </a>
+            </div>
+            
+            <!-- Navigasyon -->
+            <nav class="mt-6 flex-1 px-4 space-y-2">
+                <a href="/admin" class="group sidebar-link-active flex items-center px-4 py-3 rounded-lg transition-colors duration-200">
+                    <ion-icon name="grid-outline" class="text-xl mr-3"></ion-icon>
+                    <span>Gösterge Paneli</span>
+                </a>
+                
+                <a href="/admin/ilan_yonetimi" class="group flex items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <ion-icon name="list-outline" class="text-xl mr-3"></ion-icon>
+                    <span>İlan Yönetimi</span>
+                </a>
+
+                <a href="/admin/ihale_yonetimi" class="group flex items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <ion-icon name="hammer-outline" class="text-xl mr-3"></ion-icon>
+                    <span>İhale Yönetimi</span>
+                </a>
+                
+                <a href="/admin/kullanici_yonetimi" class="group flex items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <ion-icon name="people-outline" class="text-xl mr-3"></ion-icon>
+                    <span>Kullanıcı Yönetimi</span>
+                </a>
+                
+                <!-- YENİ: Sipariş Yönetimi Linki -->
+                 <a href="/admin/siparis_yonetimi" class="group flex items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <ion-icon name="receipt-outline" class="text-xl mr-3"></ion-icon>
+                    <span>Sipariş Yönetimi</span>
+                </a>
+
+                <div class="border-t dark:border-gray-700 my-4"></div>
+
+                <a href="/" class="group flex items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <ion-icon name="arrow-back-outline" class="text-xl mr-3"></ion-icon>
+                    <span>Siteye Dön</span>
+                </a>
+            </nav>
+        </aside>
+        <!-- ===== /Sol Sidebar ===== -->
+
+        <!-- Overlay -->
+        <div id="sidebar-overlay" class="lg:hidden fixed inset-0 z-30 bg-black/50 transition-opacity duration-300 ease-in-out opacity-0 pointer-events-none"></div>
+
+        <!-- ===== Ana İçerik Alanı ===== -->
+        <div class="flex-1 flex flex-col h-screen overflow-y-auto">
+            
+            <!-- Üst Header -->
+            <header class="sticky top-0 z-20 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-sm dark:border-b dark:border-gray-700">
+                <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+                    
+                    <!-- Mobil Menü Butonu (Sadece mobil) -->
+                    <button id="mobile-menu-button" class="lg:hidden text-2xl text-gray-700 dark:text-gray-300">
+                        <ion-icon name="menu-outline"></ion-icon>
+                    </button>
+
+                    <!-- Arama Çubuğu (Göstermelik) -->
+                    <div class="hidden md:block relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <ion-icon name="search-outline" class="text-gray-400"></ion-icon>
+                        </span>
+                        <input type="text" class="w-full max-w-sm pl-10 pr-4 py-2 rounded-lg border bg-gray-100 dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-accent-dark" placeholder="Ara...">
+                    </div>
+
+                    <!-- Sağ Taraf Kullanıcı Menüsü -->
+                    <div class="flex items-center space-x-5 ml-auto">
+                        <button id="theme-toggle" class="text-2xl text-gray-600 dark:text-gray-300 hover:text-accent-dark dark:hover:text-accent-light transition-colors duration-200">
+                            <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                            <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                        </button>
+
+                        {% if user_name %}
+                        <a href="/profile" class="flex items-center text-gray-700 dark:text-gray-300 transition-colors group font-semibold">
+                            {% if user_image_url %}
+                                <img src="{{ user_image_url }}" alt="Profil" class="w-9 h-9 rounded-full object-cover mr-2 border-2 border-gray-200 dark:border-gray-600 group-hover:border-accent-dark">
+                            {% else %}
+                                <ion-icon name="person-circle" class="text-3xl mr-2 text-accent-dark"></ion-icon>
+                            {% endif %}
+                            <span class="hidden md:block font-medium text-sm group-hover:text-accent-dark">{{ user_name }}</span>
+                        </a>
+                        <a href="/logout" class="text-2xl text-gray-600 dark:text-gray-300 hover:text-accent-dark dark:hover:text-accent-light transition-colors duration-200" title="Çıkış Yap">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </header>
+
+            <!-- Ana İçerik (YENİDEN TASARLANDI) -->
+            <main class="flex-1 p-6 md:p-8">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+                    Gösterge Paneli
+                </h1>
+
+                <!-- ===== İstatistik Kartları ===== -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-6">
+                    <!-- Kart 1: Toplam Kullanıcı -->
+                    <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md flex items-center space-x-4">
+                        <div class="flex-shrink-0 p-3 bg-blue-100 dark:bg-blue-800 rounded-full">
+                            <ion-icon name="people-outline" class="text-3xl text-blue-600 dark:text-blue-300"></ion-icon>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Toplam Kullanıcı</p>
+                            <p id="stat-total-users" class="text-3xl font-bold text-gray-900 dark:text-white">...</p>
+                        </div>
+                    </div>
+                    <!-- Kart 2: Toplam İlan -->
+                    <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md flex items-center space-x-4">
+                        <div class="flex-shrink-0 p-3 bg-green-100 dark:bg-green-800 rounded-full">
+                            <ion-icon name="list-outline" class="text-3xl text-green-600 dark:text-green-300"></ion-icon>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Toplam İlan</p>
+                            <p id="stat-total-listings" class="text-3xl font-bold text-gray-900 dark:text-white">...</p>
+                        </div>
+                    </div>
+                    <!-- Kart 3: Toplam Satış (TL) -->
+                    <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md flex items-center space-x-4">
+                        <div class="flex-shrink-0 p-3 bg-accent-light/30 dark:bg-accent/30 rounded-full">
+                            <ion-icon name="cash-outline" class="text-3xl text-accent-dark dark:text-accent-light"></ion-icon>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Toplam Satış</p>
+                            <p id="stat-total-sales" class="text-3xl font-bold text-gray-900 dark:text-white">...</p>
+                        </div>
+                    </div>
+                    <!-- Kart 4: Aktif İhaleler -->
+                    <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md flex items-center space-x-4">
+                        <div class="flex-shrink-0 p-3 bg-yellow-100 dark:bg-yellow-800 rounded-full">
+                            <ion-icon name="hammer-outline" class="text-3xl text-yellow-600 dark:text-yellow-300"></ion-icon>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Aktif İhaleler</p>
+                            <p id="stat-active-auctions" class="text-3xl font-bold text-gray-900 dark:text-white">...</p>
+                        </div>
+                    </div>
+                    <!-- Kart 5: Bekleyen Siparişler -->
+                    <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md flex items-center space-x-4 lg:col-span-1 2xl:col-span-1">
+                        <div class="flex-shrink-0 p-3 bg-orange-100 dark:bg-orange-800 rounded-full">
+                            <ion-icon name="hourglass-outline" class="text-3xl text-orange-600 dark:text-orange-300"></ion-icon>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Bekleyen Siparişler</p>
+                            <p id="stat-pending-orders" class="text-3xl font-bold text-gray-900 dark:text-white">...</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- ===== /İstatistik Kartları ===== -->
+
+
+                <!-- ===== YENİ PROFESYONEL LAYOUT (2 Sütunlu) ===== -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+                    
+                    <!-- Ana Sütun (Sol Taraf) -->
+                    <div class="lg:col-span-2 flex flex-col gap-6">
+                        
+                        <!-- Grafik: Satışlar (Bar) -->
+                        <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md">
+                           <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Haftalık Satış Hacmi (TL)</h3>
+                           <div class="w-full h-80 flex items-center justify-center" id="salesChart-container">
+                               <canvas id="salesChart" class="w-full h-80"></canvas>
+                           </div>
+                       </div>
+                       
+                       <!-- YENİ: Son Siparişler Tablosu -->
+                       <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Son Siparişler</h3>
+                                <!-- YENİ BUTON EKLENDİ -->
+                                <a href="/admin/siparis_yonetimi" class="text-sm font-medium text-accent-dark dark:text-accent-light hover:underline">
+                                    Tümünü Gör
+                                </a>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full min-w-max text-sm text-left text-gray-500 dark:text-gray-400">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th scope="col" class="py-3 px-6">Sipariş ID</th>
+                                            <th scope="col" class="py-3 px-6">Müşteri</th>
+                                            <th scope="col" class="py-3 px-6">Ürün</th>
+                                            <th scope="col" class="py-3 px-6">Tutar</th>
+                                            <th scope="col" class="py-3 px-6">Durum</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-recent-orders">
+                                        <!-- Veri JS ile yüklenecek -->
+                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                            <td colspan="5" class="py-4 px-6 text-center text-gray-500 dark:text-gray-400">Yükleniyor...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                       </div>
+                    </div>
+
+                    <!-- İkincil Sütun (Sağ Taraf) -->
+                    <div class="lg:col-span-1 flex flex-col gap-6">
+                        
+                        <!-- Grafik: İlan Dağılımı (Doughnut) -->
+                        <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">İlan Dağılımı</h3>
+                            <div class="w-full h-64 flex items-center justify-center" id="listingStatusChart-container">
+                                <canvas id="listingStatusChart" class="w-full h-64"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Grafik: Yeni Kullanıcılar (Çizgi) -->
+                        <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Yeni Kullanıcılar (Son 7 Gün)</h3>
+                            <div class="w-full h-64 flex items-center justify-center" id="userChart-container">
+                                <canvas id="userChart" class="w-full h-64"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Tablo: Son Kayıt Olanlar -->
+                        <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Son Kayıt Olanlar</h3>
+                            <div class="overflow-y-auto max-h-72">
+                                <ul id="list-recent-users" class="divide-y divide-gray-200 dark:divide-gray-700">
+                                    <!-- Veri JS ile yüklenecek -->
+                                    <li class="py-3 text-center text-gray-500 dark:text-gray-400">Yükleniyor...</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- ===== /YENİ PROFESYONEL LAYOUT ===== -->
+                
+            </main>
+        </div>
+        <!-- ===== /Ana İçerik Alanı ===== -->
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        // ===== Karanlık Mod Toggle =====
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        
+        const handleThemeToggle = () => {
+            const isDarkMode = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('color-theme', isDarkMode ? 'dark' : 'light');
+            // Grafikleri yeniden çiz (karanlık mod renkleri için)
+            loadDashboardData(true); // true parametresi grafikleri yeniden başlatmaya zorlar
+        };
+
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', handleThemeToggle);
+        }
+
+        // ===== Mobil Sidebar Toggle =====
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const mobileMenuIcon = mobileMenuButton.querySelector('ion-icon');
+
+        const toggleSidebar = () => {
+            if (sidebar && overlay && mobileMenuIcon) {
+                const isOpen = sidebar.classList.toggle('-translate-x-full');
+                sidebar.classList.toggle('translate-x-0');
+                overlay.classList.toggle('opacity-0');
+                overlay.classList.toggle('pointer-events-none');
+                mobileMenuIcon.setAttribute('name', isOpen ? 'menu-outline' : 'close-outline');
+            }
+        };
+
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', toggleSidebar);
+        }
+        if (overlay) {
+            overlay.addEventListener('click', toggleSidebar);
+        }
+
+        // ===== Chart.js Global Değişkenleri =====
+        let userChartInstance = null;
+        let salesChartInstance = null;
+        let listingStatusChartInstance = null;
+
+        // ===== Dashboard Veri Yükleme Fonksiyonları =====
+
+        // Zaman formatlayıcı (Tarih ve Saat)
+        function formatTRDateTime(dateString) {
+             if (!dateString) return '';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleString('tr-TR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                return dateString; 
+            }
+        }
+        
+        // Sadece Tarih formatlayıcı
+        function formatTRDate(dateString) {
+            if (!dateString) return '';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('tr-TR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        // 1. İstatistik Kartlarını Güncelle
+        function updateStats(stats) {
+            document.getElementById('stat-total-users').textContent = stats.total_users || '0';
+            document.getElementById('stat-total-listings').textContent = stats.total_listings || '0';
+            document.getElementById('stat-total-sales').textContent = stats.total_sales || '₺0';
+            document.getElementById('stat-active-auctions').textContent = stats.active_auctions || '0';
+            document.getElementById('stat-pending-orders').textContent = stats.pending_orders || '0';
+        }
+
+        // 2. Tabloları Güncelle (YENİ TASARIMA UYGUN)
+        function updateTables(tables) {
+            const usersList = document.getElementById('list-recent-users');
+            const ordersTbody = document.getElementById('table-recent-orders'); 
+
+            // YENİ: Son Kullanıcılar Listesi (Tablo değil, liste)
+            if (tables.recent_users && tables.recent_users.length > 0) {
+                usersList.innerHTML = tables.recent_users.map(user => `
+                    <li class="py-3 sm:py-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0">
+                                <ion-icon name="person-circle-outline" class="text-3xl text-gray-400 dark:text-gray-500"></ion-icon>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                    ${user.name}
+                                </p>
+                                <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                                    ${user.email}
+                                </p>
+                            </div>
+                            <div class="inline-flex items-center text-xs text-gray-500 dark:text-gray-400">
+                                ${formatTRDate(user.created_at)}
+                            </div>
+                        </div>
+                    </li>
+                `).join('');
+            } else {
+                usersList.innerHTML = '<li class="py-3 text-center text-gray-500 dark:text-gray-400">Yeni kullanıcı kaydı bulunamadı.</li>';
+            }
+
+            // YENİ: Son Siparişler Tablosu
+            if (tables.recent_orders && tables.recent_orders.length > 0) {
+                ordersTbody.innerHTML = tables.recent_orders.map(order => {
+                    const statusText = order.status;
+                    const statusClass = 
+                        statusText === 'Completed' ? 'bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-200' :
+                        statusText === 'Pending Payment' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-200' :
+                        'bg-red-100 text-red-800 dark:bg-red-700 dark:text-red-200'; // Cancelled vb.
+                    
+                    const price = parseFloat(order.total_amount || 0).toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' });
+
+                    return `
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <td class="py-4 px-6 font-medium text-gray-900 dark:text-white">#${order.id}</td>
+                            <td class="py-4 px-6">
+                                <div class="font-medium text-gray-900 dark:text-white">${order.user_name}</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">${formatTRDateTime(order.created_at)}</div>
+                            </td>
+                            <td class="py-4 px-6 text-gray-700 dark:text-gray-300 truncate" title="${order.motorcycle_title || 'N/A'}">
+                                ${order.motorcycle_title ? order.motorcycle_title.substring(0, 30) + '...' : 'İlan Silinmiş'}
+                            </td>
+                            <td class="py-4 px-6 font-semibold text-gray-900 dark:text-white">${price}</td>
+                            <td class="py-4 px-6">
+                                <span class="px-2 py-1 text-xs font-medium rounded-full ${statusClass}">
+                                    ${statusText}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            } else {
+                ordersTbody.innerHTML = '<tr class="bg-white dark:bg-gray-800"><td colspan="5" class="py-4 px-6 text-center text-gray-500 dark:text-gray-400">Yeni sipariş bulunamadı.</td></tr>';
+            }
+        }
+        
+        // 3. Grafikleri Başlat/Güncelle
+        function initCharts(charts) {
+            // Chart.js için genel stil ayarları
+            const chartFontColor = document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280';
+            const chartGridColor = document.documentElement.classList.contains('dark') ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            const chartColors = [
+                '#3B82F6', // blue-500
+                '#10B981', // green-500
+                '#6B7280', // gray-500
+                '#F59E0B', // amber-500
+                '#E11D48', // accent-DEFAULT
+            ];
+
+            // 1. Kullanıcı Grafiği (Çizgi)
+            const userChartCtx = document.getElementById('userChart');
+            if (userChartInstance) userChartInstance.destroy(); // Eski grafiği temizle (bug önler)
+            
+            if (userChartCtx && charts.users) {
+                userChartInstance = new Chart(userChartCtx, {
+                    type: 'line',
+                    data: {
+                        labels: charts.users.labels, // API'den gelen etiketler
+                        datasets: [{
+                            label: 'Yeni Kullanıcılar',
+                            data: charts.users.data, // API'den gelen veri
+                            borderColor: '#3B82F6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.3,
+                            fill: true,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { color: chartFontColor, precision: 0 },
+                                grid: { color: chartGridColor }
+                            },
+                            x: {
+                                ticks: { color: chartFontColor },
+                                grid: { display: false }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
+
+            // 2. Satış Grafiği (Bar)
+            const salesChartCtx = document.getElementById('salesChart');
+            if (salesChartInstance) salesChartInstance.destroy(); // Eski grafiği temizle (bug önler)
+
+            if (salesChartCtx && charts.sales) {
+                salesChartInstance = new Chart(salesChartCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: charts.sales.labels, // API'den gelen etiketler
+                        datasets: [{
+                            label: 'Satış Hacmi (TL)',
+                            data: charts.sales.data, // API'den gelen veri
+                            backgroundColor: '#E11D4899', // accent %60 opacity
+                            borderColor: '#E11D48',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { 
+                                    color: chartFontColor,
+                                    // TL formatı ekle
+                                    callback: function(value, index, ticks) {
+                                        if (value >= 1000) {
+                                            return '₺' + (value / 1000) + 'k';
+                                        }
+                                        return '₺' + value.toLocaleString('tr-TR');
+                                    }
+                                },
+                                grid: { color: chartGridColor }
+                            },
+                            x: {
+                                ticks: { color: chartFontColor },
+                                grid: { display: false }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false }, 
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += '₺' + context.parsed.y.toLocaleString('tr-TR');
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 3. İlan Dağılımı Grafiği (Doughnut)
+            const listingStatusCtx = document.getElementById('listingStatusChart');
+            if (listingStatusChartInstance) listingStatusChartInstance.destroy();
+
+            if (listingStatusCtx && charts.listing_status) {
+                listingStatusChartInstance = new Chart(listingStatusCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: charts.listing_status.labels,
+                        datasets: [{
+                            label: 'İlan Sayısı',
+                            data: charts.listing_status.data,
+                            backgroundColor: chartColors,
+                            hoverOffset: 4,
+                            borderColor: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff', // Arka plana göre border
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: chartFontColor,
+                                    padding: 15,
+                                    boxWidth: 12
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // ===== Ana Veri Çekme Fonksiyonu =====
+        // forceReloadCharts = true parametresi, grafik instanslarını zorla yok edip yeniden çizer (Karanlık mod geçişi için)
+        async function loadDashboardData(forceReloadCharts = false) {
+            
+            if(forceReloadCharts) {
+                if (userChartInstance) userChartInstance.destroy();
+                if (salesChartInstance) salesChartInstance.destroy();
+                if (listingStatusChartInstance) listingStatusChartInstance.destroy();
+            }
+
+            try {
+                const response = await fetch('/api/admin/stats');
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`API hatası: ${response.status} ${response.statusText}. Sunucu mesajı: ${errorText.substring(0, 100)}...`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // 1. Kartları doldur
+                    updateStats(data.stats);
+                    // 2. Tabloları doldur
+                    updateTables(data.tables);
+                    // 3. Grafikleri çiz (Veriyle birlikte)
+                    initCharts(data.charts);
+                } else {
+                    console.error("Dashboard verisi alınamadı:", data.message);
+                    throw new Error(data.message); // Hata fırlat, catch bloğu yakalasın
+                }
+
+            } catch (error) {
+                // Hata durumunda paneli bilgilendir
+                console.error("Dashboard fetch hatası:", error);
+                document.getElementById('stat-total-users').textContent = 'Hata';
+                document.getElementById('stat-total-listings').textContent = 'Hata';
+                document.getElementById('stat-total-sales').textContent = 'Hata';
+                document.getElementById('stat-active-auctions').textContent = 'Hata';
+                document.getElementById('stat-pending-orders').textContent = 'Hata';
+                
+                const errorMessage = `Bağlantı hatası: ${error.message}`;
+                
+                const ordersTbody = document.getElementById('table-recent-orders');
+                if(ordersTbody) ordersTbody.innerHTML = `<tr class="bg-white dark:bg-gray-800"><td colspan="5" class="py-4 px-6 text-center text-red-500">${errorMessage}</td></tr>`;
+                
+                const usersList = document.getElementById('list-recent-users');
+                if(usersList) usersList.innerHTML = `<li class="py-3 text-center text-red-500">${errorMessage}</li>`;
+            }
+        }
+
+        // Sayfa yüklendiğinde verileri çek
+        loadDashboardData();
+
+    });
+    </script>
+</body>
+</html>
+

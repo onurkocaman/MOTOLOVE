@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesajlarım - MotoLove</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { 'sans': ['Inter', 'sans-serif'], },
+                    colors: {
+                        'accent': { 'light': '#F87171', 'DEFAULT': '#E11D48', 'dark': '#BE123C' }
+                    }
+                }
+            }
+        }
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #D1D5DB;
+            background-color: #F9FAFB;
+            color: #111827;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #E11D48;
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+        }
+
+        .dark .form-input {
+            background-color: #374151;
+            border-color: #4B5563;
+            color: #F9FAFB;
+        }
+
+        .dark .form-input:focus {
+            border-color: #E11D48;
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.3);
+        }
+    </style>
+</head>
+
+<body class="font-sans bg-gray-100 dark:bg-gray-900 dark:text-gray-200 antialiased">
+
+    <header
+        class="sticky top-0 z-20 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-sm dark:border-b dark:border-gray-700">
+        <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center space-x-2">
+                <img src="/static/images/motolove.png" alt="MotoLove Logo" class="h-12 w-auto">
+            </a>
+            <div class="flex items-center space-x-5 ml-auto">
+                <a href="/" class="font-medium text-gray-600 dark:text-gray-300 hover:text-accent-DEFAULT">Ana Sayfa</a>
+                <a href="/ilanlar"
+                    class="font-medium text-gray-600 dark:text-gray-300 hover:text-accent-DEFAULT">İlanlar</a>
+                <button id="theme-toggle"
+                    class="text-2xl text-gray-600 dark:text-gray-300 hover:text-accent-dark dark:hover:text-accent-light transition-colors duration-200">
+                    <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                    <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                </button>
+                {% if user_name %}
+                <a href="/profile"
+                    class="flex items-center text-gray-700 dark:text-gray-300 transition-colors group font-semibold">
+                    {% if user_image_url %}
+                    <img src="{{ user_image_url }}" alt="Profil"
+                        class="w-9 h-9 rounded-full object-cover mr-2 border-2 border-gray-200 dark:border-gray-600 group-hover:border-accent-dark">
+                    {% else %}
+                    <ion-icon name="person-circle" class="text-3xl mr-2 text-accent-dark"></ion-icon>
+                    {% endif %}
+                    <span class="hidden md:block font-medium text-sm group-hover:text-accent-dark">{{ user_name
+                        }}</span>
+                </a>
+                <a href="/logout"
+                    class="text-2xl text-gray-600 dark:text-gray-300 hover:text-accent-dark dark:hover:text-accent-light transition-colors duration-200"
+                    title="Çıkış Yap">
+                    <ion-icon name="log-out-outline"></ion-icon>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Mesaj Kutusu</h1>
+
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden" style="height: 70vh;">
+            <div class="flex h-full">
+                <aside id="conversation-list" class="w-full md:w-1/3 border-r dark:border-gray-700 overflow-y-auto">
+                    <div class="p-4 border-b dark:border-gray-700">
+                        <h2 class="text-xl font-semibold">Görüşmeler</h2>
+                    </div>
+                    <div id="conv-list-container">
+                        <p class="p-4 text-center text-gray-500">Konuşmalar yükleniyor...</p>
+                    </div>
+                </aside>
+
+                <section class="w-full md:w-2/3 flex flex-col h-full bg-gray-50 dark:bg-gray-900/50">
+                    <div id="message-header"
+                        class="flex items-center p-4 border-b dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hidden">
+                        <!-- JS ile dolacak -->
+                    </div>
+                    <div id="message-placeholder"
+                        class="flex flex-col items-center justify-center h-full text-gray-500">
+                        <ion-icon name="chatbubbles-outline"
+                            class="text-6xl mb-4 text-gray-300 dark:text-gray-600"></ion-icon>
+                        <p>Görüntülemek için bir konuşma seçin.</p>
+                    </div>
+
+                    <div id="message-area" class="flex-1 overflow-y-auto p-4 space-y-4 hidden">
+                        <!-- JS ile dolacak -->
+                    </div>
+
+                    <form id="message-form" class="p-4 border-t dark:border-gray-700 bg-white dark:bg-gray-800 hidden">
+                        <input type="hidden" id="current-conversation-id">
+                        <div class="flex items-center space-x-3">
+                            <input type="text" id="message-input" class="form-input" placeholder="Mesajınızı yazın..."
+                                required>
+                            <button type="submit"
+                                class="p-3 bg-accent-DEFAULT text-white rounded-full hover:bg-accent-dark transition-colors shadow-lg">
+                                <ion-icon name="send-outline" class="text-xl"></ion-icon>
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const handleThemeToggle = () => {
+                const isDarkMode = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('color-theme', isDarkMode ? 'dark' : 'light');
+            };
+            if (themeToggleBtn) themeToggleBtn.addEventListener('click', handleThemeToggle);
+
+            const convListContainer = document.getElementById('conv-list-container');
+            const messageHeader = document.getElementById('message-header');
+            const messageArea = document.getElementById('message-area');
+            const messageForm = document.getElementById('message-form');
+            const messagePlaceholder = document.getElementById('message-placeholder');
+
+            const currentConversationIdInput = document.getElementById('current-conversation-id');
+            const messageInput = document.getElementById('message-input');
+
+            const currentUserId = {{ user_id | tojson
+        }};
+        let selectedConversationId = null;
+
+        async function loadConversations() {
+            try {
+                const response = await fetch('/api/messages/conversations');
+                const data = await response.json();
+
+                if (!data.success) throw new Error(data.message);
+
+                if (data.conversations.length === 0) {
+                    convListContainer.innerHTML = '<p class="p-4 text-center text-gray-500">Hiç konuşmanız bulunmuyor.</p>';
+                    return;
+                }
+
+                convListContainer.innerHTML = data.conversations.map(conv => `
+                    <div class="p-4 border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer conversation-item transition-colors duration-200 ${selectedConversationId == conv.conversation_id ? 'bg-gray-100 dark:bg-gray-700 border-l-4 border-l-accent-DEFAULT' : ''}"
+                         data-conversation-id="${conv.conversation_id}"
+                         data-recipient-name="${conv.other_user_name}"
+                         data-recipient-image="${conv.other_user_image || '/static/images/default-avatar.png'}"
+                         data-listing-title="${conv.listing_title}">
+                        
+                        <div class="flex items-center space-x-3">
+                            <div class="relative">
+                                <img src="${conv.other_user_image || '/static/images/default-avatar.png'}" alt="${conv.other_user_name}" class="w-12 h-12 rounded-full object-cover border border-gray-200 dark:border-gray-600">
+                                ${conv.unread_count > 0 ? `<span class="absolute -top-1 -right-1 bg-accent-DEFAULT text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm">${conv.unread_count}</span>` : ''}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-center mb-1">
+                                    <p class="font-semibold truncate text-gray-900 dark:text-white">${conv.other_user_name}</p>
+                                    <span class="text-xs text-gray-500">${conv.last_message_time ? new Date(conv.last_message_time).toLocaleDateString() : ''}</span>
+                                </div>
+                                <p class="text-xs font-medium text-accent-DEFAULT truncate mb-0.5">${conv.listing_title || 'Genel Sohbet'}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 truncate">${conv.last_message || '...'}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error("Konuşmalar yüklenemedi:", error);
+                convListContainer.innerHTML = `<p class="p-4 text-center text-red-500">Hata: ${error.message}</p>`;
+            }
+        }
+
+        async function loadMessages(conversationId, recipientName, recipientImage, listingTitle) {
+            selectedConversationId = conversationId;
+
+            document.querySelectorAll('.conversation-item').forEach(el => {
+                el.classList.remove('bg-gray-100', 'dark:bg-gray-700', 'border-l-4', 'border-l-accent-DEFAULT');
+                if (el.dataset.conversationId == conversationId) {
+                    el.classList.add('bg-gray-100', 'dark:bg-gray-700', 'border-l-4', 'border-l-accent-DEFAULT');
+                    const unreadBadge = el.querySelector('span.absolute');
+                    if (unreadBadge) unreadBadge.remove();
+                }
+            });
+
+            messagePlaceholder.classList.add('hidden');
+            messageHeader.classList.remove('hidden');
+            messageArea.classList.remove('hidden');
+            messageForm.classList.remove('hidden');
+
+            messageHeader.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <img src="${recipientImage}" alt="${recipientName}" class="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-gray-600">
+                    <div>
+                        <p class="font-bold text-gray-900 dark:text-white">${recipientName}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">${listingTitle || 'Genel Sohbet'}</p>
+                    </div>
+                </div>
+            `;
+
+            messageArea.innerHTML = '<div class="flex justify-center p-4"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-DEFAULT"></div></div>';
+            currentConversationIdInput.value = conversationId;
+
+            try {
+                const response = await fetch(`/api/messages/conversation/${conversationId}`);
+                const data = await response.json();
+
+                if (!data.success) throw new Error(data.message);
+
+                if (data.messages.length === 0) {
+                    messageArea.innerHTML = '<div class="text-center text-gray-400 py-10">Henüz mesaj yok. İlk mesajı siz gönderin!</div>';
+                } else {
+                    messageArea.innerHTML = data.messages.map(msg => {
+                        const isSender = msg.sender_id == currentUserId;
+                        return `
+                            <div class="flex ${isSender ? 'justify-end' : 'justify-start'} mb-2">
+                                <div class="max-w-[80%] md:max-w-[70%] p-3 rounded-2xl ${isSender ? 'bg-red-600 text-white rounded-tr-sm' : 'bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-tl-sm'}">
+                                    <p class="text-sm leading-relaxed">${msg.content}</p>
+                                    <p class="text-[10px] ${isSender ? 'text-red-100' : 'text-gray-500 dark:text-gray-400'} mt-1 text-right opacity-80">${new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                messageArea.scrollTop = messageArea.scrollHeight;
+                scrollToBottom();
+
+            } catch (error) {
+                console.error("Mesajlar yüklenemedi:", error);
+                messageArea.innerHTML = `<p class="p-4 text-center text-red-500">Hata: ${error.message}</p>`;
+            }
+        }
+
+        convListContainer.addEventListener('click', (e) => {
+            const item = e.target.closest('.conversation-item');
+            if (item) {
+                const { conversationId, recipientName, recipientImage, listingTitle } = item.dataset;
+                loadMessages(conversationId, recipientName, recipientImage, listingTitle);
+            }
+        });
+
+        messageForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const content = messageInput.value;
+            const conversationId = currentConversationIdInput.value;
+
+            if (!content || !conversationId) return;
+
+            const tempMessageContent = content;
+            messageInput.value = '';
+
+            // Optimistic UI
+            const tempMessageEl = document.createElement('div');
+            tempMessageEl.className = 'flex justify-end mb-2 opacity-70';
+            tempMessageEl.innerHTML = `
+                <div class="max-w-[80%] md:max-w-[70%] p-3 rounded-2xl bg-red-600 text-white rounded-tr-sm">
+                    <p class="text-sm leading-relaxed">${tempMessageContent}</p>
+                    <p class="text-[10px] text-red-100 mt-1 text-right">Gönderiliyor...</p>
+                </div>
+            `;
+            messageArea.appendChild(tempMessageEl);
+            messageArea.appendChild(tempMessageEl);
+            scrollToBottom();
+
+            try {
+                const response = await fetch('/api/messages/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        content: tempMessageContent,
+                        conversation_id: conversationId
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    tempMessageEl.classList.remove('opacity-70');
+                    tempMessageEl.classList.remove('opacity-70');
+                    const timeEl = tempMessageEl.querySelector('p:last-child');
+                    if (timeEl) timeEl.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                    loadConversations(); // Update list order
+                    // Optional: Authenticate exact state by reloading messages slightly later or just trust optimistic
+                    // For now, trusting optimistic but ensure bottom scroll
+                    scrollToBottom();
+                } else {
+                    throw new Error(data.message || 'Gönderilemedi');
+                }
+
+            } catch (error) {
+                console.error("Mesaj gönderme hatası:", error);
+                tempMessageEl.remove();
+                messageInput.value = tempMessageContent;
+                alert(`Hata: ${error.message}`);
+            }
+        });
+
+        // Scroll to bottom helper
+        function scrollToBottom() {
+            setTimeout(() => {
+                messageArea.scrollTop = messageArea.scrollHeight;
+            }, 50);
+        }
+
+        loadConversations();
+    });
+    </script>
+</body>
+
+</html>

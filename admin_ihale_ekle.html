@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yeni İhale Ekle - Admin Paneli</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- icon kütüphanesi -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'accent': {
+                            'light': '#F87171',
+                            'DEFAULT': '#E11D48', // Ana Vurgu Rengi
+                            'dark': '#BE123C',
+                        }
+                    }
+                }
+            }
+        }
+        // Karanlık Mod Kontrolü
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <style>
+        /* Kaydırma çubuğu stilleri */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a0aec0; }
+        .dark ::-webkit-scrollbar-thumb { background: #4a5568; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #718096; }
+
+        /* Aktif sidebar linki (Hala İhale Yönetiminde kalsın) */
+        .sidebar-link-active {
+            background-color: #fef2f2; /* light mode */
+            color: #E11D48;
+            font-weight: 600;
+        }
+        .dark .sidebar-link-active {
+            background-color: #4b1b25; /* dark mode */
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-100 dark:bg-gray-900 dark:text-gray-200 antialiased">
+
+    <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
+        
+        <!-- ===== Sol Sidebar ===== -->
+        <aside id="sidebar" class="z-40 w-64 flex-shrink-0 space-y-6 bg-white dark:bg-gray-800 shadow-lg fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out lg:static lg:inset-0">
+            <!-- Logo -->
+            <div class="flex items-center justify-center h-20 border-b dark:border-gray-700">
+                <a href="/admin">
+                    <img src="/static/images/motolove.png" alt="MotoLove Logo" class="h-16 w-auto"> 
+                </a>
+            </div>
+            
+            <!-- Navigasyon (AKTİF LİNK AYNI KALSIN) -->
+            <nav class="mt-6 flex-1 px-4 space-y-2">
+                <a href="/admin" class="group flex items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <ion-icon name="grid-outline" class="text-xl mr-3"></ion-icon>
+                    <span>Gösterge Paneli</span>
+                </a>
+                
+                <a href="/admin/ilan_yonetimi" class="group flex items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <ion-icon name="list-outline" class="text-xl mr-3"></ion-icon>
+                    <span>İlan Yönetimi</span>
+                </a>
+
+                <!-- Aktif Link -->
+                <a href="/admin/ihale_yonetimi" class="group sidebar-link-active flex items-center px-4 py-3 rounded-lg transition-colors duration-200">
+                    <ion-icon name="hammer-outline" class="text-xl mr-3"></ion-icon>
+                    <span>İhale Yönetimi</span>
+                </a>
+                
+                <a href="/admin/kullanici_yonetimi" class="group flex items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <ion-icon name="people-outline" class="text-xl mr-3"></ion-icon>
+                    <span>Kullanıcı Yönetimi</span>
+                </a>
+
+                 <a href="/admin/siparis_yonetimi" class="group flex items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <ion-icon name="receipt-outline" class="text-xl mr-3"></ion-icon>
+                    <span>Sipariş Yönetimi</span>
+                </a>
+
+
+                <div class="border-t dark:border-gray-700 my-4"></div>
+
+                <a href="/" class="group flex items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <ion-icon name="arrow-back-outline" class="text-xl mr-3"></ion-icon>
+                    <span>Siteye Dön</span>
+                </a>
+            </nav>
+        </aside>
+        <!-- ===== /Sol Sidebar ===== -->
+
+        <!-- Overlay -->
+        <div id="sidebar-overlay" class="lg:hidden fixed inset-0 z-30 bg-black/50 transition-opacity duration-300 ease-in-out opacity-0 pointer-events-none"></div>
+
+        <!-- ===== Ana İçerik Alanı ===== -->
+        <div class="flex-1 flex flex-col h-screen overflow-y-auto">
+            
+            <!-- Üst Header -->
+            <header class="sticky top-0 z-20 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-sm dark:border-b dark:border-gray-700">
+                <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+                    
+                    <!-- Mobil Menü Butonu (Sadece mobil) -->
+                    <button id="mobile-menu-button" class="lg:hidden text-2xl text-gray-700 dark:text-gray-300">
+                        <ion-icon name="menu-outline"></ion-icon>
+                    </button>
+
+                    <!-- Arama Çubuğu (Göstermelik) -->
+                    <div class="hidden md:block relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <ion-icon name="search-outline" class="text-gray-400"></ion-icon>
+                        </span>
+                        <input type="text" class="w-full max-w-sm pl-10 pr-4 py-2 rounded-lg border bg-gray-100 dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-accent-dark" placeholder="Ara...">
+                    </div>
+
+                    <!-- Sağ Taraf Kullanıcı Menüsü -->
+                    <div class="flex items-center space-x-5 ml-auto">
+                        <button id="theme-toggle" class="text-2xl text-gray-600 dark:text-gray-300 hover:text-accent-dark dark:hover:text-accent-light transition-colors duration-200">
+                            <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                            <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                        </button>
+
+                        {% if user_name %}
+                        <a href="/profile" class="flex items-center text-gray-700 dark:text-gray-300 transition-colors group font-semibold">
+                            {% if user_image_url %}
+                                <img src="{{ user_image_url }}" alt="Profil" class="w-9 h-9 rounded-full object-cover mr-2 border-2 border-gray-200 dark:border-gray-600 group-hover:border-accent-dark">
+                            {% else %}
+                                <ion-icon name="person-circle" class="text-3xl mr-2 text-accent-dark"></ion-icon>
+                            {% endif %}
+                            <span class="hidden md:block font-medium text-sm group-hover:text-accent-dark">{{ user_name }}</span>
+                        </a>
+                        <a href="/logout" class="text-2xl text-gray-600 dark:text-gray-300 hover:text-accent-dark dark:hover:text-accent-light transition-colors duration-200" title="Çıkış Yap">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </header>
+
+            <!-- Ana İçerik (DEĞİŞTİ) -->
+            <main class="flex-1 p-6 md:p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+                        Yeni İhale Oluştur
+                    </h1>
+                    <a href="/admin/ihale_yonetimi" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-sm font-medium text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                        <ion-icon name="arrow-back-outline" class="mr-1 -ml-1"></ion-icon>
+                        Geri Dön
+                    </a>
+                </div>
+
+                <!-- ===== Yeni İhale Formu ===== -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 md:p-8">
+                    
+                    <!-- Hata/Başarı Mesaj Alanı -->
+                    <div id="message-container" class="hidden p-4 mb-4 text-sm rounded-lg" role="alert">
+                        <span id="message-text"></span>
+                    </div>
+
+                    <form id="new-auction-form" class="space-y-6">
+                        
+                        <!-- Satır 1: Başlık -->
+                        <div>
+                            <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">İhale Başlığı <span class="text-red-500">*</span></label>
+                            <input type="text" id="title" name="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-dark focus:border-accent-dark block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Örn: 2023 Model Yamaha R25" required>
+                        </div>
+
+                        <!-- Satır 2: Açıklama -->
+                        <div>
+                            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Açıklama</label>
+                            <textarea id="description" name="description" rows="4" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-dark focus:border-accent-dark block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Motor hakkında detaylı bilgiler..."></textarea>
+                        </div>
+                        
+                        <!-- Satır 3: Motosiklet Seçimi (DEĞİŞTİ) -->
+                        <div>
+                            <label for="motorcycle_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">İhaleye Çıkarılacak Motosiklet <span class="text-red-500">*</span></label>
+                            <select id="motorcycle_id" name="motorcycle_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-dark focus:border-accent-dark block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {% if not motorcycles %}disabled:opacity-50 disabled:cursor-not-allowed{% endif %}" required {% if not motorcycles %}disabled{% endif %}>
+                                <option value="">-- Lütfen bir motosiklet seçin --</option>
+                                
+                                <!-- Burası app.py'den gelen 'motorcycles' listesi ile dolacak -->
+                                {% if motorcycles %}
+                                    {% for motor in motorcycles %}
+                                    <option value="{{ motor.id }}">
+                                        {{ motor.title }} (ID: {{ motor.id }})
+                                    </option>
+                                    {% endfor %}
+                                {% endif %}
+                                <!-- Eğer motosiklet yoksa, bu select zaten disabled olacak, içini doldurmaya gerek yok -->
+                            </select>
+                            {% if not motorcycles %}
+                                <p class="mt-2 text-sm text-yellow-600 dark:text-yellow-400">
+                                    <ion-icon name="warning-outline" class="inline-block align-text-bottom mr-1"></ion-icon>
+                                    İhaleye uygun 'Satılık' ve 'Aktif' statüde motosiklet bulunamadı.
+                                </p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Satır 4: Fiyatlandırma (Grid) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="starting_price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Başlangıç Fiyatı (₺) <span class="text-red-500">*</span></label>
+                                <input type="number" id="starting_price" name="starting_price" min="0" step="100" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-dark focus:border-accent-dark block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="150000" required>
+                            </div>
+                            <div>
+                                <label for="min_increment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Minimum Artış Tutarı (₺) <span class="text-red-500">*</span></label>
+                                <input type="number" id="min_increment" name="min_increment" min="1" step="1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-dark focus:border-accent-dark block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="1000" required>
+                            </div>
+                        </div>
+
+                        <!-- Satır 5: Tarihler (Grid) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="start_time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Başlangıç Zamanı <span class="text-red-500">*</span></label>
+                                <input type="datetime-local" id="start_time" name="start_time" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-dark focus:border-accent-dark block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                            </div>
+                            <div>
+                                <label for="end_time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bitiş Zamanı <span class="text-red-500">*</span></label>
+                                <input type="datetime-local" id="end_time" name="end_time" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-dark focus:border-accent-dark block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                            </div>
+                        </div>
+
+                        <!-- Satır 6: Fotoğraf Yükleme -->
+                        <div>
+                             <label for="image" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">İhale Fotoğrafı <span class="text-red-500">*</span></label>
+                            <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="image" name="image" type="file" accept="image/png, image/jpeg, image/webp" required>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400" id="file_input_help">PNG, JPG veya WEBP (Maks 5MB).</p>
+                        </div>
+
+                        <!-- Satır 7: Kaydet Butonu -->
+                        <div class="flex justify-end pt-4 border-t dark:border-gray-700">
+                            <button type="submit" id="submit-button" class="px-6 py-3 bg-accent-DEFAULT text-white rounded-lg font-medium hover:bg-accent-dark transition-colors flex items-center">
+                                <span id="submit-text">İhaleyi Oluştur</span>
+                                <span id="submit-spinner" class="hidden">
+                                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                </span>
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+                <!-- ===== /Yeni İhale Formu ===== -->
+
+            </main>
+        </div>
+        <!-- ===== /Ana İçerik Alanı ===== -->
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        // ===== Karanlık Mod Toggle =====
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const handleThemeToggle = () => {
+            const isDarkMode = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('color-theme', isDarkMode ? 'dark' : 'light');
+        };
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', handleThemeToggle);
+        }
+
+        // ===== Mobil Sidebar Toggle =====
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const mobileMenuIcon = mobileMenuButton.querySelector('ion-icon');
+
+        const toggleSidebar = () => {
+            if (sidebar && overlay && mobileMenuIcon) {
+                const isOpen = sidebar.classList.toggle('-translate-x-full');
+                sidebar.classList.toggle('lg:translate-x-0');
+                overlay.classList.toggle('opacity-0');
+                overlay.classList.toggle('pointer-events-none');
+                mobileMenuIcon.setAttribute('name', isOpen ? 'menu-outline' : 'close-outline');
+            }
+        };
+
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', toggleSidebar);
+        }
+        if (overlay) {
+            overlay.addEventListener('click', toggleSidebar);
+        }
+        
+        // ===== Form Gönderme İşlemi (AJAX/Fetch) =====
+        const form = document.getElementById('new-auction-form');
+        const submitButton = document.getElementById('submit-button');
+        const submitText = document.getElementById('submit-text');
+        const submitSpinner = document.getElementById('submit-spinner');
+        const messageContainer = document.getElementById('message-container');
+        const messageText = document.getElementById('message-text');
+
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // Tarih kontrolü
+                const startTime = new Date(document.getElementById('start_time').value);
+                const endTime = new Date(document.getElementById('end_time').value);
+                
+                if (endTime <= startTime) {
+                    showMessage('Bitiş tarihi, başlangıç tarihinden sonra olmalıdır.', 'error');
+                    return;
+                }
+
+                // Butonu yükleme moduna al
+                submitButton.disabled = true;
+                submitText.classList.add('hidden');
+                submitSpinner.classList.remove('hidden');
+                messageContainer.classList.add('hidden');
+
+                const formData = new FormData(form);
+                
+                try {
+                    const response = await fetch('/admin/ihale/ekle', {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        showMessage(result.message || 'İhale başarıyla oluşturuldu!', 'success');
+                        form.reset();
+                        // Başarı sonrası yönlendirme
+                        setTimeout(() => {
+                            window.location.href = '/admin/ihale_yonetimi';
+                        }, 2000);
+                    } else {
+                        // Sunucudan gelen hatayı göster
+                        showMessage(result.error || 'Bir hata oluştu.', 'error');
+                    }
+
+                } catch (error) {
+                    console.error('Form gönderme hatası:', error);
+                    showMessage('Sunucuyla iletişim kurulamadı. Lütfen internet bağlantınızı kontrol edin.', 'error');
+                } finally {
+                    // Butonu tekrar aktif et
+                    submitButton.disabled = false;
+                    submitText.classList.remove('hidden');
+                    submitSpinner.classList.add('hidden');
+                }
+            });
+        }
+        
+        // ===== Mesaj Gösterme Fonksiyonu =====
+        function showMessage(message, type = 'error') {
+            if (!messageContainer || !messageText) return;
+
+            messageText.textContent = message;
+            
+            // Mevcut sınıfları temizle
+            messageContainer.classList.remove('bg-red-100', 'border-red-400', 'text-red-700', 'dark:bg-red-900', 'dark:text-red-200');
+            messageContainer.classList.remove('bg-green-100', 'border-green-400', 'text-green-700', 'dark:bg-green-900', 'dark:text-green-200');
+
+            if (type === 'success') {
+                messageContainer.classList.add('bg-green-100', 'border-green-400', 'text-green-700', 'dark:bg-green-900', 'dark:text-green-200');
+            } else {
+                messageContainer.classList.add('bg-red-100', 'border-red-400', 'text-red-700', 'dark:bg-red-900', 'dark:text-red-200');
+            }
+            
+            messageContainer.classList.remove('hidden');
+            
+            // Ekranın üstüne kaydır
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // ===== Tarih Alanlarına Varsayılan Değer Atama (Opsiyonel ama kullanışlı) =====
+        // Başlangıç zamanını şu an + 10 dk olarak ayarla
+        const now = new Date();
+        now.setMinutes(now.getMinutes() + 10);
+        now.setSeconds(0); // Saniyeyi sıfırla
+        const startTimeInput = document.getElementById('start_time');
+        if(startTimeInput) {
+             startTimeInput.value = now.toISOString().slice(0, 16);
+        }
+
+        // Bitiş zamanını 1 gün sonrası olarak ayarla
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const endTimeInput = document.getElementById('end_time');
+        if(endTimeInput) {
+            endTimeInput.value = tomorrow.toISOString().slice(0, 16);
+        }
+
+    });
+    </script>
+</body>
+</html>

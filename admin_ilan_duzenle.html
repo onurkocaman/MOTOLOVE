@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İlan Düzenle - Admin Paneli</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { 'sans': ['Inter', 'sans-serif'], },
+                    colors: {
+                        'accent': { 'light': '#F87171', 'DEFAULT': '#E11D48', 'dark': '#BE123C' }
+                    }
+                }
+            }
+        }
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #4a5568; }
+        .sidebar-link-active { background-color: #fef2f2; color: #E11D48; font-weight: 600; }
+        .dark .sidebar-link-active { background-color: #4b1b25; }
+        .required-label::after { content: '*'; color: #E11D48; margin-left: 0.25rem; }
+    </style>
+</head>
+<body class="font-sans bg-gray-100 dark:bg-gray-900 dark:text-gray-200 antialiased">
+
+    <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
+        
+        <!-- ===== Sol Sidebar (Kopyalandı) ===== -->
+        <aside id="sidebar" class="z-40 w-64 flex-shrink-0 space-y-6 bg-white dark:bg-gray-800 shadow-lg fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out lg:static lg:inset-0">
+            <div class="flex items-center justify-center h-20 border-b dark:border-gray-700">
+                <a href="/admin">
+                    <img src="/static/images/motolove.png" alt="MotoLove Logo" class="h-16 w-auto"> 
+                </a>
+            </div>
+            
+            <nav class="mt-6 flex-1 px-4 space-y-2">
+                <a href="/admin" class="group flex items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <ion-icon name="grid-outline" class="text-xl mr-3"></ion-icon>
+                    <span>Gösterge Paneli</span>
+                </a>
+                <a href="/admin/ilan_yonetimi" class="group sidebar-link-active flex items-center px-4 py-3 rounded-lg transition-colors duration-200">
+                    <ion-icon name="list-outline" class="text-xl mr-3"></ion-icon>
+                    <span>İlan Yönetimi</span>
+                </a>
+                <a href="/admin/ihale_yonetimi" class="group flex items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <ion-icon name="hammer-outline" class="text-xl mr-3"></ion-icon>
+                    <span>İhale Yönetimi</span>
+                </a>
+                <a href="/admin/kullanici_yonetimi" class="group flex items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <ion-icon name="people-outline" class="text-xl mr-3"></ion-icon>
+                    <span>Kullanıcı Yönetimi</span>
+                </a>
+                 <a href="/admin/siparis_yonetimi" class="group flex items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <ion-icon name="receipt-outline" class="text-xl mr-3"></ion-icon>
+                    <span>Sipariş Yönetimi</span>
+                </a>
+                <div class="border-t dark:border-gray-700 my-4"></div>
+                <a href="/" class="group flex items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">
+                    <ion-icon name="arrow-back-outline" class="text-xl mr-3"></ion-icon>
+                    <span>Siteye Dön</span>
+                </a>
+            </nav>
+        </aside>
+        <!-- ===== /Sol Sidebar ===== -->
+
+        <div id="sidebar-overlay" class="lg:hidden fixed inset-0 z-30 bg-black/50 transition-opacity duration-300 ease-in-out opacity-0 pointer-events-none"></div>
+
+        <!-- ===== Ana İçerik Alanı ===== -->
+        <div class="flex-1 flex flex-col h-screen overflow-y-auto">
+            
+            <!-- Üst Header (Kopyalandı) -->
+            <header class="sticky top-0 z-20 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-sm dark:border-b dark:border-gray-700">
+                <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+                    <button id="mobile-menu-button" class="lg:hidden text-2xl text-gray-700 dark:text-gray-300">
+                        <ion-icon name="menu-outline"></ion-icon>
+                    </button>
+                    <div class="hidden md:block relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3"><ion-icon name="search-outline" class="text-gray-400"></ion-icon></span>
+                        <input type="text" class="w-full max-w-sm pl-10 pr-4 py-2 rounded-lg border bg-gray-100 dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-accent-dark" placeholder="Ara...">
+                    </div>
+                    <div class="flex items-center space-x-5 ml-auto">
+                        <button id="theme-toggle" class="text-2xl text-gray-600 dark:text-gray-300 hover:text-accent-dark dark:hover:text-accent-light transition-colors duration-200">
+                            <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                            <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                        </button>
+                        {% if user_name %}
+                        <a href="/profile" class="flex items-center text-gray-700 dark:text-gray-300 transition-colors group font-semibold">
+                            {% if user_image_url %}
+                                <img src="{{ user_image_url }}" alt="Profil" class="w-9 h-9 rounded-full object-cover mr-2 border-2 border-gray-200 dark:border-gray-600 group-hover:border-accent-dark">
+                            {% else %}
+                                <ion-icon name="person-circle" class="text-3xl mr-2 text-accent-dark"></ion-icon>
+                            {% endif %}
+                            <span class="hidden md:block font-medium text-sm group-hover:text-accent-dark">{{ user_name }}</span>
+                        </a>
+                        <a href="/logout" class="text-2xl text-gray-600 dark:text-gray-300 hover:text-accent-dark dark:hover:text-accent-light transition-colors duration-200" title="Çıkış Yap">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </header>
+
+            <!-- Ana İçerik: İlan Düzenleme Formu -->
+            <main class="flex-1 p-6 md:p-8">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+                    İlan Düzenle (ID: {{ listing.id }})
+                </h1>
+
+                <!-- Form Alanı -->
+                <div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 md:p-8">
+                    <!-- listing nesnesi app.py'den gönderilir -->
+                    <form id="edit-listing-form" class="space-y-6">
+                        
+                        <div id="form-notification" class="hidden p-4 rounded-lg"></div>
+
+                        <div class="border-b dark:border-gray-700 pb-6">
+                            <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">İlan Bilgileri</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="ad-user-id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white required-label">İlan Sahibi (Kullanıcı ID)</label>
+                                    <input type="number" id="ad-user-id" name="ad-user-id" class="form-input" value="{{ listing.user_id }}" required>
+                                </div>
+                                <div>
+                                    <label for="ad-category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white required-label">Kategori</label>
+                                    <select id="ad-category" name="ad-category" class="form-input" required>
+                                        <option value="Satılık" {% if listing.category == 'Satılık' %}selected{% endif %}>Satılık</option>
+                                        <option value="Kiralık" {% if listing.category == 'Kiralık' %}selected{% endif %}>Kiralık</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mt-6">
+                                <label for="ad-title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white required-label">İlan Başlığı</label>
+                                <input type="text" id="ad-title" name="ad-title" class="form-input" value="{{ listing.title }}" required>
+                            </div>
+                        </div>
+
+                        <div class="border-b dark:border-gray-700 pb-6">
+                            <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Motosiklet Detayları</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div>
+                                    <label for="ad-brand" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white required-label">Marka</label>
+                                    <input type="text" id="ad-brand" name="ad-brand" class="form-input" value="{{ listing.brand }}" required>
+                                </div>
+                                <div>
+                                    <label for="ad-model" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white required-label">Model</label>
+                                    <input type="text" id="ad-model" name="ad-model" class="form-input" value="{{ listing.model }}" required>
+                                </div>
+                                <div>
+                                    <label for="ad-year" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white required-label">Yıl</label>
+                                    <input type="number" id="ad-year" name="ad-year" class="form-input" value="{{ listing.year }}" required>
+                                </div>
+                                <div>
+                                    <label for="ad-km" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white required-label">Kilometre</label>
+                                    <input type="number" id="ad-km" name="ad-km" class="form-input" value="{{ listing.km }}" required>
+                                </div>
+                                <div>
+                                    <label for="ad-condition" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white required-label">Durumu</label>
+                                    <select id="ad-condition" name="ad-condition" class="form-input" required>
+                                        <option value="new" {% if listing.condition == 'Sıfır' %}selected{% endif %}>Sıfır</option>
+                                        <option value="used" {% if listing.condition == 'İkinci El' %}selected{% endif %}>İkinci El</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="ad-price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white required-label">Fiyat (TL)</label>
+                                    <input type="number" step="0.01" id="ad-price" name="ad-price" class="form-input" value="{{ listing.price }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-b dark:border-gray-700 pb-6">
+                            <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Açıklama ve Konum</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="ad-location" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white required-label">Konum</label>
+                                    <input type="text" id="ad-location" name="ad-location" class="form-input" value="{{ listing.location }}" required>
+                                </div>
+                                <div>
+                                    <label for="ad-contact" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white required-label">İletişim Bilgisi</label>
+                                    <input type="text" id="ad-contact" name="ad-contact" class="form-input" value="{{ listing.contact_info }}" required>
+                                </div>
+                            </div>
+                            <div class="mt-6">
+                                <label for="ad-description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Açıklama</label>
+                                <textarea id="ad-description" name="ad-description" rows="4" class="form-input" placeholder="Motorun özellikleri, hasar durumu vb.">{{ listing.description }}</textarea>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">İlan Fotoğrafı</h2>
+                            <div class="flex items-center space-x-4">
+                                {% if listing.image_url %}
+                                    <img src="{{ listing.image_url }}" alt="Mevcut Fotoğraf" class="w-24 h-24 object-cover rounded-lg border dark:border-gray-600">
+                                {% endif %}
+                                <div>
+                                    <input type="file" id="ad-photos" name="ad-photos" class="form-input" accept="image/png, image/jpeg, image/webp">
+                                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Yeni bir fotoğraf yüklerseniz eskisi değişir. Boş bırakırsanız mevcut fotoğraf korunur.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-6 text-right">
+                            <button type="submit" id="submit-button" class="px-8 py-3 bg-accent-DEFAULT text-white rounded-lg font-semibold hover:bg-accent-dark transition-colors duration-300 shadow-lg">
+                                Değişiklikleri Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <style>
+        .form-input {
+            width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #D1D5DB;
+            background-color: #F9FAFB; color: #111827; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-input:focus { outline: none; border-color: #E11D48; box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2); }
+        .dark .form-input { background-color: #374151; border-color: #4B5563; color: #F9FAFB; }
+        .dark .form-input:focus { border-color: #E11D48; box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.3); }
+    </style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // ===== Sidebar ve Theme Toggle (Kopyalandı) =====
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const handleThemeToggle = () => {
+            const isDarkMode = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('color-theme', isDarkMode ? 'dark' : 'light');
+        };
+        if (themeToggleBtn) themeToggleBtn.addEventListener('click', handleThemeToggle);
+
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const mobileMenuIcon = mobileMenuButton.querySelector('ion-icon');
+
+        const toggleSidebar = () => {
+            if (sidebar && overlay && mobileMenuIcon) {
+                const isOpen = sidebar.classList.toggle('-translate-x-full');
+                sidebar.classList.toggle('translate-x-0');
+                overlay.classList.toggle('opacity-0');
+                overlay.classList.toggle('pointer-events-none');
+                mobileMenuIcon.setAttribute('name', isOpen ? 'menu-outline' : 'close-outline');
+            }
+        };
+        if (mobileMenuButton) mobileMenuButton.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // ===== Form Gönderme (Güncelleme) =====
+        const form = document.getElementById('edit-listing-form');
+        const submitButton = document.getElementById('submit-button');
+        const notification = document.getElementById('form-notification');
+        const listingId = {{ listing.id }}; // ID'yi Flask'tan al
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            submitButton.disabled = true;
+            submitButton.textContent = 'Kaydediliyor...';
+            showNotification(null);
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(`/api/admin/listing/update/${listingId}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showNotification(data.message, 'success');
+                    // Başarılı olunca 2 saniye sonra ilan yönetimine yönlendir
+                    setTimeout(() => {
+                        window.location.href = '/admin/ilan_yonetimi';
+                    }, 2000);
+                } else {
+                    throw new Error(data.message || `HTTP Hata: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('İlan güncelleme hatası:', error);
+                showNotification(error.message, 'error');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Değişiklikleri Kaydet';
+            }
+        });
+
+        function showNotification(message, type = 'error') {
+            if (!message) {
+                notification.classList.add('hidden');
+                return;
+            }
+            notification.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
+            if (type === 'success') {
+                notification.classList.add('bg-green-100', 'text-green-700');
+            } else {
+                notification.classList.add('bg-red-100', 'text-red-700');
+            }
+            notification.textContent = message;
+            window.scrollTo(0, 0);
+        }
+    });
+    </script>
+</body>
+</html>

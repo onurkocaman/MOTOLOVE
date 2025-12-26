@@ -1,0 +1,2486 @@
+<!DOCTYPE html>
+<!-- YENİ: Dark mode için <html> tag'i izlenecek -->
+<html lang="tr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MotoLove | Aşkla Sür, Geleceği Yaşa</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/static/images/favicon.png" type="image/png">
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- SVG İkonları için (Ionicons) -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <!-- Parçacık Efekti (tsParticles) Kütüphanesi -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.9.3/tsparticles.bundle.min.js"></script>
+
+    <!-- YENİ: 3D Kart Efekti (Vanilla Tilt) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
+    <!-- YENİ: 3D Model Görüntüleyici (Google) -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+
+    <!-- YENİ: Hover Sesi (Tone.js) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+
+    <!-- YENİ: Dark Mode'u etkinleştirmek için yapılandırma -->
+    <script>
+        // Tailwind'in dark mode'u 'class' bazlı kullanmasını sağlıyoruz
+        tailwind.config = {
+            darkMode: 'class', // 'media' (tarayıcı ayarı) yerine 'class' (manuel toggle)
+            theme: {
+                extend: {
+                    // Tema renklerini buraya ekleyebilirsiniz (isteğe bağlı)
+                }
+            }
+        }
+
+        // Sayfa yüklenir yüklenmez 'dark' class'ını kontrol et
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+
+    <style>
+        /* * YENİ TEMA: MotoLove
+         * Felsefe: Temiz, profesyonel, aydınlık fütürizm.
+         * Renkler: Tutkulu bir gül kırmızısı (Rose) ve temiz beyaz/gri tonları.
+         */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1F2937;
+            /* Tailwind: text-gray-800 */
+            /* Animasyonlu Gradient Arka Plan */
+            background: linear-gradient(-45deg, #f8fafb, #fff7f7, #ffeaea, #f8fafb);
+            background-size: 400% 400%;
+            animation: gradient-background-animation 15s ease infinite;
+
+            /* Dark Mode Geçişi */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* === YENİ: DARK MODE STİLLERİ === */
+        .dark body {
+            color: #E5E7EB;
+            /* Tailwind: text-gray-200 */
+            /* Dark Mode için farklı bir arka plan animasyonu */
+            background: linear-gradient(-45deg, #111827, #1f2937, #111827);
+            background-size: 400% 400%;
+            animation: gradient-background-animation 15s ease infinite;
+        }
+
+        /* Navbar Dark Mode */
+        .dark .navbar-scrolled {
+            background-color: rgba(17, 24, 39, 0.85);
+            /* dark:bg-gray-900/85 */
+            border-bottom: 1px solid #374151;
+            /* dark:border-gray-700 */
+        }
+
+        .dark .nav-link {
+            color: #D1D5DB;
+            /* dark:text-gray-300 */
+        }
+
+        .dark .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .dark #mobile-menu-button {
+            color: #F9FAFB;
+            /* dark:text-gray-50 */
+        }
+
+        .dark #mobile-menu {
+            background-color: rgba(31, 41, 55, 0.95);
+            /* dark:bg-gray-800/95 */
+            border-color: #374151;
+            /* dark:border-gray-700 */
+        }
+
+        .dark #mobile-menu a {
+            color: #F9FAFB;
+            /* dark:text-gray-50 */
+        }
+
+        .dark #mobile-menu a:hover {
+            background-color: #374151;
+            /* dark:bg-gray-700 */
+        }
+
+        /* Hero Dark Mode */
+        .dark h1 {
+            color: #FFFFFF;
+            /* dark:text-white */
+        }
+
+        .dark #hero p {
+            color: #9CA3AF;
+            /* dark:text-gray-400 */
+        }
+
+        /* Kartlar Dark Mode */
+        .dark .bike-card,
+        .dark .category-card,
+        .dark #testimonials .bg-white,
+        .dark #auction-teaser .bg-white {
+            background-color: #1F2937;
+            /* dark:bg-gray-800 */
+            border-color: #374151;
+            /* dark:border-gray-700 */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .bike-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 15px 30px -10px rgba(225, 29, 72, 0.25);
+        }
+
+        .dark .bike-card h3,
+        .dark .category-card h3,
+        .dark #testimonials h4 {
+            color: #FFFFFF;
+            /* dark:text-white */
+        }
+
+        .dark .bike-card p,
+        .dark .category-card p,
+        .dark #testimonials p,
+        .dark #testimonials .text-sm {
+            color: #9CA3AF;
+            /* dark:text-gray-400 */
+        }
+
+        /* Bölüm Başlıkları Dark Mode */
+        .dark h2,
+        .dark h3,
+        .dark h4 {
+            color: #FFFFFF;
+        }
+
+        .dark section p,
+        .dark #how-it-works p {
+            color: #9CA3AF;
+        }
+
+        /* Marka Logoları Dark Mode (Grayscale'i kaldır, invert et) */
+        .dark #brands img {
+            filter: grayscale(1) brightness(0) invert(1);
+            opacity: 0.7;
+        }
+
+        .dark #brands img:hover {
+            filter: none;
+            opacity: 1;
+        }
+
+        /* Modal Dark Mode */
+        .dark .modal-content {
+            background-color: #1F2937;
+            /* dark:bg-gray-800 */
+            border-color: #374151;
+            /* dark:border-gray-700 */
+        }
+
+        .dark .modal-content h3,
+        .dark .modal-content h4,
+        .dark .modal-content #modalPrice {
+            color: #FFFFFF;
+        }
+
+        .dark .modal-content pre {
+            color: #D1D5DB;
+            /* dark:text-gray-300 */
+        }
+
+        .dark .modal-content #closeModal {
+            color: #9CA3AF;
+            /* dark:text-gray-400 */
+        }
+
+        .dark .modal-content #closeModal:hover {
+            color: #FFFFFF;
+        }
+
+        /* İhale Geri Sayım Dark Mode */
+        .dark #countdown span {
+            color: #FFFFFF;
+        }
+
+        .dark #countdown span:last-child {
+            color: #9CA3AF;
+        }
+
+        /* Hızlı Arama Dark Mode */
+        .dark #quick-search-bar {
+            background-color: rgba(31, 41, 55, 0.8);
+            /* dark:bg-gray-800/80 */
+        }
+
+        .dark #quick-search-bar input,
+        .dark #quick-search-bar select {
+            background-color: #374151;
+            /* dark:bg-gray-700 */
+            color: #FFFFFF;
+            border-color: #4B5563;
+            /* dark:border-gray-600 */
+        }
+
+        /* Footer Dark Mode */
+        .dark footer {
+            background-color: #1F2937;
+            /* dark:bg-gray-800 */
+            border-color: #374151;
+            /* dark:border-gray-700 */
+        }
+
+        .dark footer,
+        .dark footer p,
+        .dark footer a {
+            color: #9CA3AF;
+            /* dark:text-gray-400 */
+        }
+
+        .dark footer h4,
+        .dark footer a.text-gray-900,
+        .dark footer a:hover {
+            color: #FFFFFF;
+            /* dark:text-white */
+        }
+
+        .dark footer .border-t {
+            border-color: #374151;
+            /* dark:border-gray-700 */
+        }
+
+        /* === / DARK MODE BİTİŞİ === */
+
+
+        @keyframes gradient-background-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        :root {
+            --accent-color: #E11D48;
+            /* Tailwind: rose-600 (Tutkulu Gül) */
+            --accent-color-hover: #BE123C;
+            /* Tailwind: rose-700 */
+        }
+
+        /* Özel Scrollbar (Yeni Tema) */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #E5E7EB;
+            /* Tailwind: bg-gray-200 */
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #374151;
+            /* dark:bg-gray-700 */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 5px;
+            border: 2px solid #E5E7EB;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            border-color: #374151;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color-hover);
+        }
+
+        /* Metin Seçim Rengi (Yeni Tema) */
+        ::selection {
+            background: var(--accent-color);
+            color: #FFFFFF;
+        }
+
+        .hero-bg {
+            background-color: transparent;
+            background-image: none;
+        }
+
+        .navbar-scrolled {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 10px -1px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        /* === YENİ ANİMASYONLAR === */
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--accent-color), #f87171, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradient-flow 6s linear infinite;
+        }
+
+        @keyframes gradient-flow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .bike-card {
+            background-color: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            /* YENİ: 3D Tilt için transform-style */
+            transform-style: preserve-d;
+            transform: perspective(1000px);
+        }
+
+        .bike-card:hover {
+            /* transform: translateY(-10px); */
+            /* Tilt efekti varken bu daha iyi */
+            border-color: var(--accent-color);
+            box-shadow: 0 15px 30px -10px rgba(225, 29, 72, 0.15);
+        }
+
+        .card-image-wrapper {
+            overflow: hidden;
+            border-radius: 0.75rem 0.75rem 0 0;
+            /* YENİ: Tilt için */
+            transform: translateZ(20px);
+        }
+
+        .card-image {
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .bike-card:hover .card-image {
+            transform: scale(1.08);
+        }
+
+        /* YENİ: Kart içeriği için Tilt efekti */
+        .bike-card .p-6 {
+            transform: translateZ(10px);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px -5px rgba(225, 29, 72, 0.4);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-color-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px -5px rgba(225, 29, 72, 0.5);
+        }
+
+        .btn-pulse {
+            animation: pulse-glow 2.5s infinite ease-out;
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.6);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(225, 29, 72, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(225, 29, 72, 0);
+            }
+        }
+
+        @keyframes bob-animation {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .bike-bobbing {
+            animation: bob-animation 4s ease-in-out infinite;
+        }
+
+        .btn-secondary {
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+
+        /* Gelişmiş "Animate on Scroll" */
+        .animate-in {
+            opacity: 0;
+            transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: opacity, transform;
+        }
+
+        .animate-up {
+            transform: translateY(40px);
+        }
+
+        .animate-left {
+            transform: translateX(-40px);
+        }
+
+        .animate-right {
+            transform: translateX(40px);
+        }
+
+        .animate-in.is-visible {
+            opacity: 1;
+            transform: translateY(0) translateX(0);
+        }
+
+        /* Modal Stilleri */
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .modal.hidden .modal-content {
+            transform: scale(0.95) translateY(20px);
+        }
+
+        /* Navigasyon linkleri hover */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+            color: #374151;
+            /* text-gray-700 */
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent-color);
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Navbar scroll-up/down */
+        .header-hidden {
+            transform: translateY(-100%);
+        }
+
+        .top-bar-hidden {
+            max-height: 0px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            opacity: 0;
+        }
+
+        /* Kategori ikonları hover */
+        .category-card:hover .category-icon {
+            transform: scale(1.1);
+            filter: brightness(1.1);
+        }
+
+        .category-icon {
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        /* === YENİ EKLENEN ÖZELLİKLER İÇİN STİLLER === */
+
+        /* 1. Skeleton Loading Stili */
+        .skeleton-card {
+            background-color: #FFFFFF;
+            /* dark:bg-gray-800 */
+            border: 1px solid #E5E7EB;
+            /* dark:border-gray-700 */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        .dark .skeleton-card {
+            background-color: #1F2937;
+            border-color: #374151;
+        }
+
+        .skeleton-image {
+            background-color: #E5E7EB;
+            /* dark:bg-gray-700 */
+        }
+
+        .dark .skeleton-image {
+            background-color: #374151;
+        }
+
+        .skeleton-line {
+            background-color: #E5E7EB;
+            /* dark:bg-gray-700 */
+            border-radius: 0.25rem;
+        }
+
+        .dark .skeleton-line {
+            background-color: #4B5563;
+        }
+
+        /* 2. Karşılaştırma (Compare) Butonu ve Barı */
+        .compare-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            border-radius: 9999px;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #374151;
+            /* dark:text-gray-700 */
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .compare-btn {
+            background-color: rgba(31, 41, 55, 0.8);
+            color: #E5E7EB;
+        }
+
+        .compare-btn:hover {
+            background-color: #FFFFFF;
+            /* dark:bg-gray-800 */
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        .compare-btn.selected {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+        }
+
+        .dark .compare-btn:hover {
+            background-color: #374151;
+        }
+
+        .dark .compare-btn.selected {
+            color: #FFFFFF;
+        }
+
+        #compareBar {
+            position: fixed;
+            bottom: -150px;
+            /* Başlangıçta gizli */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        #compareBar.show {
+            bottom: 24px;
+            /* Göster */
+        }
+
+        /* 3. 3D Model Görüntüleyici */
+        model-viewer {
+            width: 100%;
+            height: 100%;
+            /* Yüksekliği parent'a göre ayarlandı */
+            min-height: 400px;
+            /* Minimum yükseklik (mobil için) */
+            background-color: #FFFFFF;
+            border-radius: 0.75rem;
+        }
+
+        .dark model-viewer {
+            background-color: #1F2937;
+        }
+
+        /* 4. Trusted by Riders Rozeti */
+        .trusted-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: #FFF7F7;
+            /* dark:bg-gray-800 */
+            border: 1px solid #FFEAEA;
+            /* dark:border-gray-700 */
+            padding: 10px 20px;
+            border-radius: 9999px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1F2937;
+            /* dark:text-gray-200 */
+            box-shadow: 0 4px 10px -5px rgba(225, 29, 72, 0.1);
+        }
+
+        .dark .trusted-badge {
+            background-color: #1F2937;
+            border-color: #374151;
+            color: #E5E7EB;
+            box-shadow: 0 4px 10px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .trusted-badge ion-icon {
+            color: var(--accent-color);
+            font-size: 1.3rem;
+            margin-right: 8px;
+        }
+
+        /* 5. Parallax Scroll (Hero Image için) */
+        /* Bobbing animasyonu ile çakışmaması için şimdilik pasif. 
+           Eğer bobbing yerine parallax istenirse JS ile scroll'a bağlı
+           'transform: translateY()' uygulanmalıdır.
+        */
+
+        /* 6. Hızlı Arama Barı */
+        #quick-search-bar {
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid #E5E7EB;
+            /* dark:border-gray-700 */
+        }
+
+        /* ===== YENİ: SOHBET BOTU STİLLERİ ===== */
+        #chat-bubble {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 9999px;
+            background-color: var(--accent-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 10px 20px -5px rgba(225, 29, 72, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        #chat-bubble:hover {
+            background-color: var(--accent-color-hover);
+            transform: scale(1.1);
+        }
+
+        #chat-window {
+            position: fixed;
+            bottom: 7rem;
+            right: 2rem;
+            z-index: 100;
+            width: 90%;
+            max-width: 400px;
+            height: 500px;
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        #chat-window.hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+
+        .dark #chat-window {
+            background-color: #1F2937;
+            /* dark:bg-gray-800 */
+            border: 1px solid #374151;
+            /* dark:border-gray-700 */
+        }
+
+        #chat-header {
+            background-color: #f9fafb;
+            /* bg-gray-50 */
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            /* border-gray-200 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dark #chat-header {
+            background-color: #374151;
+            /* dark:bg-gray-700 */
+            border-color: #4B5563;
+            /* dark:border-gray-600 */
+        }
+
+        .dark #chat-header h3 {
+            color: white;
+        }
+
+        #chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            /* Scrollbar stili (Chat için özel) */
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) #E5E7EB;
+        }
+
+        .dark #chat-messages {
+            scrollbar-color: var(--accent-color) #374151;
+        }
+
+        .chat-message {
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            max-width: 80%;
+            line-height: 1.5;
+        }
+
+        .chat-message.user {
+            background-color: var(--accent-color);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        .chat-message.bot {
+            background-color: #F3F4F6;
+            /* bg-gray-100 */
+            color: #1F2937;
+            /* text-gray-800 */
+            align-self: flex-start;
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        .dark .chat-message.bot {
+            background-color: #374151;
+            /* dark:bg-gray-700 */
+            color: #E5E7EB;
+            /* dark:text-gray-200 */
+        }
+
+        /* Yükleniyor animasyonu */
+        .chat-message.bot.loading span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #9CA3AF;
+            /* text-gray-400 */
+            animation: bounce 1s infinite;
+        }
+
+        .dark .chat-message.bot.loading span {
+            background-color: #9CA3AF;
+        }
+
+        .chat-message.bot.loading span:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .chat-message.bot.loading span:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-6px);
+            }
+        }
+
+        #chat-input-form {
+            border-top: 1px solid #e5e7eb;
+            /* border-gray-200 */
+            padding: 0.75rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .dark #chat-input-form {
+            border-color: #374151;
+            /* dark:border-gray-700 */
+        }
+
+        #chat-input-form input {
+            flex-grow: 1;
+            border: 1px solid #D1D5DB;
+            /* border-gray-300 */
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            font-size: 0.875rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .dark #chat-input-form input {
+            background-color: #374151;
+            /* dark:bg-gray-700 */
+            border-color: #4B5563;
+            /* dark:border-gray-600 */
+            color: white;
+        }
+
+        #chat-input-form input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.2);
+        }
+
+        #chat-input-form button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            transition: background-color 0.2s;
+        }
+
+        #chat-input-form button:hover {
+            background-color: var(--accent-color-hover);
+        }
+
+        /* ===== / SOHBET BOTU STİLLERİ BİTİŞ ===== */
+    </style>
+</head>
+
+<body class="text-gray-800 dark:bg-gray-900">
+
+    <!-- YENİ: Hover Sesi için Gizli Ses Elementi -->
+    <!-- Tone.js bunu kullanmayacak ama referans için burada. Gerçek ses JS'te üretilecek -->
+    <audio id="motor-hiss-sound" loop preload="auto" class="hidden"></audio>
+
+    <!-- ===== Header / Navbar (YAPISI GÜNCELLENDİ) ===== -->
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-transform duration-300 ease-out">
+
+        <!-- YENİ: Top Bar (Haber Bandı) -->
+        <div id="top-bar"
+            class="bg-rose-100 text-[var(--accent-color)] text-sm font-medium text-center py-2.5 px-6 transition-all duration-300 overflow-hidden max-h-12 opacity-100 dark:bg-rose-900/50 dark:text-rose-300">
+            <p class="flex items-center justify-center">
+                <ion-icon name="sparkles-outline" class="mr-2"></ion-icon>
+                Yeni Sezon Fırsatları! Elektrikli modellerde %15 indirim.
+            </p>
+        </div>
+
+        <!-- Ana Navigasyon Barı -->
+        <nav id="navbar" class="transition-all duration-300 bg-transparent dark:bg-transparent">
+            <div class="container mx-auto px-6 py-5 flex justify-between items-center">
+                <!-- Logo -->
+                <a href="/">
+                    <img src="/static/images/motolove.png" alt="MotoLove Logo" class="h-14 md:h-20 w-auto">
+                </a>
+
+                <!-- Desktop Nav (GÜNCELLENDİ) -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="font-medium nav-link">Ana Sayfa</a>
+                    <a href="/ilanlar" class="font-medium nav-link">İlanlar</a>
+                    <a href="/ilanver" class="font-medium nav-link">İlan Ver</a>
+                    <a href="/ihale" class="font-medium nav-link active">İhale</a>
+                    <a href="/forum" class="font-medium nav-link active">Forum</a>
+                    <a href="/mesajlarim" class="font-medium nav-link">Mesajlar</a>
+
+                    {% if user_name %}
+                    <!-- GÜNCELLENDİ: Profil ikonu veya fotoğrafı (user_image_url değişkeni ile) -->
+                    <a href="/profile"
+                        class="flex items-center text-gray-700 dark:text-gray-300 transition-colors group font-semibold">
+                        {% if user_image_url %}
+                        <img src="{{ user_image_url }}" alt="Profil"
+                            class="w-8 h-8 rounded-full object-cover mr-2 border-2 border-gray-200 dark:border-gray-600">
+                        {% else %}
+                        <ion-icon name="person-circle" class="text-3xl mr-2 text-[var(--accent-color)]"></ion-icon>
+                        {% endif %}
+                        <span class="font-medium text-sm group-hover:text-[var(--accent-color)]">{{ user_name }}</span>
+                    </a>
+
+                    <!-- Admin Panel Linki (Giriş yapınca görünür) -->
+                    <!-- Sadece 'user_role' değişkeni 'admin' ise görünür -->
+                    {% if user_role == 'admin' %}
+                    <a href="/admin"
+                        class="font-medium nav-link text-cyan-500 hover:text-cyan-400 dark:text-cyan-400 dark:hover:text-cyan-300">Admin
+                        Panel</a>
+                    {% endif %}
+
+                    <a href="/logout" class="btn-secondary font-semibold px-5 py-2 rounded-lg text-sm ml-4">Çıkış
+                        Yap</a>
+                    {% else %}
+                    <!-- GÜNCELLENDİ: Admin Giriş Butonu Eklendi -->
+                    <a href="/admin/login" class="btn-secondary font-semibold px-5 py-2 rounded-lg text-sm ml-4">Admin
+                        Giriş</a>
+                    <a href="/login" class="btn-primary font-semibold px-5 py-2 rounded-lg text-sm ml-4">Giriş Yap</a>
+                    {% endif %}
+
+
+
+                    <!-- YENİ: Night Mode Toggle Butonu -->
+                    <button id="theme-toggle"
+                        class="text-xl text-gray-700 dark:text-gray-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)] transition-colors duration-200">
+                        <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                        <!-- Ay (Karanlıkta görünür) -->
+                        <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                        <!-- Güneş (Aydınlıkta görünür) -->
+                    </button>
+                </div>
+
+                <!-- Mobil Menu Butonu (YENİ: Toggle'ı da içerir) -->
+                <div class="md:hidden flex items-center space-x-4">
+                    <!-- YENİ: Night Mode Toggle Butonu (Mobil) -->
+                    <button id="theme-toggle-mobile" class="text-2xl text-gray-900 dark:text-gray-100">
+                        <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                        <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                    </button>
+
+                    <button id="mobile-menu-button" class="text-3xl text-gray-900 dark:text-gray-100">
+                        <ion-icon name="menu-outline"></ion-icon>
+                    </button>
+                </div>
+
+            </div>
+        </nav>
+
+
+        <!-- Mobil Menu (Gizli) (Yeni Tema) -->
+        <div id="mobile-menu"
+            class="hidden md:hidden bg-white/95 backdrop-blur-sm shadow-xl border-t border-gray-200 dark:bg-gray-800/95 dark:border-gray-700">
+            <a href="/" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">Ana
+                Sayfa</a>
+            <a href="/ilan"
+                class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">İlanlar</a>
+            <a href="ilanver.html"
+                class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">İlan Ver</a>
+            <a href="/ihale"
+                class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">İhale</a>
+            <a href="forum.html"
+                class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">Forum</a>
+            <a href="/mesajlarim"
+                class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">Mesajlar</a>
+
+            {% if user_name %}
+            <a href="/profile" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">{{ user_name }} (Profil)</a>
+            <a href="/logout" class="block px-6 py-4">
+                <span class="btn-secondary w-full block text-center font-semibold px-5 py-3 rounded-lg">Çıkış Yap</span>
+            </a>
+            {% else %}
+            <a href="/login" class="block px-6 py-4">
+                <span class="btn-primary w-full block text-center font-semibold px-5 py-3 rounded-lg">Giriş Yap</span>
+            </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main>
+
+        <!-- ===== Hero Alanı ===== -->
+        <section id="hero"
+            class="h-screen min-h-[850px] md:min-h-[750px] flex items-center justify-center text-center hero-bg pt-48 px-6 relative overflow-hidden">
+            <div class="max-w-4xl relative z-10">
+                <h1
+                    class="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter animate-in animate-up is-visible dark:text-white">
+                    AŞKLA SÜR,
+                    <span class="gradient-text">GELECEĞİ YAŞA</span>
+                </h1>
+
+                <div class="relative w-full mt-8 mb-6">
+                    <div id="particle-wind" class="absolute inset-0 z-0" style="transition: opacity 0.2s ease-out;">
+                    </div>
+                    <img src="/static/images/cb650r.png" alt="Fütüristik Motorsiklet"
+                        class="relative z-10 mx-auto max-w-full h-auto bike-bobbing"
+                        style="filter: drop-shadow(0 15px 25px rgba(0,0,0,0.2));"
+                        onerror="this.onerror=null;this.src='https://placehold.co/800x600/f8fafb/e11d48?text=Motosiklet+Y%C3%BCklenemedi';this.classList.add('w-full', 'h-auto', 'max-w-xl');">
+                </div>
+
+                <p class="text-lg md:text-2xl text-gray-600 mt-6 mb-12 max-w-2xl mx-auto animate-in animate-up is-visible dark:text-gray-400"
+                    style="transition-delay: 200ms;">
+                    Tutkunu olduğunuz tasarımlar, en son teknolojiyle buluştu. MotoLove ile sürüş deneyiminizi yeniden
+                    tanımlayın.
+                </p>
+                <div class="space-x-4 animate-in animate-up is-visible" style="transition-delay: 400ms;">
+                    <a href="ilan.html" class="btn-primary btn-pulse text-lg font-semibold px-8 py-4 rounded-lg">
+                        Koleksiyonu Keşfet
+                    </a>
+                    <a href="#featured-rent"
+                        class="btn-secondary text-lg font-semibold px-8 py-4 rounded-lg hidden sm:inline-block">
+                        Hemen Kirala
+                    </a>
+                </div>
+
+                <!-- YENİ: Hızlı Arama Barı -->
+                <div id="quick-search-bar"
+                    class="mt-16 p-4 rounded-xl shadow-lg animate-in animate-up dark:bg-gray-800/80 dark:border-gray-700"
+                    style="transition-delay: 500ms;">
+                    <form class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                        <select
+                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]">
+                            <option>Tümü (Satılık/Kiralık)</option>
+                            <option>Satılık</option>
+                            <option>Kiralık</option>
+                        </select>
+                        <select
+                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]">
+                            <option>Tüm Markalar</option>
+                            <option>Yamaha</option>
+                            <option>Honda</option>
+                            <option>Kawasaki</option>
+                            <option>Ducati</option>
+                        </select>
+                        <input type="text" placeholder="Model adı veya anahtar kelime..."
+                            class="w-full md:col-span-1 px-4 py-3 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]">
+                        <button type="submit" class="btn-primary w-full text-lg font-semibold px-8 py-3 rounded-lg">
+                            Ara
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ===== YENİ BÖLÜM: Kategorilere Göz At ===== -->
+        <section id="categories" class="py-24 px-6 container mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 animate-in animate-up dark:text-white">
+                Kategorilere <span style="color: var(--accent-color);">Göz At</span></h2>
+            <p class="text-center text-lg text-gray-500 mb-16 max-w-xl mx-auto animate-in animate-up dark:text-gray-400"
+                style="transition-delay: 100ms;">
+                Hangi sürüş tarzı senin tutkun? Tarzını seç ve keşfetmeye başla.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Kategori Kart 1: Sport -->
+                <div class="category-card bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-in animate-up text-center cursor-pointer dark:bg-gray-800 dark:border-gray-700"
+                    style="transition-delay: 150ms;">
+                    <div
+                        class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5 bg-rose-100 dark:bg-gray-700">
+                        <ion-icon name="rocket-outline" class="text-5xl category-icon"
+                            style="color: var(--accent-color);"></ion-icon>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 dark:text-white">Sport & Superbike</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Adrenalin ve hız tutkunları için safkan performans.</p>
+                </div>
+
+                <!-- Kategori Kart 2: Urban -->
+                <div class="category-card bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-in animate-up text-center cursor-pointer dark:bg-gray-800 dark:border-gray-700"
+                    style="transition-delay: 250ms;">
+                    <div
+                        class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5 bg-rose-100 dark:bg-gray-700">
+                        <ion-icon name="bicycle-outline" class="text-5xl category-icon"
+                            style="color: var(--accent-color);"></ion-icon>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 dark:text-white">Urban & Scooter</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Şehrin ritmini yakala. Pratik, çevik ve şık.</p>
+                </div>
+
+                <!-- Kategori Kart 3: Adventure -->
+                <div class="category-card bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-in animate-up text-center cursor-pointer dark:bg-gray-800 dark:border-gray-700"
+                    style="transition-delay: 350ms;">
+                    <div
+                        class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5 bg-rose-100 dark:bg-gray-700">
+                        <ion-icon name="map-outline" class="text-5xl category-icon"
+                            style="color: var(--accent-color);"></ion-icon>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 dark:text-white">Adventure & Touring</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Sınırların ötesine geç. Uzun yollar ve macera için.</p>
+                </div>
+
+                <!-- Kategori Kart 4: Concept -->
+                <div class="category-card bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-in animate-up text-center cursor-pointer dark:bg-gray-800 dark:border-gray-700"
+                    style="transition-delay: 450ms;">
+                    <div
+                        class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5 bg-rose-100 dark:bg-gray-700">
+                        <ion-icon name="sparkles-outline" class="text-5xl category-icon"
+                            style="color: var(--accent-color);"></ion-icon>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 dark:text-white">Concept & Fütüristik</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Geleceğin tasarımları. Henüz yolda olmayanlar.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Öne Çıkan Satılık Modeller (GÜNCELLENDİ) ===== -->
+        <section id="featured-sale" class="py-24 px-6 container mx-auto bg-gray-50 rounded-2xl dark:bg-gray-900/50">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 animate-in animate-up dark:text-white">Sıcak
+                <span style="color: var(--accent-color);">Satışlar</span></h2>
+            <p class="text-center text-lg text-gray-500 mb-16 max-w-xl mx-auto animate-in animate-up dark:text-gray-400"
+                style="transition-delay: 100ms;">
+                Sıfır emisyon, maksimum adrenalin. Geleceğin sahibi olun.
+            </p>
+            <p class="text-center text-lg text-gray-500 mb-16 max-w-xl mx-auto animate-in animate-up dark:text-gray-400"
+                style="transition-delay: 100ms;">
+                (Fare imlecini motorlara getirirseniz motor seslerini duyabilirsiniz.)
+            </p>
+            <!-- YENİ: Dinamik veriler için bu ID'yi ekledik -->
+            <div id="featured-bikes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- YENİ: Veriler yüklenirken görünecek iskelet (skeleton) yapısı -->
+                <!-- Bu 3 kart, JS veriyi çekince silinecek -->
+                <div class="skeleton-card animate-pulse">
+                    <div class="w-full h-64 skeleton-image"></div>
+                    <div class="p-6">
+                        <div class="h-6 w-3/4 mb-4 skeleton-line"></div>
+                        <div class="h-4 w-full mb-2 skeleton-line"></div>
+                        <div class="h-4 w-5/6 mb-6 skeleton-line"></div>
+                        <div class="flex justify-between items-center mt-6">
+                            <div class="h-8 w-1/3 skeleton-line"></div>
+                            <div class="h-10 w-1/4 skeleton-line rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-card animate-pulse">
+                    <div class="w-full h-64 skeleton-image"></div>
+                    <div class="p-6">
+                        <div class="h-6 w-3/4 mb-4 skeleton-line"></div>
+                        <div class="h-4 w-full mb-2 skeleton-line"></div>
+                        <div class="h-4 w-5/6 mb-6 skeleton-line"></div>
+                        <div class="flex justify-between items-center mt-6">
+                            <div class="h-8 w-1/3 skeleton-line"></div>
+                            <div class="h-10 w-1/4 skeleton-line rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-card animate-pulse">
+                    <div class="w-full h-64 skeleton-image"></div>
+                    <div class="p-6">
+                        <div class="h-6 w-3/4 mb-4 skeleton-line"></div>
+                        <div class="h-4 w-full mb-2 skeleton-line"></div>
+                        <div class="h-4 w-5/6 mb-6 skeleton-line"></div>
+                        <div class="flex justify-between items-center mt-6">
+                            <div class="h-8 w-1/3 skeleton-line"></div>
+                            <div class="h-10 w-1/4 skeleton-line rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- YENİ: Gerçek kartlar JS ile buraya eklenecek -->
+
+                <!-- YENİ: ESKİ STATİK 3 KART (YAMAHA, HONDA, KAWASAKI) BURADAN SİLİNDİ -->
+
+            </div>
+        </section>
+
+        <section id="featured-rent" class="py-24 px-6 bg-white dark:bg-transparent">
+            <div class="container mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 animate-in animate-up dark:text-white">Günlük
+                    <span style="color: var(--accent-color);">Heyecan</span></h2>
+                <p class="text-center text-lg text-gray-500 mb-16 max-w-xl mx-auto animate-in animate-up dark:text-gray-400"
+                    style="transition-delay: 100ms;">
+                    Deneyimlemek için satın almana gerek yok. İstediğin gün kirala, aşkla sür.
+                </p>
+
+                <div id="featured-rentals-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                    <div class="skeleton-card animate-pulse">
+                        <div class="w-full h-64 skeleton-image"></div>
+                        <div class="p-6">
+                            <div class="h-6 w-3/4 mb-4 skeleton-line"></div>
+                            <div class="h-4 w-full mb-2 skeleton-line"></div>
+                            <div class="h-4 w-5/6 mb-6 skeleton-line"></div>
+                            <div class="flex justify-between items-center mt-6">
+                                <div class="h-8 w-1/3 skeleton-line"></div>
+                                <div class="h-10 w-1/4 skeleton-line rounded-lg"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="skeleton-card animate-pulse">
+                        <div class="w-full h-64 skeleton-image"></div>
+                        <div class="p-6">
+                            <div class="h-6 w-3/4 mb-4 skeleton-line"></div>
+                            <div class="h-4 w-full mb-2 skeleton-line"></div>
+                            <div class="h-4 w-5/6 mb-6 skeleton-line"></div>
+                            <div class="flex justify-between items-center mt-6">
+                                <div class="h-8 w-1/3 skeleton-line"></div>
+                                <div class="h-10 w-1/4 skeleton-line rounded-lg"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="skeleton-card animate-pulse">
+                        <div class="w-full h-64 skeleton-image"></div>
+                        <div class="p-6">
+                            <div class="h-6 w-3/4 mb-4 skeleton-line"></div>
+                            <div class="h-4 w-full mb-2 skeleton-line"></div>
+                            <div class="h-4 w-5/6 mb-6 skeleton-line"></div>
+                            <div class="flex justify-between items-center mt-6">
+                                <div class="h-8 w-1/3 skeleton-line"></div>
+                                <div class="h-10 w-1/4 skeleton-line rounded-lg"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== YENİ BÖLÜM: İhale Tanıtımı (3D MODEL İLE) ===== -->
+        <section id="auction-teaser" class="py-24 px-6 bg-rose-50 dark:bg-gray-900/50">
+            <div class="container mx-auto max-w-6xl">
+                <div
+                    class="bg-white rounded-2xl shadow-xl overflow-hidden grid grid-cols-1 md:grid-cols-2 animate-in animate-up dark:bg-gray-800 dark:border-gray-700">
+
+                    <!-- Resim Alanı (YENİ: 3D Model Görüntüleyici) -->
+                    <div class="md:h-full h-96 min-h-[400px]">
+                        <!-- 
+                            NOT: Ücretsiz bir .glb modeli kullanıldı. 
+                            Kendi modelinizle src="" kısmını değiştirebilirsiniz.
+                        -->
+                        <model-viewer id="auction-model"
+                            src="https://cdn.glitch.global/6a280e2f-659f-4493-9d33-9d487f97669d/vintage_motorcycle.glb?v=1700249767676"
+                            alt="3D İhale Modeli" auto-rotate camera-controls camera-orbit="10deg 75deg 150%"
+                            exposure="1.2" shadow-intensity="1"
+                            poster="https://placehold.co/600x600/ffffff/e11d48?text=Model+Y%C3%BCkleniyor..."
+                            class="dark:bg-gray-800">
+                        </model-viewer>
+                    </div>
+
+                    <!-- İçerik Alanı (DİNAMİK OLARAK GÜNCELLENECEK) -->
+                    <div class="p-8 md:p-12 flex flex-col justify-center">
+                        <span
+                            class="inline-block bg-rose-100 text-[var(--accent-color)] text-sm font-bold px-3 py-1 rounded-full mb-4 w-fit dark:bg-gray-700 dark:text-rose-300">Açık
+                            Artırmada</span>
+
+                        <!-- YENİ: ID'ler eklendi -->
+                        <h2 id="auction-title" class="text-4xl font-bold text-gray-900 mb-3 dark:text-white">En Yakın
+                            İhale Yükleniyor...</h2>
+                        <p id="auction-desc" class="text-lg text-gray-600 mb-6 dark:text-gray-400">Aktif ihaleler
+                            kontrol ediliyor, lütfen bekleyin...</p>
+
+                        <h4
+                            class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2 dark:text-gray-400">
+                            İhale Bitiş Tarihi:</h4>
+
+                        <!-- YENİ: ID'ler eklendi -->
+                        <div id="countdown" class="flex space-x-4 text-center mb-8">
+                            <div>
+                                <span id="days" class="text-4xl font-bold text-gray-900 dark:text-white">--</span>
+                                <span class="block text-sm text-gray-500 dark:text-gray-400">Gün</span>
+                            </div>
+                            <div>
+                                <span id="hours" class="text-4xl font-bold text-gray-900 dark:text-white">--</span>
+                                <span class="block text-sm text-gray-500 dark:text-gray-400">Saat</span>
+                            </div>
+                            <div>
+                                <span id="minutes" class="text-4xl font-bold text-gray-900 dark:text-white">--</span>
+                                <span class="block text-sm text-gray-500 dark:text-gray-400">Dakika</span>
+                            </div>
+                            <div>
+                                <span id="seconds" class="text-4xl font-bold text-gray-900 dark:text-white">--</span>
+                                <span class="block text-sm text-gray-500 dark:text-gray-400">Saniye</span>
+                            </div>
+                        </div>
+
+                        <!-- YENİ: ID eklendi -->
+                        <a id="auction-link" href="/ihale"
+                            class="btn-primary btn-pulse text-lg font-semibold px-8 py-4 rounded-lg w-full text-center block">
+                            Tüm İhaleleri Gör
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Nasıl Çalışır? (Kiralama) ===== -->
+        <section id="how-it-works" class="py-24 px-6 container mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 animate-in animate-up dark:text-white">3 Adımda
+                <span style="color: var(--accent-color);">Aşka Başla</span></h2>
+
+            <div class="flex flex-col md:flex-row justify-center items-start gap-10 md:gap-20">
+                <!-- Adım 1 -->
+                <div class="text-center max-w-xs mx-auto animate-in animate-up">
+                    <div
+                        class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 bg-rose-100 dark:bg-gray-800">
+                        <ion-icon name="search-circle-outline" class="text-5xl"
+                            style="color: var(--accent-color);"></ion-icon>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 dark:text-white">1. Tutkunu Seç</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Geniş filomuzdan sana en uygun modeli ve tarihleri seç.
+                    </p>
+                </div>
+
+                <!-- Adım 2 -->
+                <div class="text-center max-w-xs mx-auto animate-in animate-up" style="transition-delay: 150ms;">
+                    <div
+                        class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 bg-rose-100 dark:bg-gray-800">
+                        <ion-icon name="card-outline" class="text-5xl" style="color: var(--accent-color);"></ion-icon>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 dark:text-white">2. Rezervasyon Yap</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Güvenli ödeme altyapımızla rezervasyonunu saniyeler
+                        içinde tamamla.</p>
+                </div>
+
+                <!-- Adım 3 -->
+                <div class="text-center max-w-xs mx-auto animate-in animate-up" style="transition-delay: 300ms;">
+                    <div
+                        class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 bg-rose-100 dark:bg-gray-800">
+                        <ion-icon name="rocket-outline" class="text-5xl" style="color: var(--accent-color);"></ion-icon>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 dark:text-white">3. Sürüşe Başla</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Belirttiğin konumdan motorunu teslim al ve geleceğin
+                        tadını çıkar.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== YENİ BÖLÜM: Marka Ortakları ===== -->
+        <section id="brands" class="py-20 px-6 bg-white dark:bg-transparent">
+            <div class="container mx-auto">
+                <h3
+                    class="text-center text-xl font-semibold text-gray-500 mb-10 animate-in animate-up dark:text-gray-400">
+                    Güvenilir Markalarla Çalışıyoruz</h3>
+                <div class="flex flex-wrap justify-center items-center gap-x-12 gap-y-8 md:gap-x-16 lg:gap-x-20">
+                    <!-- RESİM YOLLARI GÜNCELLENDİ -->
+                    <img src="/static/images/cfmotologo.jpg" alt="CF Moto Logo"
+                        class="h-10 md:h-12 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all animate-in animate-up dark:opacity-70 dark:hover:opacity-100"
+                        style="transition-delay: 100ms;">
+                    <img src="/static/images/kawasakilogo.svg" alt="Kawasaki Logo"
+                        class="h-10 md:h-12 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all animate-in animate-up dark:opacity-70 dark:hover:opacity-100"
+                        style="transition-delay: 200ms;">
+                    <img src="/static/images/hondalogo.png" alt="Honda Logo"
+                        class="h-10 md:h-12 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all animate-in animate-up dark:opacity-70 dark:hover:opacity-100"
+                        style="transition-delay: 300ms;">
+                    <img src="/static/images/yamahalogo.png" alt="Yamaha Logo"
+                        class="h-10 md:h-12 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all animate-in animate-up dark:opacity-70 dark:hover:opacity-100"
+                        style="transition-delay: 400ms;">
+                    <img src="/static/images/bajajlogo.png" alt="Bajaj Logo"
+                        class="h-10 md:h-12 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all animate-in animate-up dark:opacity-70 dark:hover:opacity-100"
+                        style="transition-delay: 500ms;">
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== YENİ BÖLÜM: Kullanıcı Yorumları ===== -->
+        <section id="testimonials" class="py-24 px-6 dark:bg-gray-900/50" style="background-color: #f8fafb;">
+            <div class="container mx-auto">
+
+                <!-- YENİ: Trusted by Riders Rozeti -->
+                <div class="text-center mb-8 animate-in animate-up">
+                    <div class="trusted-badge dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200">
+                        <ion-icon name="shield-checkmark-outline"></ion-icon>
+                        Binlerce Sürücü Tarafından Güvenildi
+                    </div>
+                </div>
+
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 animate-in animate-up dark:text-white">
+                    Bizimle <span style="color: var(--accent-color);">Aşk Yaşayanlar</span></h2>
+                <p class="text-center text-lg text-gray-500 mb-16 max-w-xl mx-auto animate-in animate-up dark:text-gray-400"
+                    style="transition-delay: 100ms;">
+                    MotoLove deneyimini kullanıcılarımızdan dinleyin.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Yorum 1 -->
+                    <div class="bg-white p-8 rounded-xl border border-gray-200 animate-in animate-up dark:bg-gray-800 dark:border-gray-700"
+                        style="transition-delay: 150ms;">
+                        <div class="text-3xl text-rose-200 mb-4 dark:text-rose-700">
+                            <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+                        </div>
+                        <p class="text-lg text-gray-700 font-medium mb-6 dark:text-gray-300">"Kiraladığım Aero-X 1
+                            inanılmazdı. Süreç çok basitti ve motor tam bir teknoloji harikası. Gelecekte hissettim!"
+                        </p>
+                        <div class="flex items-center">
+                            <img src="https://placehold.co/50x50/e11d48/ffffff?text=AY" alt="Kullanıcı 1"
+                                class="w-12 h-12 rounded-full mr-4 border-2 border-rose-100 dark:border-rose-800">
+                            <div>
+                                <h4 class="font-bold text-gray-900 dark:text-white">Ahmet Y.</h4>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">@ahmet_rocks</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Yorum 2 -->
+                    <div class="bg-white p-8 rounded-xl border border-gray-200 animate-in animate-up dark:bg-gray-800 dark:border-gray-700"
+                        style="transition-delay: 250ms;">
+                        <div class="text-3xl text-rose-200 mb-4 dark:text-rose-700">
+                            <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+                        </div>
+                        <p class="text-lg text-gray-700 font-medium mb-6 dark:text-gray-300">"UrbanVolt modelini satın
+                            aldım. Şehir içinde inanılmaz pratik. MotoLove ekibine destekleri için teşekkürler.
+                            Gerçekten Aşk'la yapıyorlar."</p>
+                        <div class="flex items-center">
+                            <img src="https://placehold.co/50x50/e11d48/ffffff?text=EZ" alt="Kullanıcı 2"
+                                class="w-12 h-12 rounded-full mr-4 border-2 border-rose-100 dark:border-rose-800">
+                            <div>
+                                <h4 class="font-bold text-gray-900 dark:text-white">Elif Z.</h4>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">@elifz</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Yorum 3 -->
+                    <div class="bg-white p-8 rounded-xl border border-gray-200 animate-in animate-up dark:bg-gray-800 dark:border-gray-700"
+                        style="transition-delay: 350ms;">
+                        <div class="text-3xl text-rose-200 mb-4 dark:text-rose-700">
+                            <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+                        </div>
+                        <p class="text-lg text-gray-700 font-medium mb-6 dark:text-gray-300">"Sadece bir kiralama sitesi
+                            değil, bir deneyim merkezi. Fütüristik motorları denemek harikaydı. Hyperion-R pistte
+                            uçuyor!"</p>
+                        <div class="flex items-center">
+                            <img src="https://placehold.co/50x50/e11d48/ffffff?text=MK" alt="Kullanıcı 3"
+                                class="w-12 h-12 rounded-full mr-4 border-2 border-rose-100 dark:border-rose-800">
+                            <div>
+                                <h4 class="font-bold text-gray-900 dark:text-white">Murat K.</h4>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">@murat_k</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== YENİ BÖLÜM: Newsletter CTA (GÜNCELLENDİ) ===== -->
+    <section id="newsletter" class="py-24 px-6" style="background-color: var(--accent-color);">
+        <div class="container mx-auto max-w-3xl text-center animate-in animate-up">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">Gelecekten Haberdar Olun</h2>
+            <p class="text-lg text-rose-100 mb-10 max-w-xl mx-auto">
+                En yeni modeller, özel teklifler ve ihale duyuruları doğrudan e-postanıza gelsin.
+            </p>
+
+            <!-- YENİ: Form artık standart HTML POST işlemi yapacak -->
+            <!-- 'name="email"' eklendi, 'method' ve 'action' eklendi -->
+            <form id="newsletter-form" method="POST" action="/subscribe"
+                class="flex flex-col sm:flex-row max-w-lg mx-auto gap-4">
+                <input name="email" type="email" placeholder="E-posta adresiniz"
+                    class="flex-grow px-5 py-4 rounded-lg border-0 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-white focus:outline-none"
+                    required>
+                <button type="submit"
+                    class="bg-white text-[var(--accent-color)] font-bold px-8 py-4 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    Abone Ol
+                </button>
+            </form>
+
+            <!-- YENİ: Başarı/hata mesajları artık Flask/Jinja2 'flash' ile gösterilecek -->
+            <!-- Eski <p id="newsletter-message"> etiketi bununla değiştirildi -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <p class="mt-4 font-medium 
+                    {% if category == 'success' %}text-green-200{% else %}text-yellow-200{% endif %}">
+                {{ message }}
+            </p>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+        </div>
+    </section>
+
+    <!-- ===== Footer ===== -->
+    <footer
+        class="bg-white text-gray-600 py-16 px-6 mt-0 border-t border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Logo & Sosyal -->
+            <div>
+                <a href="#" class="text-3xl font-bold tracking-tighter text-gray-900 dark:text-white">
+                    Moto<span style="color: var(--accent-color);">Love</span>
+                </a>
+                <p class="mt-4 mb-6 dark:text-gray-400">Geleceğin sürüş deneyimi, bugün.</p>
+                <div class="flex space-x-4 text-2xl">
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon
+                            name="logo-instagram"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon
+                            name="logo-facebook"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon
+                            name="logo-youtube"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon
+                            name="logo-twitter"></ion-icon></a>
+                </div>
+            </div>
+
+            <!-- Hızlı Linkler -->
+            <div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4 dark:text-white">Hızlı Linkler</h4>
+                <ul class="space-y-2">
+                    <li><a href="/" class="hover:text-gray-900 dark:hover:text-white">Ana Sayfa</a></li>
+                    <li><a href="ilan.html" class="hover:text-gray-900 dark:hover:text-white">İlanlar</a></li>
+                    <li><a href="ilanver.html" class="hover:text-gray-900 dark:hover:text-white">İlan Ver</a></li>
+                    <li><a href="/ihale" class="hover:text-gray-900 dark:hover:text-white">İhale</a></li>
+                    <li><a href="forum.html" class="hover:text-gray-900 dark:hover:text-white">Forum</a></li>
+                </ul>
+            </div>
+
+            <!-- Destek -->
+            <div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4 dark:text-white">Destek</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">S.S.S.</a></li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">İletişim</a></li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">Gizlilik Politikası</a></li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">Kullanım Şartları</a></li>
+                </ul>
+            </div>
+
+            <!-- İletişim -->
+            <div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4 dark:text-white">İletişim</h4>
+                <ul class="space-y-2">
+                    <li><a href="mailto:info@motolove.com"
+                            class="hover:text-gray-900 dark:hover:text-white">emresynsd@gmail.com</a></li>
+                    <li><a href="tel:+905551234567" class="hover:text-gray-900 dark:hover:text-white">+90 552 886 34
+                            42</a></li>
+                    <li>
+                        <p>Love Plaza, İstanbul, Türkiye</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div
+            class="text-center text-gray-500 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 dark:text-gray-400">
+            &copy; 2025 MotoLove. Tüm hakları saklıdır.
+        </div>
+    </footer>
+
+
+    <!-- ===== Modal (Detaylar Penceresi) (Aydınlık Tema) ===== -->
+    <div id="bikeModal"
+        class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div
+            class="modal-content w-full max-w-4xl rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+            <div class="flex justify-between items-center p-5 border-b border-gray-200 dark:border-gray-700">
+                <h3 id="modalTitle" class="text-2xl font-bold text-gray-900 dark:text-white">Model Detayları</h3>
+                <button id="closeModal"
+                    class="text-3xl text-gray-400 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2">
+                <!-- Modal Resim -->
+                <img id="modalImage" src="https://placehold.co/600x400/f3f4f6/e11d48?text=Model" alt="Model Detayı"
+                    class="w-full h-96 object-cover">
+
+                <!-- Modal İçerik -->
+                <div class="p-8 flex flex-col justify-between">
+                    <div>
+                        <span id="modalType"
+                            class="inline-block bg-rose-100 text-[var(--accent-color)] text-sm font-bold px-3 py-1 rounded-full mb-4 dark:bg-gray-700 dark:text-rose-300">Satılık</span>
+                        <h4 class="text-xl font-bold text-gray-900 mb-3 dark:text-white">Özellikler</h4>
+                        <pre id="modalSpecs"
+                            class="text-gray-600 whitespace-pre-wrap font-sans text-base leading-relaxed dark:text-gray-300"></pre>
+                    </div>
+                    <div class="mt-8">
+                        <p class="text-4xl font-bold text-gray-900 mb-5 dark:text-white" id="modalPrice">120.000 TL</p>
+                        <a id="modalAction" href="#"
+                            class="btn-primary btn-pulse text-lg font-semibold px-8 py-4 rounded-lg w-full text-center block">
+                            Hemen Satın Al
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- YENİ: Karşılaştırma Barı (Gizli) -->
+    <div id="compareBar"
+        class="w-11/12 max-w-2xl bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-4 flex items-center justify-between dark:border dark:border-gray-700">
+        <div class="flex items-center space-x-3">
+            <span class="font-semibold text-gray-900 dark:text-white">Karşılaştır:</span>
+            <div id="compareItemsList" class="flex space-x-2">
+                <!-- Seçilen itemler buraya JS ile eklenecek -->
+                <!-- Örnek: <span class="text-sm bg-gray-100 dark:bg-gray-700 dark:text-gray-200 px-2 py-1 rounded">XSR 900</span> -->
+            </div>
+        </div>
+        <button id="compareNowBtn" class="btn-primary font-semibold px-5 py-2 rounded-lg text-sm" disabled>
+            Karşılaştır (<span id="compareCount">0</span>/3)
+        </button>
+    </div>
+
+    <!-- YENİ: Karşılaştırma Modalı (Gizli) -->
+    <div id="compareModal"
+        class="modal hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div
+            class="modal-content w-full max-w-5xl rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+            <div class="flex justify-between items-center p-5 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Modelleri Karşılaştır</h3>
+                <button id="closeCompareModal"
+                    class="text-3xl text-gray-400 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition-colors">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+
+            <!-- Karşılaştırma içeriği buraya eklenecek -->
+            <div id="compareContent" class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- JS ile doldurulacak -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== YENİ: SOHBET BOTU HTML ===== -->
+    <!-- Sohbet Balonu (FAB) -->
+    <button id="chat-bubble">
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+    </button>
+
+    <!-- Sohbet Penceresi (Gizli) -->
+    <div id="chat-window" class="hidden">
+        <!-- Başlık -->
+        <div id="chat-header">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white">MotoAsistan</h3>
+            <button id="close-chat"
+                class="text-2xl text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                <ion-icon name="close-outline"></ion-icon>
+            </button>
+        </div>
+
+        <!-- Mesaj Alanı -->
+        <div id="chat-messages">
+            <!-- İlk Mesaj (Bot) -->
+            <div class="chat-message bot">
+                Merhaba! Ben MotoAsistan. Motosikletler, kiralama veya ihaleler hakkında nasıl yardımcı olabilirim?
+            </div>
+        </div>
+
+        <!-- Giriş Formu -->
+        <form id="chat-input-form">
+            <input type="text" id="chat-input" placeholder="Bir mesaj yazın..." required autocomplete="off">
+            <button type="submit" id="chat-send-btn">
+                <ion-icon name="paper-plane-outline"></ion-icon>
+            </button>
+        </form>
+    </div>
+    <!-- ===== / SOHBET BOTU HTML BİTİŞ ===== -->
+
+
+    <!-- ===== JavaScript (GÜNCELLENDİ) ===== -->
+    <script>
+        // Geri sayım için global bir interval değişkeni
+        let countdownInterval = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const audioPlayer = new Audio();
+            audioPlayer.volume = 0.5; // Sesi ayarla
+            let currentPlayingCard = null;
+
+            // --- (Navbar, Mobil Menu, Scroll Animasyon... kodları aynı) ...
+            const mainHeader = document.getElementById('main-header');
+            const navbar = document.getElementById('navbar');
+            const topBar = document.getElementById('top-bar');
+            let lastScrollY = window.scrollY;
+
+            window.addEventListener('scroll', () => {
+                // YENİ: mainHeader null mı diye kontrol et (sağlamlık için)
+                if (window.scrollY > 50) {
+                    if (navbar) navbar.classList.add('navbar-scrolled');
+                    if (topBar) topBar.classList.add('top-bar-hidden');
+                } else {
+                    if (navbar) navbar.classList.remove('navbar-scrolled');
+                    if (topBar) topBar.classList.remove('top-bar-hidden');
+                }
+
+                if (window.scrollY > lastScrollY && window.scrollY > 200) {
+                    if (mainHeader) mainHeader.classList.add('header-hidden');
+                } else {
+                    if (mainHeader) mainHeader.classList.remove('header-hidden');
+                }
+                lastScrollY = window.scrollY;
+            });
+
+            // --- Mobil Menu Toggle (Mevcut) ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            // YENİ: mobileMenuButton null mı diye kontrol et
+            if (mobileMenuButton && mobileMenu) {
+                const mobileMenuIcon = mobileMenuButton.querySelector('ion-icon');
+
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    if (mobileMenuIcon) {
+                        mobileMenuIcon.setAttribute('name', mobileMenu.classList.contains('hidden') ? 'menu-outline' : 'close-outline');
+                    }
+                });
+
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                        if (mobileMenuIcon) {
+                            mobileMenuIcon.setAttribute('name', 'menu-outline');
+                        }
+                    });
+                });
+            }
+
+            // --- Kaydırma ile Animasyon (Mevcut) ---
+            const scrollElements = document.querySelectorAll('.animate-in');
+            // YENİ: IntersectionObserver desteği var mı diye kontrol et
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                scrollElements.forEach(el => observer.observe(el));
+            } else {
+                // Eski tarayıcılar için fallback (hepsini göster)
+                scrollElements.forEach(el => el.classList.add('is-visible'));
+            }
+
+            // --- YENİ: Ana Sayfa Link Düzeltmeleri ---
+            // (Statik linkleri dinamik rotalara/kaydırmalara yönlendir)
+
+            // 1. "Koleksiyonu Keşfet" Butonu (Hero)
+            const heroDiscoverButton = document.querySelector('#hero a[href="ilan.html"]');
+            if (heroDiscoverButton) {
+                // Bu zaten doğru, ilan.html'e gitmeli (veya /ilan rotasına)
+                // Rota kullandığımız için /ilan yapalım
+                heroDiscoverButton.href = '/ilan'; // GÜNCELLENDİ (ihale.html'deki gibi)
+            }
+
+            // 2. "Hemen Kirala" Butonu (Hero)
+            const heroRentButton = document.querySelector('#hero a[href="#featured-rent"]');
+            if (heroRentButton) {
+                // Bu zaten doğru, #featured-rent ID'li bölüme kaydırır.
+            }
+
+            // 3. Mobil Menu Linkleri (Emin olmak için)
+            const mobileSaleLink = document.querySelector('#mobile-menu a[href="ilan.html"]');
+            if (mobileSaleLink) {
+                mobileSaleLink.href = '/ilan'; // GÜNCELLENDİ
+            }
+            const mobileRentLink = document.querySelector('#mobile-menu a[href="#featured-rent"]');
+            if (mobileRentLink) {
+                // Bu zaten doğru, kaydırır.
+            }
+            const mobileHomePageLink = document.querySelector('#mobile-menu a[href="#hero"]');
+            if (mobileHomePageLink) {
+                mobileHomePageLink.href = "/"; // GÜNCELLENDİ
+            }
+            const mobileHowItWorksLink = document.querySelector('#mobile-menu a[href="#how-it-works"]');
+            if (mobileHowItWorksLink) {
+                // Bu zaten doğru, kaydırır.
+            }
+
+            // 4. Footer Linkleri (Emin olmak için)
+            document.querySelectorAll('footer a[href="#hero"]').forEach(link => link.href = '/');
+            document.querySelectorAll('footer a[href="#categories"]').forEach(link => link.href = '/#categories');
+            document.querySelectorAll('footer a[href="#featured-sale"]').forEach(link => link.href = '/#featured-sale');
+            document.querySelectorAll('footer a[href="#featured-rent"]').forEach(link => link.href = '/#featured-rent');
+            document.querySelectorAll('footer a[href="ilan.html"]').forEach(link => link.href = '/ilan');
+            document.querySelectorAll('footer a[href="ilanver.html"]').forEach(link => link.href = '/ilanver');
+            document.querySelectorAll('footer a[href="forum.html"]').forEach(link => link.href = '/forum');
+            document.querySelectorAll('footer a[href="/ihale"]').forEach(link => {/* Bu zaten doğru */ });
+
+
+            // --- "Sıcak Satışlar" bölümünü dinamik olarak yükle (GÜNCELLENDİ) ---
+            const featuredGrid = document.getElementById('featured-bikes-grid');
+            const featuredRentalsGrid = document.getElementById('featured-rentals-grid');
+
+            async function loadFeaturedMotorcycles() {
+                if (!featuredGrid) return;
+
+                try {
+                    const response = await fetch('/api/motorcycles?cache_bust=' + new Date().getTime());
+                    if (!response.ok) {
+                        throw new Error(`API hatası: ${response.status}`);
+                    }
+                    const motorcycles = await response.json();
+
+                    if (!motorcycles || motorcycles.length === 0) {
+                        featuredGrid.innerHTML = '<p class="text-gray-500 text-center col-span-3">Şu anda gösterilecek motosiklet bulunmamaktadır.</p>';
+                        return;
+                    }
+
+                    featuredGrid.innerHTML = '';
+
+                    motorcycles.forEach(motor => {
+                        const specs = [
+                            motor.specs_range ? `Menzil: ${motor.specs_range}km` : '',
+                            motor.specs_speed ? `Hız: ${motor.specs_speed}km/s` : '',
+                            motor.specs_motor ? `Motor: ${motor.specs_motor}` : '',
+                            motor.specs_extra ? `${motor.specs_extra}` : ''
+                        ].filter(Boolean).join(' | ');
+
+                        const soundUrl = motor.sound_url || null;
+                        const priceFormatted = motor.price ? parseFloat(motor.price).toLocaleString('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }) : 'Fiyat Belirsiz';
+
+
+                        // ONAYLANDI: Yorum satırı kaldırıldı, data-id eklendi
+                        const cardHTML = `
+                <div class="bike-card rounded-xl overflow-hidden animate-in animate-up is-visible relative" 
+                     data-tilt 
+                     data-sound-url="${soundUrl}">
+                    
+                    <button class="compare-btn" 
+                            data-id="${motor.id}"
+                            data-title="${motor.title}"
+                            data-image="${motor.image_url}"
+                            data-price="${priceFormatted}"
+                            data-specs="${specs}">
+                        <ion-icon name="git-compare-outline"></ion-icon>
+                    </button>
+                    <div class="card-image-wrapper">
+                        <img src="${motor.image_url}" alt="${motor.title}" class="w-full h-64 object-cover card-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/f3f4f6/e11d48?text=Resim+Yok';">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2 dark:text-white">${motor.title}</h3>
+                        <p class="text-gray-600 mb-4 dark:text-gray-400 truncate">${motor.description || 'Açıklama mevcut değil'}</p>
+                        <div class="flex justify-between items-center mt-6">
+                            <span class="text-3xl font-bold" style="color: var(--accent-color);">${priceFormatted}</span>
+                            <button class="btn-secondary font-semibold px-5 py-2 rounded-lg open-modal"
+                                data-id="${motor.id}" 
+                                data-image="${motor.image_url}"
+                                data-title="${motor.title}"
+                                data-type="Satılık"
+                                data-price="${priceFormatted}"
+                                data-specs="${specs}"
+                                data-raw-price="${motor.price}">
+                                Detaylar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+                        featuredGrid.innerHTML += cardHTML;
+                    });
+
+                    const newTiltCards = featuredGrid.querySelectorAll('[data-tilt]');
+                    if (newTiltCards.length > 0 && typeof VanillaTilt !== 'undefined') {
+                        VanillaTilt.init(newTiltCards, {
+                            max: 10, speed: 400, glare: true, "max-glare": 0.2
+                        });
+                    }
+
+                } catch (error) {
+                    console.error('Motorlar yüklenirken hata oluştu:', error);
+                    featuredGrid.innerHTML = '<p class="text-red-500 text-center col-span-3">Motorlar yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.</p>';
+                }
+            }
+
+            // --- "Günlük Heyecan" bölümünü dinamik olarak yükle ---
+            async function loadFeaturedRentals() {
+                if (!featuredRentalsGrid) return;
+
+                try {
+                    const response = await fetch('/api/motorcycles/rentals?cache_bust=' + new Date().getTime());
+                    if (!response.ok) {
+                        throw new Error(`Kiralık API hatası: ${response.status}`);
+                    }
+                    const motorcycles = await response.json();
+
+                    if (!motorcycles || motorcycles.length === 0) {
+                        featuredRentalsGrid.innerHTML = '<p class="text-gray-500 text-center col-span-3">Şu anda gösterilecek kiralık motosiklet bulunmamaktadır.</p>';
+                        return;
+                    }
+
+                    featuredRentalsGrid.innerHTML = '';
+
+                    motorcycles.forEach(motor => {
+                        const specs = [
+                            motor.specs_range ? `Menzil: ${motor.specs_range}km` : '',
+                            motor.specs_speed ? `Hız: ${motor.specs_speed}km/s` : '',
+                            motor.specs_motor ? `Motor: ${motor.specs_motor}` : '',
+                            motor.specs_extra ? `${motor.specs_extra}` : ''
+                        ].filter(Boolean).join(' | ');
+
+                        const priceFormatted = motor.price ? parseFloat(motor.price).toLocaleString('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }) : 'Fiyat Belirsiz';
+
+                        // ONAYLANDI: Yorum satırı kaldırıldı, data-id eklendi
+                        const cardHTML = `
+                    <div class="bike-card rounded-xl overflow-hidden animate-in animate-up is-visible relative" 
+                         data-tilt> 
+                        
+                        <button class="compare-btn" 
+                                data-id="${motor.id}"
+                                data-title="${motor.title}"
+                                data-image="${motor.image_url}"
+                                data-price="${priceFormatted} / Gün"
+                                data-specs="${specs}">
+                            <ion-icon name="git-compare-outline"></ion-icon>
+                        </button>
+                        <div class="card-image-wrapper">
+                            <img src="${motor.image_url}" alt="${motor.title}" class="w-full h-64 object-cover card-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/f3f4f6/e11d48?text=Resim+Yok';">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold mb-2 dark:text-white">${motor.title}</h3>
+                            <p class="text-gray-600 mb-4 dark:text-gray-400 truncate">${motor.description || 'Açıklama mevcut değil'}</p>
+                            <div class="flex justify-between items-center mt-6">
+                                <span class="text-3xl font-bold" style="color: var(--accent-color);">${priceFormatted}<span class="text-lg text-gray-500 dark:text-gray-400">/gün</span></span>
+                                <button class="btn-secondary font-semibold px-5 py-2 rounded-lg open-modal"
+                                    data-id="${motor.id}"
+                                    data-image="${motor.image_url}"
+                                    data-title="${motor.title}"
+                                    data-type="Kiralık"
+                                    data-price="${priceFormatted} / Gün"
+                                    data-specs="${specs}"
+                                    data-raw-price="${motor.price}">
+                                    Detaylar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                        featuredRentalsGrid.innerHTML += cardHTML;
+                    });
+
+                    try {
+                        const newTiltCards = featuredRentalsGrid.querySelectorAll('[data-tilt]');
+                        if (newTiltCards.length > 0 && typeof VanillaTilt !== 'undefined') {
+                            VanillaTilt.init(newTiltCards, {
+                                max: 10, speed: 400, glare: true, "max-glare": 0.2
+                            });
+                        }
+                    } catch (tiltError) {
+                        console.error('Kiralık kartlara tilt efekti uygularken hata oluştu:', tiltError);
+                    }
+
+                } catch (error) {
+                    console.error('Kiralık motorlar yüklenirken hata oluştu:', error);
+                    featuredRentalsGrid.innerHTML = '<p class="text-red-500 text-center col-span-3">Kiralık motorlar yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.</p>';
+                }
+            }
+
+            // === YENİ: ÖNE ÇIKAN İHALE YÜKLEYİCİ ===
+            async function loadFeaturedAuction() {
+                const teaserSection = document.getElementById('auction-teaser');
+                if (!teaserSection) return;
+
+                // Gerekli DOM elementlerini seç
+                const titleEl = teaserSection.querySelector('#auction-title');
+                const descEl = teaserSection.querySelector('#auction-desc');
+                const linkEl = teaserSection.querySelector('#auction-link');
+                const modelEl = teaserSection.querySelector('#auction-model'); // 3D Model
+
+                try {
+                    const response = await fetch('/api/auctions/featured');
+                    if (!response.ok) throw new Error('API yanıtı başarısız');
+
+                    const data = await response.json();
+
+                    if (data.success && data.auction) {
+                        const auction = data.auction;
+
+                        // Başlangıç fiyatını formatla
+                        const priceFormatted = parseFloat(auction.current_price).toLocaleString('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 });
+
+                        // Elementleri güncelle
+                        if (titleEl) titleEl.textContent = auction.title;
+                        if (descEl) descEl.textContent = `${auction.description} Başlangıç fiyatı: ${priceFormatted}`;
+                        if (linkEl) {
+                            linkEl.href = `/ihale/${auction.id}`; // Doğru ihale detay sayfasına yönlendir
+                            linkEl.textContent = 'İhaleye Katıl'; // Buton metnini güncelle
+                        }
+
+                        // 3D Model'i güncelle (Eğer image_url'i poster olarak kullanmak istersek)
+                        if (modelEl && auction.image_url) {
+                            modelEl.poster = auction.image_url;
+                        }
+
+                        // Geri sayımı başlat
+                        setupCountdown(auction.end_time);
+
+                    } else {
+                        // Aktif ihale yoksa
+                        if (titleEl) titleEl.textContent = 'Şu Anda Aktif İhale Yok';
+                        if (descEl) descEl.textContent = 'Yeni ihaleler için bizi takip etmeye devam edin. Salonu görmek için tıklayın.';
+                        if (linkEl) linkEl.href = '/ihale'; // Salon sayfasına yönlendir
+                    }
+
+                } catch (error) {
+                    console.error('Öne çıkan ihale yüklenirken hata:', error);
+                    if (titleEl) titleEl.textContent = 'İhaleler Yüklenemedi';
+                    if (descEl) descEl.textContent = 'Veriler çekilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.';
+                }
+            }
+
+            // === YENİ: DİNAMİK GERİ SAYIM FONKSİYONU ===
+            function setupCountdown(endTimeString) {
+                const countdownElement = document.getElementById('countdown');
+                if (!countdownElement) return;
+
+                // Mevcut bir interval varsa temizle
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                }
+
+                const countdownDate = new Date(endTimeString).getTime();
+
+                const updateCountdown = () => {
+                    const now = new Date().getTime();
+                    const distance = countdownDate - now;
+
+                    if (distance < 0) {
+                        clearInterval(countdownInterval);
+                        countdownElement.innerHTML = "<p class='text-xl text-red-600 font-bold w-full col-span-4 text-center'>İHALE SONA ERDİ!</p>";
+                        // Ana sayfadaki butonu da güncelleyebiliriz
+                        const linkEl = document.getElementById('auction-link');
+                        if (linkEl) {
+                            linkEl.textContent = 'İhale Sona Erdi';
+                            linkEl.classList.remove('btn-pulse');
+                        }
+                        return;
+                    }
+
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    const daysEl = document.getElementById('days');
+                    const hoursEl = document.getElementById('hours');
+                    const minutesEl = document.getElementById('minutes');
+                    const secondsEl = document.getElementById('seconds');
+
+                    if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+                    if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+                    if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+                    if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+                };
+
+                updateCountdown(); // Hemen ilk güncellemeyi yap
+                countdownInterval = setInterval(updateCountdown, 1000); // Her saniye güncelle
+            }
+
+
+            // --- Modal (Detay) İşlevselliği (Ödeme Sayfasına Yönlendirme) ---
+            const modal = document.getElementById('bikeModal');
+            const closeModalButton = document.getElementById('closeModal');
+
+            document.body.addEventListener('click', (event) => {
+                const button = event.target.closest('.open-modal');
+
+                if (button && modal) {
+                    const modalImage = document.getElementById('modalImage');
+                    const modalTitle = document.getElementById('modalTitle');
+                    const modalType = document.getElementById('modalType');
+                    const modalSpecs = document.getElementById('modalSpecs');
+                    const modalPrice = document.getElementById('modalPrice');
+                    const modalAction = document.getElementById('modalAction');
+
+                    // Gerekli tüm verileri al
+                    const id = button.dataset.id;
+                    const image = button.dataset.image;
+                    const title = button.dataset.title;
+                    const type = button.dataset.type;
+                    const price = button.dataset.price;
+                    const specs = button.dataset.specs ? button.dataset.specs.split(' | ').join('\n') : '';
+                    const rawPrice = button.dataset.rawPrice; // Ham fiyat
+
+                    // Modal içeriğini doldur
+                    if (modalImage) {
+                        modalImage.src = image;
+                        modalImage.onerror = () => { modalImage.src = 'https://placehold.co/600x400/f3f4f6/e11d48?text=Resim+Yok'; };
+                    }
+                    if (modalTitle) modalTitle.textContent = title;
+                    if (modalType) modalType.textContent = type;
+                    if (modalPrice) modalPrice.textContent = price;
+                    if (modalSpecs) modalSpecs.textContent = specs;
+
+                    // Ana Butonu (Satın Al / Kirala) ayarla
+                    if (modalAction) {
+                        modalAction.textContent = type.toLowerCase().includes('satılık') ? 'Hemen Satın Al' : 'Hemen Kirala';
+
+                        // === YÖNLENDİRME DÜZELTMESİ (URL OLUŞTURMA) ===
+
+                        // URL parametrelerini oluştur
+                        const params = new URLSearchParams({
+                            id: id,
+                            type: type, // 'Satılık' veya 'Kiralık'
+                            title: title,
+                            price: rawPrice, // Ham, formatlanmamış fiyat
+                            image: image
+                        });
+
+                        // DÜZELTME: '.html' OLMADAN, '/odeme' adresine yönlendir
+                        modalAction.href = `/odeme?${params.toString()}`;
+                        // === DÜZELTME SONU ===
+                    }
+
+                    modal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+
+            const closeModal = (modalEl) => {
+                if (modalEl) modalEl.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            };
+
+            if (closeModalButton) {
+                closeModalButton.addEventListener('click', () => closeModal(modal));
+            }
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal(modal);
+                });
+            }
+
+
+            // --- 3D Kart "Tilt" Efekti (Statik Kartlar için) ---
+            const staticTiltCards = document.querySelectorAll('[data-tilt]:not(#featured-bikes-grid [data-tilt]):not(#featured-rentals-grid [data-tilt])');
+            if (staticTiltCards.length > 0 && typeof VanillaTilt !== 'undefined') {
+                VanillaTilt.init(staticTiltCards, {
+                    max: 10, speed: 400, glare: true, "max-glare": 0.2
+                });
+            }
+
+            // --- Gerçek Motor Sesi Çalma Mantığı ---
+            const featuredGridForSound = document.getElementById('featured-bikes-grid');
+            if (featuredGridForSound) {
+                featuredGridForSound.addEventListener('mouseenter', (event) => {
+                    const card = event.target.closest('.bike-card');
+                    if (card && card.dataset.soundUrl && card.dataset.soundUrl !== 'null') {
+                        if (currentPlayingCard !== card) {
+                            try {
+                                audioPlayer.src = card.dataset.soundUrl;
+                                audioPlayer.play().catch(e => console.warn("Ses izni gerekiyor, lütfen sayfaya tıklayın."));
+                                currentPlayingCard = card;
+                            } catch (err) {
+                                console.error("Ses dosyası yüklenemedi:", err, card.dataset.soundUrl);
+                            }
+                        }
+                    }
+                }, true);
+
+                featuredGridForSound.addEventListener('mouseleave', (event) => {
+                    const card = event.target.closest('.bike-card');
+                    if (card && currentPlayingCard === card) {
+                        if (!audioPlayer.paused) {
+                            audioPlayer.pause();
+                            audioPlayer.currentTime = 0;
+                        }
+                        currentPlayingCard = null;
+                    }
+                }, true);
+            }
+
+            // --- Karşılaştırma (Compare) Mantığı (GÜNCELLENDİ) ---
+            let compareItems = [];
+            const compareBar = document.getElementById('compareBar');
+            const compareItemsList = document.getElementById('compareItemsList');
+            const compareCount = document.getElementById('compareCount');
+            const compareNowBtn = document.getElementById('compareNowBtn');
+            const compareModal = document.getElementById('compareModal');
+            const closeCompareModal = document.getElementById('closeCompareModal');
+            const compareContent = document.getElementById('compareContent');
+            const maxCompare = 3;
+
+            document.body.addEventListener('click', (event) => {
+                const btn = event.target.closest('.compare-btn');
+                if (!btn) return;
+
+                event.preventDefault();
+                const id = btn.dataset.id;
+
+                if (compareItems.find(item => item.id === id)) {
+                    compareItems = compareItems.filter(item => item.id !== id);
+                    btn.classList.remove('selected');
+                    btn.innerHTML = '<ion-icon name="git-compare-outline"></ion-icon>';
+                } else {
+                    if (compareItems.length < maxCompare) {
+                        compareItems.push({
+                            id: id,
+                            title: btn.dataset.title,
+                            image: btn.dataset.image,
+                            price: btn.dataset.price,
+                            specs: btn.dataset.specs
+                        });
+                        btn.classList.add('selected');
+                        btn.innerHTML = '<ion-icon name="checkmark-outline"></ion-icon>';
+                    } else {
+                        // Basit bir uyarı (daha iyi bir bildirimle değiştirilebilir)
+                        // alert('Maksimum 3 ürün karşılaştırabilirsiniz.');
+                        // Daha iyi bir bildirim (veya sessizce başarısız olma)
+                        console.warn('Maksimum karşılaştırma limitine ulaşıldı.');
+                    }
+                }
+                updateCompareBar();
+            });
+
+            function updateCompareBar() {
+                if (!compareCount || !compareItemsList || !compareBar || !compareNowBtn) return;
+
+                compareCount.textContent = compareItems.length;
+                compareItemsList.innerHTML = '';
+
+                compareItems.forEach(item => {
+                    compareItemsList.innerHTML += `<span class="text-sm bg-gray-100 dark:bg-gray-700 dark:text-gray-200 px-2 py-1 rounded">${item.title.split(' ')[0]}</span>`;
+                });
+
+                if (compareItems.length > 0) {
+                    compareBar.classList.add('show');
+                } else {
+                    compareBar.classList.remove('show');
+                }
+
+                if (compareItems.length >= 2) {
+                    compareNowBtn.disabled = false;
+                } else {
+                    compareNowBtn.disabled = true;
+                }
+            }
+
+            if (compareNowBtn) {
+                compareNowBtn.addEventListener('click', () => {
+                    if (!compareContent || !compareModal) return;
+
+                    compareContent.innerHTML = '';
+
+                    compareItems.forEach(item => {
+                        const specsHtml = (item.specs || '').split(' | ').map(spec => `<li class="text-sm dark:text-gray-400">${spec}</li>`).join('');
+
+                        compareContent.innerHTML += `
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                        <img src="${item.image}" alt="${item.title}" class="w-full h-40 object-cover rounded-lg mb-4" onerror="this.src='https://placehold.co/400x300/f3f4f6/e11d48?text=Resim+Yok'">
+                        <h4 class="text-lg font-bold mb-2 dark:text-white">${item.title}</h4>
+                        <p class="text-xl font-semibold text-[var(--accent-color)] mb-4">${item.price}</p>
+                        <ul class="space-y-2 list-disc list-inside">
+                            ${specsHtml}
+                        </ul>
+                    </div>
+                `;
+                    });
+
+                    for (let i = 0; i < (maxCompare - compareItems.length); i++) {
+                        compareContent.innerHTML += `<div class="border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-lg p-4 flex items-center justify-center">
+                    <span class="text-gray-400 dark:text-gray-500">Slot boş</span>
+                 </div>`;
+                    }
+
+                    compareModal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+
+            if (closeCompareModal) {
+                closeCompareModal.addEventListener('click', () => closeModal(compareModal));
+            }
+            if (compareModal) {
+                compareModal.addEventListener('click', (e) => {
+                    if (e.target === compareModal) closeModal(compareModal);
+                });
+            }
+
+            // --- Night Mode Toggle (GÜNCELLENDİ - Null Kontrolü) ---
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeToggleMobileBtn = document.getElementById('theme-toggle-mobile');
+
+            const handleThemeToggle = () => {
+                const isDarkMode = document.documentElement.classList.toggle('dark');
+                if (isDarkMode) {
+                    localStorage.setItem('color-theme', 'dark');
+                } else {
+                    localStorage.setItem('color-theme', 'light');
+                }
+            };
+
+            if (themeToggleBtn) themeToggleBtn.addEventListener('click', handleThemeToggle);
+            if (themeToggleMobileBtn) themeToggleMobileBtn.addEventListener('click', handleThemeToggle);
+
+
+            // --- Hero Parçacık Efekti (GÜNCELLENDİ - Null Kontrolü) ---
+            const particleEl = document.getElementById('particle-wind');
+            if (particleEl && typeof tsParticles !== 'undefined') {
+                let particleContainer = null;
+                tsParticles.load("particle-wind", {
+                    autoPlay: false, fpsLimit: 60,
+                    particles: {
+                        number: { value: 150, density: { enable: true, value_area: 800 } },
+                        color: { value: ["#E11D48", "#F472B6", "#FFFFFF"] },
+                        shape: { type: "circle" },
+                        opacity: { value: 0.6, random: true },
+                        size: { value: 3, random: { enable: true, minimumValue: 1 } },
+                        move: { enable: true, speed: 25, direction: "left", random: true, straight: true, outModes: { default: "out" } },
+                        links: { enable: false }
+                    },
+                    interactivity: { events: { onHover: { enable: false }, onClick: { enable: false } } },
+                    detectRetina: true, background: { color: "transparent" }
+                }).then(container => { particleContainer = container; });
+
+                if ('IntersectionObserver' in window) {
+                    const particleObserver = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (particleContainer) {
+                                if (entry.isIntersecting) {
+                                    particleContainer.play();
+                                    if (particleEl) particleEl.style.opacity = 1;
+                                } else {
+                                    particleContainer.pause();
+                                    if (particleEl) particleEl.style.opacity = 0;
+                                }
+                            }
+                        });
+                    }, { threshold: 0.01 });
+                    if (particleEl) particleObserver.observe(particleEl);
+                }
+            }
+
+            // === YENİ: SOHBET BOTU MANTIĞI ===
+            const chatBubble = document.getElementById('chat-bubble');
+            const chatWindow = document.getElementById('chat-window');
+            const closeChatBtn = document.getElementById('close-chat');
+            const chatForm = document.getElementById('chat-input-form');
+            const chatInput = document.getElementById('chat-input');
+            const chatMessages = document.getElementById('chat-messages');
+
+            // Sohbet penceresini aç/kapat
+            const toggleChat = () => {
+                chatWindow.classList.toggle('hidden');
+            };
+
+            if (chatBubble) chatBubble.addEventListener('click', toggleChat);
+            if (closeChatBtn) closeChatBtn.addEventListener('click', toggleChat);
+
+            // Mesajı sohbet ekranına ekle
+            const addMessageToChat = (sender, text, isLoading = false) => {
+                const messageEl = document.createElement('div');
+                messageEl.classList.add('chat-message', sender);
+
+                if (isLoading) {
+                    messageEl.classList.add('loading');
+                    messageEl.innerHTML = '<span></span><span></span><span></span>';
+                } else {
+                    // Güvenlik için metni .textContent ile ekle
+                    messageEl.textContent = text;
+                }
+
+                chatMessages.appendChild(messageEl);
+                // Her zaman en alta kaydır
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                return messageEl; // Yükleniyor durumunu kaldırabilmek için
+            };
+
+            // API'ye mesaj gönder
+            const callChatAPI = async (prompt) => {
+                // Yükleniyor göstergesi ekle
+                const loadingEl = addMessageToChat('bot', '', true);
+
+                try {
+                    const response = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ prompt: prompt })
+                    });
+
+                    // Yükleniyor göstergesini kaldır
+                    if (loadingEl) loadingEl.remove();
+
+                    if (!response.ok) {
+                        throw new Error('API yanıtı başarısız');
+                    }
+
+                    const data = await response.json();
+
+                    if (data.reply) {
+                        addMessageToChat('bot', data.reply);
+                    } else {
+                        addMessageToChat('bot', 'Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.');
+                    }
+
+                } catch (error) {
+                    console.error('Sohbet API hatası:', error);
+                    // Yükleniyor göstergesini kaldır (eğer hala oradaysa)
+                    if (loadingEl) loadingEl.remove();
+                    addMessageToChat('bot', 'Bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
+                }
+            };
+
+            // Form gönderimini yakala
+            if (chatForm) {
+                chatForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const messageText = chatInput.value.trim();
+
+                    if (messageText) {
+                        // Mesajı kullanıcı olarak ekle
+                        addMessageToChat('user', messageText);
+                        // API'yi çağır
+                        callChatAPI(messageText);
+                        // Giriş alanını temizle
+                        chatInput.value = '';
+                    }
+                });
+            }
+            // === / SOHBET BOTU MANTIĞI BİTİŞ ===
+
+
+            // === SAYFA YÜKLENDİĞİNDE VERİLERİ ÇEK ===
+            loadFeaturedMotorcycles();
+            loadFeaturedRentals();
+            loadFeaturedAuction(); // YENİ EKLENDİ
+
+        });
+    </script>
+</body>
+
+</html>

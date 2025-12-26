@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MotoLove | Profilim</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/static/images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class', 
+            theme: { extend: {} }
+        }
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1F2937;
+            background: linear-gradient(-45deg, #f8fafb, #fff7f7, #ffeaea, #f8fafb);
+            background-size: 400% 400%;
+            animation: gradient-background-animation 15s ease infinite;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* === DARK MODE STİLLERİ === */
+        .dark body {
+            color: #E5E7EB;
+            background: linear-gradient(-45deg, #111827, #1f2937, #111827);
+            background-size: 400% 400%;
+            animation: gradient-background-animation 15s ease infinite;
+        }
+        .dark .navbar-scrolled {
+            background-color: rgba(17, 24, 39, 0.85);
+            border-bottom: 1px solid #374151;
+        }
+        .dark .nav-link { color: #D1D5DB; }
+        .dark .nav-link:hover { color: var(--accent-color); }
+        .dark #mobile-menu-button { color: #F9FAFB; }
+        .dark #mobile-menu {
+            background-color: rgba(31, 41, 55, 0.95);
+            border-color: #374151;
+        }
+        .dark #mobile-menu a { color: #F9FAFB; }
+        .dark #mobile-menu a:hover { background-color: #374151; }
+        .dark h1, .dark h2, .dark h3, .dark h4 { color: #FFFFFF; }
+        .dark p, .dark section p, .dark .text-gray-600 { color: #9CA3AF; }
+        .dark .text-gray-700, .dark .text-gray-500 { color: #D1D5DB; }
+        .dark footer { background-color: #1F2937; border-color: #374151; }
+        .dark footer, .dark footer p, .dark footer a { color: #9CA3AF; }
+        .dark footer h4, .dark footer a.text-gray-900, .dark footer a:hover { color: #FFFFFF; }
+        .dark footer .border-t { border-color: #374151; }
+        .dark .profile-container, .dark .profile-tab-content {
+            background-color: #1F2937;
+            border-color: #374151;
+        }
+        .dark .profile-tab {
+            color: #9CA3AF;
+        }
+        .dark .profile-tab:hover {
+            border-color: #4B5563;
+            color: #FFFFFF;
+        }
+        .dark .profile-tab.active {
+            color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        .dark .form-label { color: #D1D5DB; }
+        .dark .form-input {
+            background-color: #374151;
+            border-color: #4B5563;
+            color: #FFFFFF;
+        }
+        .dark .form-input:focus {
+             border-color: var(--accent-color);
+        }
+        .dark .ilan-kart-simple {
+            background-color: #374151;
+            border-color: #4B5563;
+        }
+        .dark .ilan-kart-simple:hover {
+            border-color: var(--accent-color);
+        }
+        /* YENİ: Dosya inputu için dark mode */
+        .dark .form-input[type="file"]::file-selector-button {
+            background-color: #4B5563;
+            color: #D1D5DB;
+            border-color: #4B5563;
+        }
+        .dark .form-input[type="file"]::file-selector-button:hover {
+            background-color: #6B7280;
+        }
+        /* === / DARK MODE BİTİŞİ === */
+
+
+        @keyframes gradient-background-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        :root {
+            --accent-color: #E11D48;
+            --accent-color-hover: #BE123C;
+        }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #E5E7EB; }
+        .dark ::-webkit-scrollbar-track { background: #374151; }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 5px;
+            border: 2px solid #E5E7EB;
+        }
+        .dark ::-webkit-scrollbar-thumb { border-color: #374151; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-color-hover); }
+        ::selection { background: var(--accent-color); color: #FFFFFF; }
+
+        .navbar-scrolled {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 10px -1px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #E5E7EB;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--accent-color), #f87171, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradient-flow 6s linear infinite;
+        }
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px -5px rgba(225, 29, 72, 0.4);
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-color-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px -5px rgba(225, 29, 72, 0.5);
+        }
+
+        .btn-secondary {
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            border: 1px solid #DC2626; /* red-600 */
+            color: #DC2626;
+            transition: all 0.3s ease;
+        }
+        .btn-danger:hover {
+            background-color: #DC2626;
+            color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+            color: #374151;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent-color);
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .nav-link:hover { color: var(--accent-color); }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .nav-link.active { color: var(--accent-color); }
+
+        .header-hidden { transform: translateY(-100%); }
+        .top-bar-hidden {
+            max-height: 0px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            opacity: 0;
+        }
+
+        .profile-container {
+            background-color: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .profile-tab {
+            color: #6B7280;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .profile-tab:hover {
+            border-color: #E5E7EB;
+            color: #1F2937;
+        }
+        .profile-tab.active {
+            color: var(--accent-color);
+            border-color: var(--accent-color);
+            font-weight: 600;
+        }
+        
+        .profile-tab-content {
+            background-color: #F9FAFB;
+            border: 1px solid #E5E7EB;
+        }
+        .profile-tab-pane {
+            display: none;
+        }
+        .profile-tab-pane.active {
+            display: block;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+        .form-input {
+            width: 100%;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+        }
+        
+        /* DÜZENLENDİ: Dosya inputu için özel stil (artık kullanılmıyor) */
+        /* .form-input[type="file"] { ... } */
+        /* .form-input[type="file"]::file-selector-button { ... } */
+
+        .ilan-kart-simple {
+            background-color: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+        }
+        .ilan-kart-simple:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 7px 15px -5px rgba(225, 29, 72, 0.1);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body class="text-gray-800 dark:bg-gray-900">
+
+    <!-- ===== Header / Navbar ===== -->
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-transform duration-300 ease-out">
+        
+        <div id="top-bar" class="bg-rose-100 text-[var(--accent-color)] text-sm font-medium text-center py-2.5 px-6 transition-all duration-300 overflow-hidden max-h-12 opacity-100 dark:bg-rose-900/50 dark:text-rose-300">
+            <p class="flex items-center justify-center">
+                <ion-icon name="sparkles-outline" class="mr-2"></ion-icon>
+                Yeni Sezon Fırsatları! Elektrikli modellerde %15 indirim.
+            </p>
+        </div>
+
+        <nav id="navbar" class="transition-all duration-300 bg-transparent dark:bg-transparent">
+            <div class="container mx-auto px-6 py-5 flex justify-between items-center">
+                <img src="/static/images/motolove.png"
+                     alt="MotoLove Logo" 
+                     class="h-14 md:h-20 w-auto">
+                
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center space-x-8">
+                     <a href="/" class="font-medium nav-link">Ana Sayfa</a>
+                    <a href="/ilanlar" class="font-medium nav-link">İlanlar</a>
+                    <a href="/ilanver" class="font-medium nav-link">İlan Ver</a>
+                    <a href="/ihale" class="font-medium nav-link active">İhale</a>
+                    <a href="/forum" class="font-medium nav-link active">Forum</a>
+                    
+                    {% if user_name %}
+                        <!-- GÜNCELLENDİ: Profil ikonu veya fotoğrafı -->
+                        <a href="/profile" class="flex items-center text-gray-700 dark:text-gray-300 transition-colors group font-semibold">
+                            {% if user.profile_image_url %}
+                                <img src="{{ user.profile_image_url }}" alt="Profil" class="w-8 h-8 rounded-full object-cover mr-2 border-2 border-gray-200 dark:border-gray-600">
+                            {% else %}
+                                <ion-icon name="person-circle" class="text-3xl mr-2 text-[var(--accent-color)]"></ion-icon>
+                            {% endif %}
+                            <span class="font-medium text-sm group-hover:text-[var(--accent-color)]">{{ user_name }}</span>
+                        </a>
+                        <a href="/logout" class="btn-secondary font-semibold px-5 py-2 rounded-lg text-sm ml-4">Çıkış Yap</a>
+                    {% else %}
+                        <a href="/login" class="btn-primary font-semibold px-5 py-2 rounded-lg text-sm ml-4">Giriş Yap</a>
+                    {% endif %}
+
+                    
+                    <button id="theme-toggle" class="text-xl text-gray-700 dark:text-gray-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)] transition-colors duration-200">
+                        <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                        <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                    </button>
+                </div>
+
+                <!-- Mobil Menu Butonu -->
+                <div class="md:hidden flex items-center space-x-4">
+                    <button id="theme-toggle-mobile" class="text-2xl text-gray-900 dark:text-gray-100">
+                        <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                        <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                    </button>
+                    <button id="mobile-menu-button" class="text-3xl text-gray-900 dark:text-gray-100">
+                        <ion-icon name="menu-outline"></ion-icon>
+                    </button>
+                </div>
+
+            </div>
+        </nav>
+        
+        <!-- Mobil Menu (Gizli) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur-sm shadow-xl border-t border-gray-200 dark:bg-gray-800/95 dark:border-gray-700">
+            <a href="/" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">Ana Sayfa</a>
+            <a href="ilan.html" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">İlanlar</a>
+            <a href="ilanver.html" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">İlan Ver</a>
+            <a href="ihale.html" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">İhale</a>
+            <a href="forum.html" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">Forum</a>
+            
+            {% if user_name %}
+                <!-- GÜNCELLENDİ: Mobil profil linki (ikon/fotoğraf) -->
+                <a href="/profile" class="flex items-center px-6 py-3 text-lg font-semibold bg-gray-100 text-[var(--accent-color)] dark:bg-gray-700">
+                    {% if user.profile_image_url %}
+                         <img src="{{ user.profile_image_url }}" alt="Profil" class="w-7 h-7 rounded-full object-cover mr-3">
+                    {% else %}
+                        <ion-icon name="person-circle-outline" class="mr-2 relative top-px"></ion-icon>
+                    {% endif %}
+                    Profilim
+                </a>
+                <a href="/logout" class="block px-6 py-4">
+                    <span class="btn-secondary w-full block text-center font-semibold px-5 py-3 rounded-lg">Çıkış Yap</span>
+                </a>
+            {% else %}
+                <a href="/login" class="block px-6 py-4">
+                    <span class="btn-primary w-full block text-center font-semibold px-5 py-3 rounded-lg">Giriş Yap</span>
+                </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main>
+        
+        <!-- ===== Profil Alanı ===== -->
+        <section class="pt-48 pb-24 relative hero-bg">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    
+                    <!-- Başlık -->
+                    <div class="text-center mb-12">
+                        <h1 class="text-5xl md:text-6xl font-black uppercase tracking-tighter dark:text-white">
+                            Profilim
+                        </h1>
+                        <p class="text-lg text-gray-600 mt-4 dark:text-gray-400">
+                            Hoş geldin, <span class="font-bold text-[var(--accent-color)]">{{ user.name }}</span>. Hesap bilgilerini ve ilanlarını yönet.
+                        </p>
+                    </div>
+
+                    <!-- Profil Kabı -->
+                    <div class="profile-container rounded-xl overflow-hidden dark:bg-gray-800">
+                        
+                        <!-- Profil Başlığı ve İstatistikler -->
+                        <div class="p-8 md:p-10 flex flex-col sm:flex-row items-center gap-6">
+                            <img src="{{ user.profile_image_url or 'https://placehold.co/100x100/e11d48/ffffff?text=' + (user.name[0] | upper) }}" 
+                                 alt="Profil Fotoğrafı"
+                                 class="w-24 h-24 rounded-full border-4 border-white dark:border-gray-700 shadow-lg object-cover">
+                            <div>
+                                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">{{ user.name }}</h2>
+                                <p class="text-gray-500 dark:text-gray-400">MotoLove Üyesi</p>
+                            </div>
+                            
+                            <!-- İstatistikler -->
+                            <div class="ml-auto flex space-x-6 text-center pt-4 sm:pt-0">
+                                <div>
+                                    <span class="text-3xl font-bold gradient-text">{{ listings|length }}</span>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">İlan</p>
+                                </div>
+                                <div>
+                                    <span class="text-3xl font-bold gradient-text">{{ favorites|length }}</span>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Favori</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sekme Başlıkları (Tab Nav) -->
+                        <nav class="flex border-b border-gray-200 dark:border-gray-700 px-8">
+                            <button class="profile-tab py-4 px-6 text-sm font-medium active" data-tab="hesap">
+                                Hesap Bilgileri
+                            </button>
+                            <button class="profile-tab py-4 px-6 text-sm font-medium" data-tab="guvenlik">
+                                Güvenlik
+                            </button>
+                            <button class="profile-tab py-4 px-6 text-sm font-medium" data-tab="ilanlar">
+                                İlanlarım ({{ listings|length }})
+                            </button>
+                            <button class="profile-tab py-4 px-6 text-sm font-medium" data-tab="favoriler">
+                                Favorilerim ({{ favorites|length }})
+                            </button>
+                              <!-- YENİ EKLENEN BUTON (Yatay sekme olarak) -->
+                <a href="/mesajlarim" class="profile-tab py-4 px-4 md:px-6 text-sm font-medium flex items-center">
+                    <ion-icon name="chatbubble-ellipses-outline" class="text-lg mr-2"></ion-icon>
+                    <span>Mesajlarım</span>
+                </a>
+            </nav>
+                        </nav>
+
+                        <!-- Sekme İçerikleri (Tab Content) -->
+                        <div class="profile-tab-content dark:bg-gray-800/50 dark:border-gray-700">
+                            
+                            <!-- 1. Hesap Bilgileri Sekmesi -->
+                            <div id="tab-hesap" class="profile-tab-pane active p-8 md:p-10">
+                                <form id="profile-update-form" class="space-y-6">
+                                    <h3 class="text-2xl font-bold mb-6 dark:text-white">Bilgilerini Güncelle</h3>
+                                    
+                                    <!-- GÜNCELLENDİ: Profil Fotoğrafı Yükleme Alanı (Daha Şık) -->
+                                    <div>
+                                        <label class="form-label">Profil Fotoğrafı</label>
+                                        <div class="flex items-center gap-4">
+                                            <!-- Mevcut Fotoğrafın Önizlemesi -->
+                                            <img id="image-preview" src="{{ user.profile_image_url or 'https://placehold.co/100x100/e11d48/ffffff?text=' + (user.name[0] | upper) }}" 
+                                                 alt="Profil Fotoğrafı"
+                                                 class="w-20 h-20 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600">
+                                            
+                                            <!-- Gizli File Input -->
+                                            <input type="file" id="prof-image" name="profile_image" class="hidden" accept="image/png, image/jpeg, image/gif">
+                                            
+                                            <!-- Özel Buton -->
+                                            <button type="button" onclick="document.getElementById('prof-image').click()" 
+                                                    class="btn-secondary font-medium px-5 py-2 rounded-lg text-sm">
+                                                Fotoğraf Seç...
+                                            </button>
+                                            <span id="file-name-display" class="text-sm text-gray-500 dark:text-gray-400"></span>
+                                        </div>
+                                        <p class="text-xs text-gray-400 mt-2">(gif, jpg, jpeg, png...)</p>
+                                    </div>
+
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label for="prof-name" class="form-label">Tam Adınız</label>
+                                            <input type="text" id="prof-name" name="name" class="form-input dark:bg-gray-700 dark:border-gray-600" value="{{ user.name }}">
+                                        </div>
+                                        <div>
+                                            <label for="prof-email" class="form-label">E-posta Adresiniz</label>
+                                            <input type="email" id="prof-email" name="email" class="form-input dark:bg-gray-700 dark:border-gray-600" value="{{ user.email }}" disabled>
+                                            <p class="text-xs text-gray-400 mt-1">E-posta adresi değiştirilemez.</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="prof-phone" class="form-label">Telefon Numaranız</label>
+                                        <input type="tel" id="prof-phone" name="phone" class="form-input dark:bg-gray-700 dark:border-gray-600" value="{{ user.phone or '' }}" placeholder="+90 555 123 4567">
+                                    </div>
+                                    <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
+                                        <button type="submit" class="btn-primary font-semibold px-6 py-3 rounded-lg">
+                                            Değişiklikleri Kaydet
+                                        </button>
+                                        <p id="profile-message" class="text-sm mt-4"></p>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- 2. Güvenlik Sekmesi -->
+                            <div id="tab-guvenlik" class="profile-tab-pane p-8 md:p-10">
+                                <form id="password-change-form" class="space-y-6 max-w-md">
+                                    <h3 class="text-2xl font-bold mb-6 dark:text-white">Şifre Değiştir</h3>
+                                    <div>
+                                        <label for="current-password" class="form-label">Mevcut Şifreniz</label>
+                                        <input type="password" id="current-password" class="form-input dark:bg-gray-700 dark:border-gray-600" required>
+                                    </div>
+                                    <div>
+                                        <label for="new-password" class="form-label">Yeni Şifreniz</label>
+                                        <input type="password" id="new-password" class="form-input dark:bg-gray-700 dark:border-gray-600" required>
+                                    </div>
+                                    <div>
+                                        <label for="confirm-password" class="form-label">Yeni Şifreniz (Tekrar)</label>
+                                        <input type="password" id="confirm-password" class="form-input dark:bg-gray-700 dark:border-gray-600" required>
+                                    </div>
+                                    <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
+                                        <button type="submit" class="btn-primary font-semibold px-6 py-3 rounded-lg">
+                                            Şifreyi Güncelle
+                                        </button>
+                                        <p id="password-message" class="text-sm mt-4"></p>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <!-- 3. İlanlarım Sekmesi -->
+                            <div id="tab-ilanlar" class="profile-tab-pane p-8 md:p-10">
+                                <h3 class="text-2xl font-bold mb-6 dark:text-white">Yayınladığım İlanlar</h3>
+                                <div id="listings-container" class="space-y-4">
+                                    
+                                    {% if not listings %}
+                                        <p id="no-listings-message" class="text-gray-500 dark:text-gray-400">Henüz yayınladığınız bir ilan bulunmuyor.</p>
+                                    {% endif %}
+
+                                    {% for listing in listings %}
+                                    <div class="ilan-kart-simple flex items-center p-4 gap-4 dark:bg-gray-700 dark:border-gray-600">
+                                        <img src="{{ listing.image_url or 'https://placehold.co/100x75' }}" alt="İlan" class="w-24 rounded-lg object-cover h-16">
+                                        <div class="flex-grow">
+                                            <h4 class="font-bold text-lg dark:text-white">{{ listing.title }}</h4>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400">Durum: {{ listing.status }}</p>
+                                            <p class="text-lg font-semibold text-[var(--accent-color)]">{{ listing.price }} TL</p>
+                                        </div>
+                                        <div class="flex flex-col sm:flex-row gap-2">
+                                            <button class="btn-secondary text-sm px-3 py-1 rounded-md">Düzenle</button>
+                                            <button onclick="deleteListing(this, {{ listing.id }})" class="btn-danger text-sm px-3 py-1 rounded-md">Kaldır</button>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    
+                                </div>
+                            </div>
+                            
+                            <!-- 4. Favorilerim Sekmesi -->
+                            <div id="tab-favoriler" class="profile-tab-pane p-8 md:p-10">
+                                <h3 class="text-2xl font-bold mb-6 dark:text-white">Favori İlanlarım</h3>
+                                <div id="favorites-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                                    {% if not favorites %}
+                                        <p id="no-favorites-message" class="text-gray-500 dark:text-gray-400">Henüz favorilerinize eklediğiniz bir ilan yok.</p>
+                                    {% endif %}
+                                    
+                                    {% for fav in favorites %}
+                                    <div class="ilan-kart-simple flex items-center p-3 gap-3 dark:bg-gray-700 dark:border-gray-600">
+                                        <img src="{{ fav.image_url or 'https://placehold.co/80x60' }}" alt="İlan" class="w-20 rounded-md object-cover h-14">
+                                        <div>
+                                            <h4 class="font-semibold dark:text-white">{{ fav.title }}</h4>
+                                            <p class="text-md font-semibold text-[var(--accent-color)]">{{ fav.price }} TL</p>
+                                        </div>
+                                        <button onclick="removeFavorite(this, {{ fav.id }})" class="ml-auto text-red-500 hover:text-red-700 text-2xl" title="Favoriden Kaldır">
+                                            <ion-icon name="heart-dislike-outline"></ion-icon>
+                                        </button>
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== Footer (index.html ile aynı) ===== -->
+    <footer class="bg-white text-gray-600 py-16 px-6 mt-0 border-t border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Logo & Sosyal -->
+            <div>
+                <a href="/" class="text-3xl font-bold tracking-tighter text-gray-900 dark:text-white">
+                    Moto<span style="color: var(--accent-color);">Love</span>
+                </a>
+                <p class="mt-4 mb-6 dark:text-gray-400">Geleceğin sürüş deneyimi, bugün.</p>
+                <div class="flex space-x-4 text-2xl">
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-instagram"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-facebook"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-youtube"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-twitter"></ion-icon></a>
+                </div>
+            </div>
+            
+            <!-- Hızlı Linkler -->
+            <div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4 dark:text-white">Hızlı Linkler</h4>
+                <ul class="space-y-2">
+                    <li><a href="/" class="hover:text-gray-900 dark:hover:text-white">Ana Sayfa</a></li>
+                    <li><a href="ilan.html" class="hover:text-gray-900 dark:hover:text-white">İlanlar</a></li>
+                    <li><a href="ilanver.html" class="hover:text-gray-900 dark:hover:text-white">İlan Ver</a></li>
+                    <li><a href="ihale.html" class="hover:text-gray-900 dark:hover:text-white">İhale</a></li>
+                    <li><a href="forum.html" class="hover:text-gray-900 dark:hover:text-white">Forum</a></li>
+                </ul>
+            </div>
+            
+            <!-- Destek -->
+            <div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4 dark:text-white">Destek</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">S.S.S.</a></li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">İletişim</a></li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">Gizlilik Politikası</a></li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">Kullanım Şartları</a></li>
+                </ul>
+            </div>
+
+            <!-- İletişim -->
+            <div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4 dark:text-white">İletişim</h4>
+                <ul class="space-y-2">
+                    <li><a href="mailto:info@motolove.com" class="hover:text-gray-900 dark:hover:text-white">emresynsd@gmail.com</a></li>
+                    <li><a href="tel:+905551234567" class="hover:text-gray-900 dark:hover:text-white">+90 552 886 34 42</a></li>
+                    <li><p>Love Plaza, İstanbul, Türkiye</p></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center text-gray-500 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 dark:text-gray-400">
+            &copy; 2025 MotoLove. Tüm hakları saklıdır.
+        </div>
+    </footer>
+    
+    <!-- ===== JavaScript (Genel) ===== -->
+    <script>
+        // İlan Silme Fonksiyonu
+        function deleteListing(button, listingId) {
+            console.log(`İlan siliniyor: ${listingId}`);
+            fetch(`/api/listing/delete/${listingId}`, { method: 'DELETE' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const card = button.closest('.ilan-kart-simple');
+                    card.style.transition = 'opacity 0.5s ease';
+                    card.style.opacity = '0';
+                    setTimeout(() => {
+                        card.remove();
+                        const container = document.getElementById('listings-container');
+                        if (container.children.length <= 1) { 
+                            const noListingMsg = document.getElementById('no-listings-message');
+                            if(noListingMsg) noListingMsg.style.display = 'block';
+                        }
+                    }, 500);
+                } else {
+                    console.error('İlan silinemedi:', data.message);
+                }
+            })
+            .catch(error => console.error('Ağ hatası:', error));
+        }
+
+        // Favoriden Kaldırma Fonksiyonu
+        function removeFavorite(button, motorcycleId) {
+            console.log(`Favoriden kaldırılıyor: ${motorcycleId}`);
+            fetch(`/api/favorite/remove/${motorcycleId}`, { method: 'DELETE' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const card = button.closest('.ilan-kart-simple');
+                    card.style.transition = 'opacity 0.5s ease';
+                    card.style.opacity = '0';
+                    setTimeout(() => {
+                        card.remove();
+                        const container = document.getElementById('favorites-container');
+                        if (container.children.length <= 1) { 
+                            const noFavMsg = document.getElementById('no-favorites-message');
+                            if(noFavMsg) noFavMsg.style.display = 'block';
+                        }
+                    }, 500);
+                } else {
+                    console.error('Favori kaldırılamadı:', data.message);
+                }
+            })
+            .catch(error => console.error('Ağ hatası:', error));
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Navbar Scroll Efekti ---
+            const mainHeader = document.getElementById('main-header');
+            const navbar = document.getElementById('navbar');
+            const topBar = document.getElementById('top-bar');
+            let lastScrollY = window.scrollY;
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('navbar-scrolled');
+                    topBar.classList.add('top-bar-hidden');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                    topBar.classList.remove('top-bar-hidden');
+                }
+                if (window.scrollY > lastScrollY && window.scrollY > 200) {
+                    mainHeader.classList.add('header-hidden');
+                } else {
+                    mainHeader.classList.remove('header-hidden');
+                }
+                lastScrollY = window.scrollY;
+            });
+
+            // --- Mobil Menu Toggle ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuIcon = mobileMenuButton.querySelector('ion-icon');
+            
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                mobileMenuIcon.setAttribute('name', mobileMenu.classList.contains('hidden') ? 'menu-outline' : 'close-outline');
+            });
+            
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuIcon.setAttribute('name', 'menu-outline');
+                });
+            });
+            
+            // --- Night Mode Toggle ---
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeToggleMobileBtn = document.getElementById('theme-toggle-mobile');
+            const handleThemeToggle = () => {
+                const isDarkMode = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('color-theme', isDarkMode ? 'dark' : 'light');
+            };
+            if (themeToggleBtn) themeToggleBtn.addEventListener('click', handleThemeToggle);
+            if (themeToggleMobileBtn) themeToggleMobileBtn.addEventListener('click', handleThemeToggle);
+
+            // --- GÜNCELLENDİ: Profil Sekme (Tab) Yönetimi ---
+            const tabButtons = document.querySelectorAll('.profile-tab');
+            const tabPanes = document.querySelectorAll('.profile-tab-pane');
+
+            // Hata ayıklama için konsol mesajı
+            console.log('Sekme betiği yüklendi. Bulunan butonlar:', tabButtons.length, 'Bulunan paneller:', tabPanes.length);
+
+            // NodeList'leri Array'e çevir (Eski tarayıcı uyumluluğu için)
+            const buttonsArray = Array.prototype.slice.call(tabButtons);
+            const panesArray = Array.prototype.slice.call(tabPanes);
+
+            buttonsArray.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+                    console.log('Tıklanan sekme:', tabId); // Hata ayıklama
+
+                    // Tüm butonlardan 'active' sınıfını kaldır
+                    buttonsArray.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Tıklanan butona 'active' sınıfını ekle
+                    button.classList.add('active');
+                    
+                    // Tüm panellerden 'active' sınıfını kaldır
+                    panesArray.forEach(pane => {
+                        pane.classList.remove('active');
+                    });
+                    
+                    // İlgili paneli bul ve 'active' sınıfını ekle
+                    const activePane = document.getElementById('tab-' + tabId);
+                    if (activePane) {
+                        console.log('Aktif edilen panel:', activePane.id); // Hata ayıklama
+                        activePane.classList.add('active');
+                    } else {
+                        // Panelin bulunamaması durumunda hata ver
+                        console.error('İlgili panel bulunamadı. Aranan ID:', 'tab-' + tabId); 
+                    }
+                });
+            });
+            
+            // --- YENİ: Profil Fotoğrafı Önizleme ---
+            const profImageInput = document.getElementById('prof-image');
+            const imagePreview = document.getElementById('image-preview');
+            const fileNameDisplay = document.getElementById('file-name-display');
+
+            if (profImageInput && imagePreview) {
+                profImageInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        // Dosya adını göster
+                        fileNameDisplay.textContent = file.name;
+                        
+                        // Önizlemeyi göster
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            imagePreview.src = event.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        fileNameDisplay.textContent = '';
+                        // Varsayılan resme geri dön (Jinja2'den gelen ilk src)
+                        // HATALI SATIR DÜZELTİLDİ
+                        imagePreview.src = {{ (user.profile_image_url or 'https://placehold.co/100x100/e11d48/ffffff?text=' + (user.name[0] | upper)) | tojson }};
+                    }
+                });
+            }
+
+            // --- Profil Güncelleme Formu (FormData ile) ---
+            const profileForm = document.getElementById('profile-update-form');
+            const profileMessage = document.getElementById('profile-message');
+
+            if (profileForm) {
+                profileForm.addEventListener('submit', (e) => {
+                    e.preventDefault(); 
+                    
+                    profileMessage.textContent = 'Kaydediliyor...';
+                    profileMessage.className = 'text-sm mt-4 text-gray-500';
+                    const formData = new FormData();
+                    formData.append('name', document.getElementById('prof-name').value);
+                    formData.append('phone', document.getElementById('prof-phone').value);
+                    
+                    const imageFile = document.getElementById('prof-image').files[0];
+                    if (imageFile) {
+                        formData.append('profile_image', imageFile);
+                    }
+
+                    fetch('/api/profile/update', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            profileMessage.textContent = data.message;
+                            profileMessage.className = 'text-sm mt-4 text-green-600';
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500); 
+                        } else {
+                            profileMessage.textContent = 'Hata: ' + data.message;
+                            profileMessage.className = 'text-sm mt-4 text-red-600';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch hatası:', error);
+                        profileMessage.textContent = 'Ağ hatası. Lütfen tekrar deneyin.';
+                        profileMessage.className = 'text-sm mt-4 text-red-600';
+                    });
+                });
+            }
+            
+            // --- Şifre Değiştirme Formu ---
+            const passwordForm = document.getElementById('password-change-form');
+            const passwordMessage = document.getElementById('password-message');
+            
+            if (passwordForm) {
+                passwordForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    const current_password = document.getElementById('current-password').value;
+                    const new_password = document.getElementById('new-password').value;
+                    const confirm_password = document.getElementById('confirm-password').value;
+                    
+                    passwordMessage.textContent = 'İşleniyor...';
+                    passwordMessage.className = 'text-sm mt-4 text-gray-500';
+
+                    if (new_password !== confirm_password) {
+                        passwordMessage.textContent = 'Yeni şifreler eşleşmiyor.';
+                        passwordMessage.className = 'text-sm mt-4 text-red-600';
+                        return;
+                    }
+                    
+                    fetch('/api/profile/change-password', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            current_password: current_password,
+                            new_password: new_password,
+                            confirm_password: confirm_password
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                         if (data.success) {
+                            passwordMessage.textContent = data.message;
+                            passwordMessage.className = 'text-sm mt-4 text-green-600';
+                            passwordForm.reset();
+                        } else {
+                            passwordMessage.textContent = 'Hata: ' + data.message;
+                            passwordMessage.className = 'text-sm mt-4 text-red-600';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch hatası:', error);
+                        passwordMessage.textContent = 'Ağ hatası. Lütfen tekrar deneyin.';
+                        passwordMessage.className = 'text-sm mt-4 text-red-600';
+                    });
+                });
+            }
+            
+        });
+    </script>
+</body>
+</html>

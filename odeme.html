@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ödeme - MotoLove</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- SVG İkonları için (Ionicons) -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <!-- Dark Mode Yapılandırması -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'rose-accent': {
+                            '100': '#FFF7F7',
+                            '200': '#FFEAEA',
+                            '600': '#E11D48',
+                            '700': '#BE123C',
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1F2937;
+            background: linear-gradient(-45deg, #f8fafb, #fff7f7, #ffeaea, #f8fafb);
+            background-size: 400% 400%;
+            animation: gradient-background-animation 15s ease infinite;
+        }
+        
+        @keyframes gradient-background-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        :root {
+            --accent-color: #E11D48;
+            --accent-color-hover: #BE123C;
+        }
+
+        /* === DARK MODE STİLLERİ === */
+        .dark body {
+            color: #E5E7EB;
+            background: linear-gradient(-45deg, #111827, #1f2937, #111827);
+            background-size: 400% 400%;
+            animation: gradient-background-animation 15s ease infinite;
+        }
+        .dark .navbar-scrolled {
+            background-color: rgba(17, 24, 39, 0.85);
+            border-bottom: 1px solid #374151;
+        }
+        .dark .nav-link { color: #D1D5DB; }
+        .dark .nav-link:hover { color: var(--accent-color); }
+        .dark .checkout-container {
+            background-color: #1F2937;
+            border-color: #374151;
+        }
+        .dark .summary-card {
+            background-color: #111827;
+            border-color: #374151;
+        }
+        .dark h1, .dark h2, .dark h3 { color: #FFFFFF; }
+        .dark p, .dark label, .dark span { color: #D1D5DB; }
+        .dark .summary-card span, .dark .summary-card p { color: #E5E7EB; }
+        .dark .form-input {
+            background-color: #374151;
+            border-color: #4B5563;
+            color: #FFFFFF;
+        }
+        .dark .form-input::placeholder { color: #9CA3AF; }
+        .dark .step-item.active .step-number {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+        }
+        .dark .step-item.active .step-label { color: var(--accent-color); }
+        .dark .step-item .step-number {
+            background-color: #374151;
+            color: #9CA3AF;
+        }
+        .dark .step-item .step-label { color: #9CA3AF; }
+        .dark .step-connector { background-color: #374151; }
+        .dark .step-item.completed .step-label {
+            color: #E5E7EB;
+        }
+
+        /* === Adım Göstergesi === */
+        .step-item { transition: all 0.3s ease; }
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background-color: #E5E7EB;
+            color: #6B7280;
+        }
+        .step-label {
+            font-weight: 600;
+            color: #6B7280;
+            transition: all 0.3s ease;
+        }
+        .step-item.active .step-number,
+        .step-item.completed .step-number {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+        }
+        .step-item.active .step-label { color: var(--accent-color); }
+        .step-item.completed .step-label { color: #1F2937; }
+        .step-connector {
+            flex-grow: 1;
+            height: 2px;
+            background-color: #E5E7EB;
+            transition: all 0.3s ease;
+        }
+        .step-item.completed + .step-connector {
+            background-color: var(--accent-color);
+        }
+
+        /* === Form Animasyonları === */
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .form-step.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            60% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop {
+            animation: popIn 0.5s ease-out forwards;
+        }
+
+        /* Form Elemanları */
+        .form-input {
+            background-color: #F9FAFB;
+            border: 1px solid #D1D5DB;
+            color: #1F2937;
+            border-radius: 0.5rem;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+        }
+        .form-input.invalid {
+            border-color: #E11D48;
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+        }
+        .dark .form-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+        }
+        .dark .form-input.invalid {
+            border-color: #E11D48;
+        }
+        
+        /* Teslimat vb. için Radio Buton Stilleri */
+        .payment-option {
+            border: 1px solid #D1D5DB;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .payment-option:hover {
+            background-color: #F9FAFB;
+        }
+        .payment-option.selected {
+            border-color: var(--accent-color);
+            background-color: #FFF7F7;
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+        }
+        .dark .payment-option {
+            border-color: #4B5563;
+        }
+        .dark .payment-option:hover {
+            background-color: #1F2937;
+        }
+        .dark .payment-option.selected {
+            border-color: var(--accent-color);
+            background-color: rgba(225, 29, 72, 0.05);
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+        }
+        
+        /* YENİ: Ödeme Sekmesi Stilleri (Yeni Tasarım) */
+        .payment-option-tab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #D1D5DB; /* default border */
+            border-radius: 0.5rem;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            color: #6B7280; /* default text color */
+        }
+        .payment-option-tab:hover {
+            background-color: #F9FAFB;
+            border-color: #9CA3AF;
+        }
+        .payment-option-tab.selected {
+            border-color: var(--accent-color);
+            background-color: #FFF7F7;
+            color: var(--accent-color);
+            box-shadow: 0 4px 10px rgba(225, 29, 72, 0.1);
+        }
+        .dark .payment-option-tab {
+            border-color: #4B5563;
+            color: #9CA3AF;
+        }
+        .dark .payment-option-tab:hover {
+            background-color: #1F2937;
+            border-color: #6B7280;
+        }
+        .dark .payment-option-tab.selected {
+            border-color: var(--accent-color);
+            background-color: rgba(225, 29, 72, 0.05);
+            color: var(--accent-color);
+        }
+
+        /* Butonlar */
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px -5px rgba(225, 29, 72, 0.4);
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 0.5rem;
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-color-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px -5px rgba(225, 29, 72, 0.5);
+        }
+        .btn-primary:disabled {
+            background-color: #F87171;
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .btn-secondary {
+            background-color: #E5E7EB;
+            color: #374151;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 0.5rem;
+        }
+        .btn-secondary:hover { background-color: #D1D5DB; }
+        .dark .btn-secondary {
+            background-color: #374151;
+            color: #E5E7EB;
+        }
+        .dark .btn-secondary:hover { background-color: #4B5563; }
+        
+        /* YENİ: Kupon Butonu Stili */
+        .btn-apply-coupon {
+            background-color: #E5E7EB;
+            color: #374151;
+            border-radius: 0.5rem;
+            padding: 0 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-apply-coupon:hover {
+             background-color: #D1D5DB;
+        }
+        .dark .btn-apply-coupon {
+            background-color: #374151;
+            color: #E5E7EB;
+        }
+        .dark .btn-apply-coupon:hover {
+            background-color: #4B5563;
+        }
+        
+        /* Hata Mesajı */
+        #payment-error-message {
+            display: none;
+            background-color: #FFF7F7;
+            color: #BE123C;
+            border: 1px solid #FFEAEA;
+            border-radius: 0.5rem;
+            padding: 12px 16px;
+            margin-top: 16px;
+            font-weight: 500;
+            text-align: center;
+        }
+        .dark #payment-error-message {
+            background-color: rgba(190, 18, 60, 0.1);
+            color: #F43F5E;
+            border-color: rgba(190, 18, 60, 0.3);
+        }
+
+        /* ===== KART ANİMASYONU STİLLERİ ===== */
+        .card-preview-container {
+            perspective: 1000px;
+            margin-bottom: 2rem;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            padding-bottom: 63%; 
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .card-inner.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            color: white;
+            padding: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+        }
+        .card-chip {
+            width: 50px;
+            height: 40px;
+            background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 100%);
+            border-radius: 0.25rem;
+        }
+        .card-preview-number {
+            font-family: 'monospace';
+            font-size: 1.25rem;
+            letter-spacing: 0.1em;
+            word-spacing: 0.2em;
+        }
+        .card-back-strip {
+            height: 50px;
+            background-color: #111827;
+            margin-top: 1rem;
+        }
+        .card-cvc-box {
+            background-color: #FFFFFF;
+            color: #1F2937;
+            text-align: right;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            width: 80%;
+            margin-left: auto;
+            margin-top: 1rem;
+            font-family: 'monospace';
+            font-style: italic;
+        }
+        .dark .card-front, .dark .card-back {
+             background: linear-gradient(135deg, #374151 0%, #4B5563 100%);
+        }
+    </style>
+</head>
+<body class="text-gray-800 dark:bg-gray-900">
+
+    <!-- ===== Header / Navbar ===== -->
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-transform duration-300 ease-out">
+        <nav id="navbar" class="navbar-scrolled">
+            <div class="container mx-auto px-6 py-5 flex justify-between items-center">
+                <a href="/">
+                    <img src="/static/images/motolove.png" alt="MotoLove Logo" class="h-14 md:h-20 w-auto">
+                </a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="font-medium nav-link dark:text-gray-300 hover:text-[var(--accent-color)]">Ana Sayfa</a>
+                    
+                    
+                    {% if user_name %}
+                        <a href="/profile" class="flex items-center text-gray-700 dark:text-gray-300 transition-colors group font-semibold">
+                            {% if user and user.profile_image_url %}
+                                <img src="{{ user.profile_image_url }}" alt="Profil" class="w-8 h-8 rounded-full object-cover mr-2 border-2 border-gray-200 dark:border-gray-600">
+                            {% else %}
+                                <ion-icon name="person-circle" class="text-3xl mr-2 text-[var(--accent-color)]"></ion-icon>
+                            {% endif %}
+                            <span class="font-medium text-sm group-hover:text-[var(--accent-color)]">{{ user_name }}</span>
+                        </a>
+                        <a href="/logout" class="btn-secondary font-semibold px-5 py-2 rounded-lg text-sm ml-4 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">Çıkış Yap</a>
+                    {% else %}
+                        <a href="/login" class="btn-primary font-semibold px-5 py-2 rounded-lg text-sm ml-4">Giriş Yap</a>
+                    {% endif %}
+                    
+                    <button id="theme-toggle" class="text-xl text-gray-700 dark:text-gray-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)] transition-colors duration-200">
+                        <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                        <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                    </button>
+                </div>
+                
+                <div class="md:hidden flex items-center space-x-4">
+                    <button id="theme-toggle-mobile" class="text-2xl text-gray-900 dark:text-gray-100">
+                        <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                        <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                    </button>
+                    <button id="mobile-menu-button" class="text-3xl text-gray-900 dark:text-gray-100">
+                        <ion-icon name="menu-outline"></ion-icon>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ===== ÖDEME FORMU ALANI ===== -->
+    <main class="pt-40 pb-24 px-6 container mx-auto">
+        <div class="max-w-5xl mx-auto">
+            
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4 dark:text-white">Güvenli Ödeme</h1>
+                <p class="text-lg text-gray-600 dark:text-gray-400">Sadece birkaç adımda işleminizi tamamlayın.</p>
+            </div>
+
+            <!-- Adım Göstergesi -->
+            <div id="step-indicator" class="flex items-center justify-center mb-12">
+                <div id="step-item-1" class="step-item active flex flex-col items-center text-center px-4">
+                    <div class="step-number">1</div>
+                    <span class="step-label mt-2 text-sm">Teslimat & Fatura</span>
+                </div>
+                <div class="step-connector"></div>
+                <div id="step-item-2" class="step-item flex flex-col items-center text-center px-4">
+                    <div class="step-number">2</div>
+                    <span class="step-label mt-2 text-sm">Ödeme</span>
+                </div>
+                <div class="step-connector"></div>
+                <div id="step-item-3" class="step-item flex flex-col items-center text-center px-4">
+                    <div class="step-number"><ion-icon name="checkmark-outline" class="text-xl"></ion-icon></div>
+                    <span class="step-label mt-2 text-sm">Onay</span>
+                </div>
+            </div>
+
+            <!-- Form Alanı -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                
+                <!-- Sol Taraf: Form Adımları -->
+                <div class="lg:col-span-2 checkout-container bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl dark:border dark:border-gray-700">
+                    
+                    {% if not user_name %}
+                    <div id="login-warning" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg mb-6 dark:bg-yellow-900/20 dark:border-yellow-600 dark:text-yellow-300" role="alert">
+                        <div class="flex">
+                            <div class="py-1"><ion-icon name="warning-outline" class="text-2xl mr-3"></ion-icon></div>
+                            <div>
+                                <p class="font-bold">Giriş Gerekli</p>
+                                <p class="text-sm">Ödeme yapabilmek için lütfen <a href="/login" class="font-bold underline hover:text-yellow-800 dark:hover:text-yellow-200">giriş yapın</a>.</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <form id="checkout-form">
+                        
+                        <fieldset {% if not user_name %}disabled class="opacity-50 cursor-not-allowed"{% endif %}>
+                        
+                            <!-- ADIM 1: Teslimat & Fatura Bilgileri -->
+                            <div id="step-1" class="form-step active">
+                                <h2 class="text-2xl font-bold mb-6 dark:text-white">1. Kişisel ve Teslimat Bilgileri</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label for="full-name" class="block text-sm font-medium mb-2 dark:text-gray-300">Tam Adınız</label>
+                                        <input type="text" id="full-name" name="full-name" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Emre S." value="{{ user.name or '' }}" required>
+                                    </div>
+                                    <div>
+                                        <label for="email" class="block text-sm font-medium mb-2 dark:text-gray-300">E-posta Adresi</label>
+                                        <input type="email" id="email" name="email" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="emre@example.com" value="{{ user.email or '' }}" required>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label for="phone" class="block text-sm font-medium mb-2 dark:text-gray-300">Telefon Numarası</label>
+                                        <input type="tel" id="phone" name="phone" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="555 123 4567" value="{{ user.phone or '' }}" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="border-t dark:border-gray-700 mt-8 pt-6">
+                                    <!-- YENİ: SATILIK TESLİMAT SEÇENEKLERİ (Kiralık'ta gizli) -->
+                                    <div id="sale-delivery-options" class="hidden mb-6">
+                                        <h3 class="text-lg font-semibold mb-3 dark:text-white">Teslimat Yöntemi (Satılık)</h3>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <label class="payment-option selected">
+                                                <input type="radio" name="sale-delivery" value="pickup" class="hidden" checked>
+                                                <div class="flex items-center">
+                                                    <ion-icon name="storefront-outline" class="text-2xl text-[var(--accent-color)] mr-3 flex-shrink-0"></ion-icon>
+                                                    <div>
+                                                        <span class="font-bold dark:text-white">Bayiden Teslim Al</span>
+                                                        <p class="text-sm text-gray-500 dark:text-gray-400">Ücretsiz</p>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <label class="payment-option">
+                                                <input type="radio" name="sale-delivery" value="home" class="hidden">
+                                                <div class="flex items-center">
+                                                    <ion-icon name="rocket-outline" class="text-2xl text-[var(--accent-color)] mr-3 flex-shrink-0"></ion-icon>
+                                                    <div>
+                                                        <span class="font-bold dark:text-white">Adrese Teslimat</span>
+                                                        <p class="text-sm text-gray-500 dark:text-gray-400">500,00 TL Kargo</p>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- YENİ: KİRALAMA TARİH ALANLARI (Satılık'ta gizli) -->
+                                    <div id="rental-date-fields" class="hidden md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border dark:border-gray-700 mb-6">
+                                        <div>
+                                            <label for="start-date" class="block text-sm font-medium mb-2 dark:text-gray-300">Başlangıç Tarihi</label>
+                                            <input type="date" id="start-date" name="start-date" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                        </div>
+                                        <div>
+                                            <label for="end-date" class="block text-sm font-medium mb-2 dark:text-gray-300">Bitiş Tarihi</label>
+                                            <input type="date" id="end-date" name="end-date" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- YENİ: ADRES ALANI (Kiralama veya Kargo için) -->
+                                    <div id="address-field-container" class="hidden md:col-span-2 mb-6">
+                                        <label for="address" class="block text-sm font-medium mb-2 dark:text-gray-300">Teslimat Adresi</label>
+                                        <input type="text" id="address" name="address" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Love Plaza, İstanbul, Türkiye">
+                                        <p id="address-helper" class="text-xs text-gray-500 mt-2 dark:text-gray-400"></p>
+                                    </div>
+                                </div>
+                                
+                                <!-- YENİ: FATURA BİLGİLERİ -->
+                                <div class="border-t dark:border-gray-700 mt-8 pt-6">
+                                    <h2 class="text-xl font-bold mb-4 dark:text-white">Fatura Bilgileri</h2>
+                                    <div class="flex items-center mb-4">
+                                        <input id="billing-checkbox" name="billing-checkbox" type="checkbox" class="h-4 w-4 text-[var(--accent-color)] rounded border-gray-300 focus:ring-[var(--accent-color)]" checked>
+                                        <label for="billing-checkbox" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                                            Fatura bilgilerim kişisel bilgilerimle aynı.
+                                        </label>
+                                    </div>
+                                    
+                                    <div id="billing-fields-container" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border dark:border-gray-700">
+                                        <div>
+                                            <label for="billing-name" class="block text-sm font-medium mb-2 dark:text-gray-300">Ad/Soyad veya Firma Adı</label>
+                                            <input type="text" id="billing-name" name="billing-name" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                        </div>
+                                        <div>
+                                            <label for="billing-tax-no" class="block text-sm font-medium mb-2 dark:text-gray-300">TC Kimlik No / Vergi No</label>
+                                            <input type="text" id="billing-tax-no" name="billing-tax-no" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                        </div>
+                                        <div class="md:col-span-2">
+                                            <label for="billing-address" class="block text-sm font-medium mb-2 dark:text-gray-300">Fatura Adresi</label>
+                                            <input type="text" id="billing-address" name="billing-address" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div id="step-1-error" class="text-sm text-red-600 dark:text-red-400 mt-4" style="display: none;"></div>
+                                <div class="flex justify-end mt-10">
+                                    <button type="button" id="next-step-1" class="btn-primary">
+                                        Ödeme Adımına Geç <ion-icon name="arrow-forward-outline" class="ml-2"></ion-icon>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- ADIM 2: Ödeme Bilgileri -->
+                            <div id="step-2" class="form-step">
+                                <h2 class="text-2xl font-bold dark:text-white mb-6">2. Ödeme Yöntemi</h2>
+                                
+                                <!-- YENİ: ÖDEME YÖNTEMİ SEÇİMİ (YENİ TASARIM) -->
+                                <div class="grid grid-cols-2 gap-4 mb-8">
+                                    <!-- Kredi Kartı Seçeneği -->
+                                    <label class="payment-option-tab selected">
+                                        <input type="radio" name="payment-method" value="Kredi Kartı" class="hidden" checked>
+                                        <ion-icon name="card-outline" class="text-2xl mr-2 flex-shrink-0"></ion-icon>
+                                        <span class="font-semibold">Kredi Kartı</span>
+                                    </label>
+                                    
+                                    <!-- Bayide Öde Seçeneği -->
+                                    <label class="payment-option-tab">
+                                        <input type="radio" name="payment-method" value="Bayide Öde" class="hidden">
+                                        <ion-icon name="storefront-outline" class="text-2xl mr-2 flex-shrink-0"></ion-icon>
+                                        <span class="font-semibold">Bayide Öde</span>
+                                    </label>
+                                </div>
+                                
+                                <!-- YENİ: KREDİ KARTI FORMU (Gizlenip açılacak) -->
+                                <div id="credit-card-container">
+                                    <div class="flex justify-between items-center mb-6">
+                                        <h3 class="text-xl font-semibold dark:text-white">Kart Bilgileri</h3>
+                                        <div class="flex items-center space-x-3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="#1A1F71" d="M20.32 3.38A2.3 2.3 0 0 0 18.05 2H5.95A2.3 2.3 0 0 0 3.68 3.38L.8 9.35a.86.86 0 0 0 .78 1.15h2.83l.5 2.13c-.22.1-.42.22-.6.37L1.48 14.9a.86.86 0 0 0 0 1.2l3.05 3.52a.86.86 0 0 0 1.2 0l2.84-3.28c.12-.13.2-.28.25-.44H15l.25.44c.06.16.13.3.25.44l2.84 3.28a.86.86 0 0 0 1.2 0l3.05-3.52a.86.86 0 0 0 0-1.2L19.47 12.9a.85.85 0 0 0-.6-.37l.5-2.13h2.83a.86.86 0 0 0 .78-1.15Z"/></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><circle cx="7.7" cy="12" r="7" fill="#EA001B"/><circle cx="16.3" cy="12" r="7" fill="#F79E1B"/><path fill="#FF5F00" d="M12 7.7a7 7 0 0 0 0 8.6a7 7 0 0 0 0-8.6Z"/></svg>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-preview-container">
+                                        <div id="card-inner" class="card-inner">
+                                            <div class="card-front">
+                                                <div class="flex justify-between items-center">
+                                                    <div class="card-chip"></div>
+                                                    <svg id="card-type-logo" width="48" height="48" viewBox="0 0 24 24" class="text-gray-400 opacity-50"><path fill="currentColor" d="M22 4H2v16h20V4M4 6h16v3H4V6m0 5h16v7H4v-7Z"/></svg>
+                                                </div>
+                                                <div id="card-preview-number" class="card-preview-number mt-8 mb-4">#### #### #### ####</div>
+                                                <div class="flex justify-between text-sm">
+                                                    <div id="card-preview-name">AD SOYAD</div>
+                                                    <div id="card-preview-expiry">AA/YY</div>
+                                                </div>
+                                            </div>
+                                            <div class="card-back">
+                                                <div class="card-back-strip"></div>
+                                                <div class="card-cvc-box">
+                                                    <span id="card-preview-cvc">###</span>
+                                                </div>
+                                                <p class="text-xs text-right mt-4 text-gray-400">Bu kart sadece bir önizlemedir.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-1 gap-6">
+                                        <div>
+                                            <label for="card-number" class="block text-sm font-medium mb-2 dark:text-gray-300">Kart Numarası</label>
+                                            <div class="relative">
+                                                <input type="text" id="card-number" name="card-number" class="form-input w-full pl-12 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="0000 0000 0000 0000" required maxlength="19">
+                                                <ion-icon name="card-outline" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl"></ion-icon>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="card-name" class="block text-sm font-medium mb-2 dark:text-gray-300">Kart Üzerindeki İsim</label>
+                                            <input type="text" id="card-name" name="card-name" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="EMRE S." required>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-6">
+                                            <div>
+                                                <label for="card-expiry" class="block text-sm font-medium mb-2 dark:text-gray-300">Son Kullanma Tarihi</label>
+                                                <input type="text" id="card-expiry" name="card-expiry" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="AA / YY" required maxlength="7">
+                                            </div>
+                                            <div>
+                                                <label for="card-cvc" class="block text-sm font-medium mb-2 dark:text-gray-300">CVC</label>
+                                                <input type="text" id="card-cvc" name="card-cvc" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="123" required maxlength="3">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- / Kredi Kartı Formu -->
+                                
+                                <!-- YENİ: BAYİDE ÖDE AÇIKLAMASI -->
+                                <div id="pay-at-dealership-container" class="hidden p-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg text-center">
+                                    <ion-icon name="information-circle-outline" class="text-4xl text-blue-600 dark:text-blue-400 mb-2"></ion-icon>
+                                    <p class="font-medium text-blue-800 dark:text-blue-200">Siparişiniz oluşturulacak ve ödemeyi bayide yapacaksınız.</p>
+                                    <p class="text-sm text-blue-600 dark:text-blue-300 mt-1">Lütfen 2 iş günü içinde bayimizle iletişime geçin.</p>
+                                </div>
+                                
+                                <div class="flex items-center mt-6">
+                                    <input id="accept-terms" name="accept-terms" type="checkbox" class="h-4 w-4 text-[var(--accent-color)] rounded border-gray-300 focus:ring-[var(--accent-color)]">
+                                    <label for="accept-terms" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                                        <a href="#" class="font-medium text-[var(--accent-color)] hover:underline">Hizmet sözleşmesini</a> okudum, kabul ediyorum.
+                                    </label>
+                                </div>
+                                
+                                <div id="payment-error-message"></div>
+                                
+                                <div class="flex justify-between items-center mt-10">
+                                    <button type="button" id="prev-step-2" class="btn-secondary">
+                                        <ion-icon name="arrow-back-outline" class="mr-2"></ion-icon> Geri Dön
+                                    </button>
+                                    <button type="submit" id="submit-payment" class="btn-primary">
+                                        Siparişi Tamamla <span id="final-price-button"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                        </fieldset>
+                        
+                        <!-- ADIM 3: Onay Ekranı -->
+                        <div id="step-3" class="form-step">
+                            <div class="flex flex-col items-center justify-center text-center py-12">
+                                <svg class="w-24 h-24 text-green-500 mb-6 animate-pop" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                
+                                <h2 class="text-3xl font-bold mb-4 dark:text-white">Teşekkürler!</h2>
+                                <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-md">
+                                    <strong id="purchased-item-name" class="text-gray-900 dark:text-white"></strong> için siparişiniz başarıyla alındı.
+                                    Onay e-postanız yola çıktı.
+                                </p>
+                                <a href="/" class="btn-primary">
+                                    <ion-icon name="home-outline" class="mr-2"></ion-icon> Ana Sayfaya Dön
+                                </a>
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+
+                <!-- Sağ Taraf: Sipariş Özeti -->
+                <div class="lg:col-span-1">
+                    <div class="summary-card bg-white dark:bg-gray-900/50 p-6 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 sticky top-40">
+                        <h3 class="text-xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-4 dark:text-white">Sipariş Özeti</h3>
+                        
+                        <div id="summary-item" class="flex items-center space-x-4 mb-6">
+                            <img id="summary-image" src="https://placehold.co/100x80/f3f4f6/e11d48?text=Model" alt="Model" class="w-24 h-20 object-cover rounded-lg border border-gray-200 dark:border-gray-700">
+                            <div>
+                                <h4 id="summary-title" class="font-semibold dark:text-white">Model Yükleniyor...</h4>
+                                <p id="summary-type" class="text-sm text-gray-500 dark:text-gray-400">...</p>
+                            </div>
+                        </div>
+                        
+                        <!-- YENİ: KUPON ALANI -->
+                        <div class="mb-6">
+                            <label for="coupon-code" class="block text-sm font-medium mb-2 dark:text-gray-300">Kupon Kodu</label>
+                            <div class="flex">
+                                <input type="text" id="coupon-code" class="form-input w-full rounded-r-none dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="MOTOLOVE10">
+                                <button type="button" id="apply-coupon-btn" class="btn-apply-coupon rounded-l-none">Uygula</button>
+                            </div>
+                            <p id="coupon-message" class="text-sm mt-2"></p>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div id="summary-price-row" class="hidden justify-between">
+                                <span class="text-gray-600 dark:text-gray-300">Günlük Fiyat</span>
+                                <span id="summary-price-per-day" class="font-medium dark:text-white">0 TL / gün</span>
+                            </div>
+                            <div id="summary-days-row" class="hidden justify-between">
+                                <span class="text-gray-600 dark:text-gray-300">Gün Sayısı</span>
+                                <span id="summary-days" class="font-medium dark:text-white">0 gün</span>
+                            </div>
+                            
+                            <div id="summary-subtotal-row" class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-300">Ara Toplam</span>
+                                <span id="summary-subtotal" class="font-medium dark:text-white">0 TL</span>
+                            </div>
+                            
+                            <!-- YENİ: İNDİRİM SATIRI -->
+                            <div id="summary-discount-row" class="hidden justify-between">
+                                <span class="text-green-600 dark:text-green-400">İndirim (MOTOLOVE10)</span>
+                                <span id="summary-discount" class="font-medium text-green-600 dark:text-green-400">-0 TL</span>
+                            </div>
+                            
+                            <div class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-300">KDV (%20)</span>
+                                <span id="summary-tax" class="font-medium dark:text-white">0 TL</span>
+                            </div>
+                            <div id="shipping-cost-row" class="flex justify-between">
+                                <span class="text-gray-600 dark:text-gray-300">Kargo/Teslimat</span>
+                                <span id="summary-shipping" class="font-medium dark:text-white">0 TL</span>
+                            </div>
+                            <div class="border-t border-gray-200 dark:border-gray-700 my-4"></div>
+                            <div class="flex justify-between text-xl font-bold">
+                                <span class="dark:text-white">Toplam</span>
+                                <span id="summary-total" class="text-[var(--accent-color)]">0 TL</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 text-center text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center">
+                            <ion-icon name="lock-closed-outline" class="text-green-500 text-lg mr-2"></ion-icon>
+                            Tüm ödemeler 256-bit SSL ile güvence altındadır.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ===== JavaScript ===== -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- URL'den Bilgi Al ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const motorId = urlParams.get('id');
+        const motorTitle = urlParams.get('title') || 'Model Bilgisi Yok';
+        const motorType = urlParams.get('type') || 'Satılık';
+        const motorPrice = parseFloat(urlParams.get('price')) || 0;
+        const motorImage = urlParams.get('image') || 'https://placehold.co/100x80/f3f4f6/e11d48?text=Model';
+
+        // --- Formatlayıcı ---
+        const formatCurrency = (amount) => {
+            return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(amount);
+        };
+
+        // --- Global Fiyat Değişkenleri ---
+        let subtotal, tax, shipping, total, diffDays;
+        let discountAmount = 0.0; // YENİ: Kupon indirimi
+        const taxRate = 0.20;
+        const isKiralik = motorType.toLowerCase().includes('kiralık');
+        
+        // --- DOM Elementleri ---
+        // Adım 1
+        const saleDeliveryOptions = document.getElementById('sale-delivery-options');
+        const rentalDateFields = document.getElementById('rental-date-fields');
+        const startDateInput = document.getElementById('start-date');
+        const endDateInput = document.getElementById('end-date');
+        const addressFieldContainer = document.getElementById('address-field-container');
+        const addressInput = document.getElementById('address');
+        const addressHelper = document.getElementById('address-helper');
+        const billingCheckbox = document.getElementById('billing-checkbox');
+        const billingFieldsContainer = document.getElementById('billing-fields-container');
+        
+        // Özet Kartı
+        const summaryPriceRow = document.getElementById('summary-price-row');
+        const summaryDaysRow = document.getElementById('summary-days-row');
+        const summarySubtotalRow = document.getElementById('summary-subtotal-row');
+        const summaryShippingRow = document.getElementById('shipping-cost-row');
+        const summaryDiscountRow = document.getElementById('summary-discount-row'); // YENİ
+        
+        const summaryPricePerDay = document.getElementById('summary-price-per-day');
+        const summaryDays = document.getElementById('summary-days');
+        const summarySubtotal = document.getElementById('summary-subtotal');
+        const summaryDiscount = document.getElementById('summary-discount'); // YENİ
+        const summaryTax = document.getElementById('summary-tax');
+        const summaryShipping = document.getElementById('summary-shipping');
+        const summaryTotal = document.getElementById('summary-total');
+        const finalPriceButton = document.getElementById('final-price-button');
+
+        // Kupon
+        const couponInput = document.getElementById('coupon-code');
+        const applyCouponBtn = document.getElementById('apply-coupon-btn');
+        const couponMessage = document.getElementById('coupon-message');
+        
+        // Adım 2
+        const paymentMethodRadios = document.querySelectorAll('input[name="payment-method"]');
+        const creditCardContainer = document.getElementById('credit-card-container');
+        const payAtDealershipContainer = document.getElementById('pay-at-dealership-container');
+        
+        // Form
+        const step1Error = document.getElementById('step-1-error');
+        const paymentErrorMessage = document.getElementById('payment-error-message');
+        const submitButton = document.getElementById('submit-payment');
+
+        // --- Fiyatı Güncelleme Fonksiyonu (GÜNCELLENDİ) ---
+        const updatePriceSummary = () => {
+            // 1. Ara Toplamı Hesapla
+            if (isKiralik) {
+                const start = new Date(startDateInput.value);
+                const end = new Date(endDateInput.value);
+                let days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+                if (days <= 0 || isNaN(days)) days = 1;
+                diffDays = days;
+                
+                subtotal = motorPrice * diffDays;
+                summaryDays.textContent = `${diffDays} gün`;
+            } else {
+                subtotal = motorPrice;
+            }
+            
+            // 2. Kargo Ücretini Hesapla
+            shipping = 0.0;
+            if (isKiralik) {
+                shipping = 150.00; // Kiralama teslimat
+            } else {
+                const deliveryMethod = document.querySelector('input[name="sale-delivery"]:checked').value;
+                if (deliveryMethod === 'home') {
+                    shipping = 500.00; // Satılık evde teslimat
+                }
+            }
+            
+            // 3. İndirimi Düş (Kupondan gelen global değişkene göre)
+            const discountedSubtotal = subtotal - discountAmount;
+            
+            // 4. Vergiyi Hesapla (İndirimli fiyattan)
+            tax = discountedSubtotal * taxRate;
+            
+            // 5. Toplamı Hesapla
+            total = discountedSubtotal + tax + shipping;
+            
+            // UI Güncelle
+            summarySubtotal.textContent = formatCurrency(subtotal);
+            summaryShipping.textContent = formatCurrency(shipping);
+            summaryTax.textContent = formatCurrency(tax);
+            summaryTotal.textContent = formatCurrency(total);
+            finalPriceButton.textContent = `(${formatCurrency(total)})`;
+            
+            // İndirim satırını göster/gizle
+            if (discountAmount > 0) {
+                summaryDiscount.textContent = `-${formatCurrency(discountAmount)}`;
+                summaryDiscountRow.style.display = 'flex';
+            } else {
+                summaryDiscountRow.style.display = 'none';
+            }
+        };
+
+        // --- 1. Sayfa Yüklemesi (Setup) (GÜNCELLENDİ) ---
+        document.getElementById('summary-image').src = motorImage;
+        document.getElementById('summary-title').textContent = motorTitle;
+        document.getElementById('summary-type').textContent = motorType;
+        
+        if (isKiralik) {
+            // Kiralıksa: Kiralama tarihlerini ve adres alanını göster
+            rentalDateFields.style.display = 'grid';
+            addressFieldContainer.style.display = 'block';
+            addressHelper.textContent = 'Motorun teslim edilmesini istediğiniz adresi girin.';
+            addressInput.required = true;
+            
+            // Satılık seçeneklerini gizle
+            saleDeliveryOptions.style.display = 'none';
+
+            // Kiralama özetini göster
+            summaryPriceRow.style.display = 'flex';
+            summaryDaysRow.style.display = 'flex';
+            summarySubtotalRow.style.display = 'none'; 
+            summaryShippingRow.style.display = 'flex'; // Kiralama kargo hep var
+
+            // Tarihleri ayarla
+            startDateInput.required = true;
+            endDateInput.required = true;
+            const today = new Date();
+            const threeDaysFromNow = new Date();
+            threeDaysFromNow.setDate(today.getDate() + 3);
+            const todayStr = today.toISOString().split('T')[0];
+            startDateInput.value = todayStr;
+            endDateInput.value = threeDaysFromNow.toISOString().split('T')[0];
+            startDateInput.min = todayStr;
+            endDateInput.min = todayStr;
+
+            summaryPricePerDay.textContent = formatCurrency(motorPrice) + " / gün";
+            
+        } else {
+            // Satılıksa: Satılık teslimat seçeneklerini göster
+            saleDeliveryOptions.style.display = 'block';
+            
+            // Kiralama alanlarını gizle
+            rentalDateFields.style.display = 'none';
+            addressFieldContainer.style.display = 'none'; // Bayiden teslimatta gizli
+            addressInput.required = false;
+            
+            // Satılık özetini göster
+            summaryPriceRow.style.display = 'none';
+            summaryDaysRow.style.display = 'none';
+            summarySubtotalRow.style.display = 'flex';
+            summaryShippingRow.style.display = 'none'; // Bayiden teslimatta gizli
+        }
+        
+        updatePriceSummary();
+        
+        // --- EVENT LISTENERS ---
+        
+        // Kiralama tarihleri
+        startDateInput.addEventListener('change', () => {
+            if (endDateInput.value < startDateInput.value) {
+                endDateInput.value = startDateInput.value;
+            }
+            endDateInput.min = startDateInput.value;
+            updatePriceSummary();
+        });
+        endDateInput.addEventListener('change', updatePriceSummary);
+
+        // Satılık teslimat seçimi
+        document.querySelectorAll('input[name="sale-delivery"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                document.querySelectorAll('input[name="sale-delivery"]').forEach(r => r.closest('label').classList.remove('selected'));
+                e.target.closest('label').classList.add('selected');
+                
+                if (e.target.value === 'home') {
+                    addressFieldContainer.style.display = 'block';
+                    addressHelper.textContent = 'Motorun teslim edileceği kargo adresini girin.';
+                    addressInput.required = true;
+                    summaryShippingRow.style.display = 'flex';
+                } else {
+                    addressFieldContainer.style.display = 'none';
+                    addressInput.required = false;
+                    summaryShippingRow.style.display = 'none';
+                }
+                updatePriceSummary(); // Fiyatı (kargo) güncelle
+            });
+        });
+        
+        // Fatura checkbox
+        billingCheckbox.addEventListener('change', (e) => {
+            const required = !e.target.checked;
+            if (required) {
+                billingFieldsContainer.style.display = 'grid';
+            } else {
+                billingFieldsContainer.style.display = 'none';
+            }
+            billingFieldsContainer.querySelectorAll('input').forEach(input => {
+                input.required = required;
+            });
+        });
+
+        // Kupon Uygulama
+        applyCouponBtn.addEventListener('click', () => {
+            const code = couponInput.value.trim().toUpperCase();
+            if (code === "MOTOLOVE10") {
+                // Mock: Normalde API'ye gidilir, biz direkt %10 hesaplıyoruz
+                discountAmount = subtotal * 0.10;
+                couponMessage.textContent = "Kupon başarıyla uygulandı!";
+                couponMessage.className = "text-sm mt-2 text-green-600 dark:text-green-400";
+                couponInput.disabled = true;
+                applyCouponBtn.disabled = true;
+            } else {
+                discountAmount = 0.0;
+                couponMessage.textContent = "Geçersiz kupon kodu.";
+                couponMessage.className = "text-sm mt-2 text-red-600 dark:text-red-400";
+            }
+            updatePriceSummary(); // Fiyatı (indirim) güncelle
+        });
+
+        // Ödeme Yöntemi Değişimi
+        paymentMethodRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const method = e.target.value;
+                
+                paymentMethodRadios.forEach(r => r.closest('label').classList.remove('selected'));
+                e.target.closest('label').classList.add('selected');
+
+                if (method === 'Kredi Kartı') {
+                    creditCardContainer.style.display = 'block';
+                    payAtDealershipContainer.style.display = 'none';
+                    // Kart alanlarını zorunlu yap
+                    creditCardContainer.querySelectorAll('input').forEach(input => input.required = true);
+                    submitButton.innerHTML = `Ödemeyi Tamamla ${finalPriceButton.textContent}`;
+                    
+                } else if (method === 'Bayide Öde') {
+                    creditCardContainer.style.display = 'none';
+                    payAtDealershipContainer.style.display = 'block';
+                    // Kart alanlarını zorunlu DEĞİL yap
+                    creditCardContainer.querySelectorAll('input').forEach(input => input.required = false);
+                    submitButton.innerHTML = `Siparişi Oluştur ${finalPriceButton.textContent}`;
+                }
+            });
+        });
+
+        // --- 2. Çok Adımlı Form Mantığı (GÜNCELLENDİ) ---
+        const steps = ['step-1', 'step-2', 'step-3'];
+        const stepItems = ['step-item-1', 'step-item-2', 'step-item-3'];
+        let currentStep = 1;
+
+        const nextStep1 = document.getElementById('next-step-1');
+        const prevStep2 = document.getElementById('prev-step-2');
+        const form = document.getElementById('checkout-form');
+
+        const showStep = (stepNumber) => {
+            steps.forEach(stepId => {
+                document.getElementById(stepId).classList.remove('active');
+            });
+            document.getElementById(`step-${stepNumber}`).classList.add('active');
+
+            stepItems.forEach((itemId, index) => {
+                const item = document.getElementById(itemId);
+                const stepIndex = index + 1;
+                item.classList.remove('active', 'completed');
+                if (stepIndex < stepNumber) {
+                    item.classList.add('completed');
+                } else if (stepIndex === stepNumber) {
+                    item.classList.add('active');
+                }
+            });
+        };
+        
+        const showErrorMessage = (message, step = 2) => {
+            const div = (step === 1) ? step1Error : paymentErrorMessage;
+            div.textContent = message;
+            div.style.display = 'block';
+        };
+        const hideErrorMessages = () => {
+            step1Error.style.display = 'none';
+            paymentErrorMessage.style.display = 'none';
+        };
+        
+        const clearInputErrors = (stepId) => {
+            document.getElementById(stepId).querySelectorAll('input.invalid').forEach(input => {
+                input.classList.remove('invalid');
+            });
+        };
+        
+        const isEmailValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        const isPhoneValid = (phone) => phone.replace(/\D/g, '').length >= 10;
+        const isCardExpiryValid = (expiry) => {
+            const parts = expiry.split(' / ');
+            if (parts.length !== 2) return false;
+            const month = parseInt(parts[0], 10);
+            const year = parseInt("20" + parts[1], 10);
+            const now = new Date();
+            const currentMonth = now.getMonth() + 1;
+            const currentYear = now.getFullYear();
+            if (month < 1 || month > 12) return false;
+            return year > currentYear || (year === currentYear && month >= currentMonth);
+        };
+
+        // Adım 1 İlerleme (Validasyon Güncellendi)
+        if (nextStep1) {
+            nextStep1.addEventListener('click', () => {
+                hideErrorMessages();
+                clearInputErrors('step-1');
+                
+                let isValid = true;
+                let errorMessages = [];
+                
+                // Kişisel bilgileri kontrol et
+                document.getElementById('step-1').querySelectorAll('input[required]:not([name^="billing-"])').forEach(input => {
+                    if (!input.value) {
+                        isValid = false;
+                        input.classList.add('invalid');
+                    }
+                });
+                
+                // Fatura bilgilerini kontrol et (Eğer açıksa)
+                if (!billingCheckbox.checked) {
+                     document.getElementById('billing-fields-container').querySelectorAll('input[required]').forEach(input => {
+                        if (!input.value) {
+                            isValid = false;
+                            input.classList.add('invalid');
+                        }
+                    });
+                }
+                
+                if (document.getElementById('full-name').classList.contains('invalid')) errorMessages.push('İsim');
+                if (!isEmailValid(document.getElementById('email').value)) {
+                    isValid = false;
+                    document.getElementById('email').classList.add('invalid');
+                    errorMessages.push('Geçerli E-posta');
+                }
+                if (!isPhoneValid(document.getElementById('phone').value)) {
+                    isValid = false;
+                    document.getElementById('phone').classList.add('invalid');
+                    errorMessages.push('Geçerli Telefon');
+                }
+                if (addressInput.required && !addressInput.value) errorMessages.push('Teslimat Adresi');
+                if (!billingCheckbox.checked && document.getElementById('billing-name').classList.contains('invalid')) errorMessages.push('Fatura Adı');
+                
+
+                if (isValid) {
+                    currentStep = 2;
+                    showStep(currentStep);
+                } else {
+                    showErrorMessage(errorMessages.join(', ') + ' alanları zorunludur.', 1);
+                }
+            });
+        }
+
+        if (prevStep2) {
+            prevStep2.addEventListener('click', () => {
+                currentStep = 1;
+                showStep(currentStep);
+                hideErrorMessages();
+            });
+        }
+
+        // Form Gönderme (Submit) (Komple Güncellendi)
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                hideErrorMessages();
+                clearInputErrors('step-2');
+                
+                let isValid = true;
+                let errorMessages = [];
+                const selectedPaymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+                
+                // Sadece Kredi Kartı seçiliyse kartı doğrula
+                if (selectedPaymentMethod === 'Kredi Kartı') {
+                    const cardNumber = document.getElementById('card-number');
+                    const cardName = document.getElementById('card-name');
+                    const cardExpiry = document.getElementById('card-expiry');
+                    const cardCvc = document.getElementById('card-cvc');
+
+                    if (cardNumber.value.replace(/\D/g, '').length < 15) {
+                        isValid = false;
+                        cardNumber.classList.add('invalid');
+                        errorMessages.push('Kart numarası geçersiz.');
+                    }
+                    if (!cardName.value) {
+                        isValid = false;
+                        cardName.classList.add('invalid');
+                        errorMessages.push('Kart üzerindeki isim zorunludur.');
+                    }
+                    if (!isCardExpiryValid(cardExpiry.value)) {
+                        isValid = false;
+                        cardExpiry.classList.add('invalid');
+                        errorMessages.push('Kart tarihi geçersiz veya geçmiş tarihli.');
+                    }
+                    if (cardCvc.value.replace(/\D/g, '').length < 3) {
+                        isValid = false;
+                        cardCvc.classList.add('invalid');
+                        errorMessages.push('CVC kodu geçersiz (en az 3 rakam).');
+                    }
+                }
+                
+                const terms = document.getElementById('accept-terms');
+                if (!terms.checked) {
+                    isValid = false;
+                    terms.parentElement.style.color = 'var(--accent-color)'; 
+                } else {
+                    terms.parentElement.style.color = '';
+                }
+
+                if (isValid) {
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<ion-icon name="sync-outline" class="animate-spin mr-2"></ion-icon> İşleniyor...';
+                    
+                    const deliveryMethod = isKiralik ? null : document.querySelector('input[name="sale-delivery"]:checked').value;
+                    
+                    const orderData = {
+                        motorcycle_id: motorId,
+                        transaction_type: motorType,
+                        
+                        // Kişisel
+                        customer_name: document.getElementById('full-name').value,
+                        customer_email: document.getElementById('email').value,
+                        customer_phone: document.getElementById('phone').value,
+                        
+                        // Teslimat
+                        delivery_method: deliveryMethod, // 'pickup' or 'home'
+                        delivery_address: (isKiralik || deliveryMethod === 'home') ? addressInput.value : null,
+                        
+                        // Kiralama
+                        start_date: isKiralik ? startDateInput.value : null,
+                        end_date: isKiralik ? endDateInput.value : null,
+                        
+                        // Fatura
+                        billing_name: billingCheckbox.checked ? document.getElementById('full-name').value : document.getElementById('billing-name').value,
+                        billing_address: billingCheckbox.checked ? addressInput.value : document.getElementById('billing-address').value,
+                        billing_tax_no: billingCheckbox.checked ? null : document.getElementById('billing-tax-no').value,
+                        
+                        // Ödeme
+                        payment_method: selectedPaymentMethod,
+                        coupon_code: couponInput.value.trim().toUpperCase()
+                    };
+                    
+                    try {
+                        const response = await fetch('/api/create-order', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify(orderData)
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (response.ok && result.success) {
+                            currentStep = 3;
+                            showStep(currentStep);
+                            document.getElementById('purchased-item-name').textContent = motorTitle;
+                            document.getElementById('step-indicator').style.display = 'none';
+                        } else {
+                            showErrorMessage(result.message || 'Bilinmeyen bir hata oluştu.', 2);
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = `${selectedPaymentMethod === 'Bayide Öde' ? 'Siparişi Oluştur' : 'Ödemeyi Tamamla'} ${finalPriceButton.textContent}`;
+                        }
+                        
+                    } catch (error) {
+                        showErrorMessage('Sunucuya bağlanılamadı. Lütfen internet bağlantınızı kontrol edin.', 2);
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = `${selectedPaymentMethod === 'Bayide Öde' ? 'Siparişi Oluştur' : 'Ödemeyi Tamamla'} ${finalPriceButton.textContent}`;
+                    }
+                } else {
+                    showErrorMessage(errorMessages.join(' '), 2);
+                }
+            });
+        }
+
+        // --- 3. KART ANİMASYONU ---
+        const cardInner = document.getElementById('card-inner');
+        const cardTypeLogo = document.getElementById('card-type-logo');
+        const cardPreviewNumber = document.getElementById('card-preview-number');
+        const cardPreviewName = document.getElementById('card-preview-name');
+        const cardPreviewExpiry = document.getElementById('card-preview-expiry');
+        const cardPreviewCvc = document.getElementById('card-preview-cvc');
+        
+        const cardNumberInput = document.getElementById('card-number');
+        const cardNameInput = document.getElementById('card-name');
+        const cardExpiryInput = document.getElementById('card-expiry');
+        const cardCvcInput = document.getElementById('card-cvc');
+
+        cardNumberInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, ''); 
+            let formattedValue = value.replace(/(.{4})/g, '$1 ').trim();
+            e.target.value = formattedValue;
+            cardPreviewNumber.textContent = formattedValue || '#### #### #### ####';
+            
+            if (value.startsWith('4')) {
+                cardTypeLogo.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="#1A1F71" d="M20.32 3.38A2.3 2.3 0 0 0 18.05 2H5.95A2.3 2.3 0 0 0 3.68 3.38L.8 9.35a.86.86 0 0 0 .78 1.15h2.83l.5 2.13c-.22.1-.42.22-.6.37L1.48 14.9a.86.86 0 0 0 0 1.2l3.05 3.52a.86.86 0 0 0 1.2 0l2.84-3.28c.12-.13.2-.28.25-.44H15l.25.44c.06.16.13.3.25.44l2.84 3.28a.86.86 0 0 0 1.2 0l3.05-3.52a.86.86 0 0 0 0-1.2L19.47 12.9a.85.85 0 0 0-.6-.37l.5-2.13h2.83a.86.86 0 0 0 .78-1.15Z"/></svg>';
+                cardTypeLogo.classList.remove('opacity-50', 'text-gray-400');
+            } else if (value.startsWith('5')) {
+                cardTypeLogo.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><circle cx="7.7" cy="12" r="7" fill="#EA001B"/><circle cx="16.3" cy="12" r="7" fill="#F79E1B"/><path fill="#FF5F00" d="M12 7.7a7 7 0 0 0 0 8.6a7 7 0 0 0 0-8.6Z"/></svg>';
+                cardTypeLogo.classList.remove('opacity-50', 'text-gray-400');
+            } else {
+                cardTypeLogo.innerHTML = '<path fill="currentColor" d="M22 4H2v16h20V4M4 6h16v3H4V6m0 5h16v7H4v-7Z"/>';
+                cardTypeLogo.classList.add('opacity-50', 'text-gray-400');
+            }
+        });
+        
+        cardNameInput.addEventListener('input', (e) => {
+            cardPreviewName.textContent = e.target.value.toUpperCase() || 'AD SOYAD';
+        });
+
+        cardExpiryInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 2) {
+                value = value.substring(0, 2) + ' / ' + value.substring(2, 4);
+            }
+            e.target.value = value;
+            cardPreviewExpiry.textContent = value || 'AA/YY';
+        });
+
+        cardCvcInput.addEventListener('input', (e) => {
+            cardPreviewCvc.textContent = e.target.value.replace(/\D/g, '') || '###';
+        });
+        cardCvcInput.addEventListener('focus', () => {
+            cardInner.classList.add('is-flipped');
+        });
+        cardCvcInput.addEventListener('blur', () => {
+            cardInner.classList.remove('is-flipped');
+        });
+
+        // --- 4. Dark Mode Toggle ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleMobileBtn = document.getElementById('theme-toggle-mobile');
+        
+        const handleThemeToggle = () => {
+            const isDarkMode = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('color-theme', isDarkMode ? 'dark' : 'light');
+        };
+
+        if (themeToggleBtn) themeToggleBtn.addEventListener('click', handleThemeToggle);
+        if (themeToggleMobileBtn) themeToggleMobileBtn.addEventListener('click', handleThemeToggle);
+    });
+    </script>
+</body>
+</html>
+

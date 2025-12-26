@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- YENİ: Başlık -->
+    <title>MotoLove | Şifre Sıfırlama</title>
+    
+    <!-- Tailwind CSS CDN --><script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/static/images/favicon.png" type="image/png">
+    <!-- Google Fonts: Inter --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- SVG İkonları için (Ionicons) --><script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <!-- login.html'den kopyalanan stil bloğu -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1F2937; /* Tailwind: text-gray-800 */
+            /* Animasyonlu Gradient Arka Plan */
+            background: linear-gradient(-45deg, #f8fafb, #fff7f7, #ffeaea, #f8fafb);
+            background-size: 400% 400%;
+            animation: gradient-background-animation 15s ease infinite;
+            
+            /* Formun ortalanması için */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        @keyframes gradient-background-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        :root {
+            --accent-color: #E11D48; /* Tailwind: rose-600 (Tutkulu Gül) */
+            --accent-color-hover: #BE123C; /* Tailwind: rose-700 */
+        }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #E5E7EB; }
+        ::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 5px; border: 2px solid #E5E7EB; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-color-hover); }
+        ::selection { background: var(--accent-color); color: #FFFFFF; }
+        .navbar-scrolled { background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); box-shadow: 0 4px 10px -1px rgba(0, 0, 0, 0.05); border-bottom: 1px solid #E5E7EB; }
+        .gradient-text { background: linear-gradient(90deg, var(--accent-color), #f87171, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: gradient-flow 6s linear infinite; }
+        @keyframes gradient-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        .btn-primary { background-color: var(--accent-color); color: #FFFFFF; transition: all 0.3s ease; box-shadow: 0 4px 15px -5px rgba(225, 29, 72, 0.4); }
+        .btn-primary:hover { background-color: var(--accent-color-hover); transform: translateY(-3px); box-shadow: 0 7px 20px -5px rgba(225, 29, 72, 0.5); }
+        .btn-secondary { border: 1px solid var(--accent-color); color: var(--accent-color); transition: all 0.3s ease; }
+        .btn-secondary:hover { background-color: var(--accent-color); color: #FFFFFF; transform: translateY(-2px); }
+        .nav-link { position: relative; transition: color 0.3s ease; color: #374151; }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 50%; transform: translateX(-50%); background-color: var(--accent-color); transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .nav-link:hover { color: var(--accent-color); }
+        .nav-link:hover::after { width: 100%; }
+        .header-hidden { transform: translateY(-100%); }
+        .top-bar-hidden { max-height: 0px; padding-top: 0px; padding-bottom: 0px; opacity: 0; }
+
+        /* ===== YENİ: Ana İçerik Alanı ===== */
+        main {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 120px; /* Header için boşluk */
+            padding-bottom: 40px; /* Footer için boşluk */
+            flex-grow: 1; /* Footer'ı aşağı itmek için */
+        }
+        
+        /* ===== GÜNCELLENDİ: Şifre Sıfırlama Kartı ===== */
+        .reset-card {
+            background-color: #fff;
+            border-radius: 1.5rem; /* 2xl */
+            box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 500px; /* Daha dar bir kart */
+            padding: 50px 55px;
+            border: 1px solid #E5E7EB;
+            text-align: center;
+            /* GÜNCELLENDİ: Animasyon */
+            animation: fadeInUp 0.7s ease-out;
+        }
+
+        /* GÜNCELLENDİ: Animasyon */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* YENİ: Kademeli animasyon */
+        .reset-card h1, .reset-card p, .reset-card input, .reset-card .btn-primary, .reset-card a {
+             /* Animasyonun son state'de kalması için */
+            animation-fill-mode: both;
+        }
+        .reset-card h1 { animation: fadeInUp 0.7s ease-out 0.1s; }
+        .reset-card p { animation: fadeInUp 0.7s ease-out 0.2s; }
+        .reset-card input { animation: fadeInUp 0.7s ease-out 0.3s; }
+        .reset-card .btn-primary { animation: fadeInUp 0.7s ease-out 0.4s; }
+        .reset-card a { animation: fadeInUp 0.7s ease-out 0.5s; }
+
+
+        .reset-card h1 {
+            font-size: 2rem; /* 3xl */
+            font-weight: 700; /* bold */
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .reset-card p {
+            font-size: 1rem; /* base */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 2rem;
+        }
+
+        .reset-card input {
+            background-color: #F3F4F6; /* gray-100 */
+            border: none;
+            padding: 14px 15px;
+            margin: 8px 0;
+            width: 100%;
+            border-radius: 0.5rem; /* lg */
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .reset-card input:focus {
+            outline: none;
+            background-color: #fff;
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.2);
+        }
+        
+        .reset-card a {
+            color: #6B7280;
+            font-size: 0.875rem;
+            text-decoration: none;
+            margin-top: 1.5rem; /* Butondan sonra boşluk */
+            display: inline-block;
+            transition: color 0.2s ease;
+        }
+        .reset-card a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        .reset-card .btn-primary {
+            border-radius: 0.5rem; /* lg */
+            font-size: 0.875rem; /* sm */
+            font-weight: 600; /* semibold */
+            padding: 12px 45px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            width: 100%; /* Buton tam genişlik */
+            margin-top: 1rem;
+        }
+        
+        /* ===== YENİ: Başarı İkonu Stilleri ===== */
+        .success-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        .success-icon svg {
+            width: 5rem; /* 80px */
+            height: 5rem; /* 80px */
+            color: #10B981; /* green-500 */
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* YENİ: Form içeriğini gizlemek için animasyon */
+        .form-content.hidden {
+            animation: fadeOut 0.4s ease-out forwards;
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); height: 0; overflow: hidden; margin: 0; padding: 0; }
+        }
+
+        /* ===== YENİ: Mesaj Alanı Stili ===== */
+        .form-message {
+            font-size: 0.875rem; /* sm */
+            font-weight: 500;
+            margin-top: 1.5rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            width: 100%;
+            display: none; /* Varsayılan olarak gizli */
+            /* YENİ: Başarı mesajı için geçiş */
+            transition: all 0.3s ease;
+        }
+        .form-message.success {
+            background-color: #D1FAE5; /* green-100 */
+            color: #065F46; /* green-800 */
+            display: block;
+            margin-top: 0; /* YENİ: İkonun hemen altında */
+        }
+        .form-message.error {
+            background-color: #FEE2E2; /* red-100 */
+            color: #991B1B; /* red-800 */
+            display: block;
+        }
+        /* Yükleniyor butonu stili */
+        .btn-loading {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .btn-loading::after {
+            content: '...';
+            animation: loading-dots 1s infinite;
+        }
+        @keyframes loading-dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* ===== Mobil Uyumluluk ===== */
+        @media (max-width: 768px) {
+            body {
+                display: block;
+                min-height: 0;
+            }
+            main {
+                padding-top: 100px;
+                padding-bottom: 20px;
+                min-height: 0; 
+                align-items: flex-start;
+            }
+            .reset-card {
+                max-width: 90vw;
+                padding: 40px 25px;
+            }
+            .reset-card h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- ===== Header / Navbar (login.html'den kopyalandı) ===== -->
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-transform duration-300 ease-out">
+        
+        <!-- Top Bar (Haber Bandı) -->
+        <div id="top-bar" class="bg-rose-100 text-[var(--accent-color)] text-sm font-medium text-center py-2.5 px-6 transition-all duration-300 overflow-hidden max-h-12 opacity-100">
+            <p class="flex items-center justify-center">
+                <ion-icon name="sparkles-outline" class="mr-2"></ion-icon>
+                Yeni Sezon Fırsatları! Elektrikli modellerde %15 indirim.
+            </p>
+        </div>
+
+        <!-- Ana Navigasyon Barı -->
+        <nav id="navbar" class="transition-all duration-300 bg-transparent">
+            <div class="container mx-auto px-6 py-5 flex justify-between items-center">
+                <!-- Logo -->
+               <a href="/"><img src="static/images/motolove.png" alt="MotoLove Logo" class="h-20 w-auto"></a>
+                
+                <!-- Mobil Menu Butonu -->
+                <button id="mobile-menu-button" class="md:hidden text-3xl text-gray-900">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </button>
+                
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="font-medium nav-link">Ana Sayfa</a>
+                    <a href="ilan.html" class="font-medium nav-link">İlanlar</a>
+                    <a href="ilanver.html" class="font-medium nav-link">İlan Ver</a>
+                    <a href="ihale.html" class="font-medium nav-link active">İhale</a>
+                    <a href="forum.html" class="font-medium nav-link active">Forum</a>
+                    <a href="/login" class="btn-primary font-semibold px-5 py-2 rounded-lg text-sm ml-4">Giriş Yap</a>
+                </div>
+            </div>
+            
+        </nav>
+        
+        <!-- Mobil Menu (Gizli) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur-sm shadow-xl border-t border-gray-200">
+            <a href="/" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100">Ana Sayfa</a>
+            <a href="ilan.html" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100">İlanlar</a>
+            <a href="ilanver.html" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100">İlan Ver</a>
+            <a href="ihale.html" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100">İhale</a>
+            <a href="forum.html" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100">Forum</a>
+            <a href="/login" class="block px-6 py-4">
+                <span class="btn-primary w-full block text-center font-semibold px-5 py-3 rounded-lg">Giriş Yap</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- ===== YENİ BÖLÜM: Şifre Sıfırlama Formu ===== -->
+    <main>
+        
+        <!-- GÜNCELLENDİ: HTML Yapısı -->
+        <div class="reset-card">
+            
+            <!-- YENİ: Başarı ikonu (başlangıçta gizli) -->
+            <div id="success-icon" class="success-icon hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+
+            <form id="reset-form">
+                <!-- YENİ: Form içeriği sarmalayıcısı -->
+                <div id="form-content">
+                    <h1>Şifreni Sıfırla</h1>
+                    <p>Kayıtlı e-posta adresinizi girin. Size şifrenizi sıfırlamanız için bir link göndereceğiz.</p>
+                    
+                    <input type="email" name="email" placeholder="Email" required />
+                    
+                    <button type="submit" class="btn-primary">Sıfırlama Linki Gönder</button>
+                    
+                    <a href="/login">Giriş Yap'a Geri Dön</a>
+                </div>
+            </form>
+    
+            <!-- Mesaj alanı formun dışına alındı -->
+            <div id="reset-message" class="form-message"></div>
+
+        </div>
+        
+    </main>
+    <!-- ===== YENİ BÖLÜM SONU ===== -->
+
+
+    <!-- ===== Footer (Sayfanın altına sabitlendi) ===== -->
+    <footer class="bg-white text-gray-600 py-16 px-6 border-t border-gray-200 w-full mt-auto">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Logo & Sosyal --><div>
+                <a href="/" class="text-3xl font-bold tracking-tighter text-gray-900">
+                    Moto<span style="color: var(--accent-color);">Love</span>
+                </a>
+                <p class="mt-4 mb-6">Geleceğin sürüş deneyimi, bugün.</p>
+                <div class="flex space-x-4 text-2xl">
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-instagram"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-facebook"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-youtube"></ion-icon></a>
+                    <a href="#" class_disabled="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-twitter"></ion-icon></a>
+                </div>
+            </div>
+            
+            <!-- Hızlı Linkler --><div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4">Hızlı Linkler</h4>
+                <ul class="space-y-2">
+                    <li><a href="/" class="hover:text-gray-900">Ana Sayfa</a></li>
+                    <li><a href="index.html#categories" class="hover:text-gray-900">Kategoriler</a></li>
+                    <li><a href="index.html#featured-sale" class="hover:text-gray-900">Satılık Modeller</a></li>
+                    <li><a href="index.html#featured-rent" class="hover:text-gray-900">Kiralık Filo</a></li>
+                    <li><a href="#" class="hover:text-gray-900">Hakkımızda</a></li>
+                </ul>
+            </div>
+            
+            <!-- Destek --><div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4">Destek</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-gray-900">S.S.S.</a></li>
+                    <li><a href="#" class="hover:text-gray-900">İletişim</a></li>
+                    <li><a href="#" class="hover:text-gray-900">Gizlilik Politikası</a></li>
+                    <li><a href="#" class="hover:text-gray-900">Kullanım Şartları</a></li>
+                </ul>
+            </div>
+
+            <!-- İletişim --><div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4">İletişim</h4>
+                <ul class="space-y-2">
+                    <li><a href="mailto:info@motolove.com" class="hover:text-gray-900">info@motolove.com</a></li>
+                    <li><a href="tel:+905551234567" class="hover:text-gray-900">+90 555 123 45 67</a></li>
+                    <li><p>Love Plaza, İstanbul, Türkiye</p></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center text-gray-500 mt-12 pt-8 border-t border-gray-200">
+            &copy; 2025 MotoLove. Tüm hakları saklıdır.
+        </div>
+    </footer>
+    
+    <!-- ===== JavaScript (GÜNCELLENDİ) ===== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Navbar Scroll Efekti ---
+            const mainHeader = document.getElementById('main-header'); // Ana header container
+            const navbar = document.getElementById('navbar'); // Sadece nav bar
+            const topBar = document.getElementById('top-bar'); // Sadece top bar
+            let lastScrollY = window.scrollY;
+
+            window.addEventListener('scroll', () => {
+                document.body.classList.toggle('scroll', window.scrollY > 0);
+
+                if (window.scrollY > 50) {
+                    navbar.classList.add('navbar-scrolled');
+                    topBar.classList.add('top-bar-hidden');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                    topBar.classList.remove('top-bar-hidden');
+                }
+                if (window.scrollY > lastScrollY && window.scrollY > 200) {
+                    mainHeader.classList.add('header-hidden');
+                } else {
+                    mainHeader.classList.remove('header-hidden');
+                }
+                lastScrollY = window.scrollY;
+            });
+
+            // --- Mobil Menu Toggle ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuIcon = mobileMenuButton.querySelector('ion-icon');
+            
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    if (mobileMenu.classList.contains('hidden')) {
+                        mobileMenuIcon.setAttribute('name', 'menu-outline');
+                    } else {
+                        mobileMenuIcon.setAttribute('name', 'close-outline');
+                    }
+                });
+            }
+            
+            if (mobileMenu) {
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuIcon.setAttribute('name', 'menu-outline');
+                    });
+                });
+            }
+
+            // --- GÜNCELLENDİ: Şifre Sıfırlama Formu ---
+            const resetForm = document.getElementById('reset-form');
+            const resetMessage = document.getElementById('reset-message');
+            const successIcon = document.getElementById('success-icon'); // YENİ
+            const formContent = document.getElementById('form-content'); // YENİ
+
+            if (resetForm) {
+                resetForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const button = resetForm.querySelector('button[type="submit"]');
+                    toggleButtonLoading(button, true, "Sıfırlama Linki Gönder");
+                    
+                    const formData = new FormData(resetForm);
+                    const data = Object.fromEntries(formData.entries());
+                    
+                    showMessage(resetMessage, '', 'error'); // Temizle
+                    successIcon.classList.add('hidden'); // İkonu temizle
+
+                    try {
+                        // TODO: Backend'de /api/reset-password endpoint'i oluşturulmalı.
+                        // Şimdilik sadece başarılı bir demo gösteriyoruz.
+                        // const response = await fetch('/api/reset-password', {
+                        //     method: 'POST',
+                        //     headers: { 'Content-Type': 'application/json' },
+                        //     body: JSON.stringify(data),
+                        // });
+                        // const result = await response.json();
+
+                        // Demo Başarılı Cevabı
+                        const demoResult = { success: true, message: `Başarılı! ${data.email} adresine bir sıfırlama linki gönderdik.` };
+
+                        // Demo Hata Cevabı (test için)
+                        // const demoResult = { success: false, message: "Bu e-posta adresi sistemde bulunamadı." };
+
+                        // GÜNCELLENDİ: Başarı ve yönlendirme
+                        if (demoResult.success) {
+                            
+                            // 1. Formu gizle ve ikonu göster
+                            formContent.classList.add('hidden');
+                            successIcon.classList.remove('hidden');
+
+                            // 2. Başarı mesajını göster
+                            showMessage(resetMessage, demoResult.message, 'success');
+                            
+                            // 3. 2 saniye sonra yönlendir
+                            setTimeout(() => {
+                                window.location.href = '/login';
+                            }, 2000); // 2 saniye
+
+                        } else {
+                            showMessage(resetMessage, demoResult.message, 'error');
+                            toggleButtonLoading(button, false, "Sıfırlama Linki Gönder");
+                        }
+
+                    } catch (error) {
+                        console.error('Sıfırlama hatası:', error);
+                        showMessage(resetMessage, 'Sunucuya bağlanırken bir hata oluştu.', 'error');
+                        toggleButtonLoading(button, false, "Sıfırlama Linki Gönder");
+                    }
+                });
+            }
+            
+            // --- Yardımcı Fonksiyonlar ---
+            
+            /**
+             * Form mesaj alanını günceller.
+             */
+            function showMessage(element, message, type) {
+                if (!element) return;
+                element.textContent = message;
+                element.className = 'form-message'; // Önce sıfırla
+                if (type === 'success') {
+                    element.classList.add('success');
+                } else if (type === 'error') {
+                    element.classList.add('error');
+                }
+            }
+            
+            /**
+             * Butonun yükleniyor durumunu ayarlar.
+             */
+            function toggleButtonLoading(button, isLoading, defaultText) {
+                if (!button) return;
+                if (isLoading) {
+                    button.disabled = true;
+                    button.classList.add('btn-loading');
+                    button.textContent = 'İşleniyor'; // '...' stilden gelecek
+                } else {
+                    button.disabled = false;
+                    button.classList.remove('btn-loading');
+                    button.textContent = defaultText;
+                }
+            }
+
+        });
+    </script>
+</body>
+</html>
+

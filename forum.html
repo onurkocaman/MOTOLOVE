@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<!-- YENİ: Dark mode için <html> tag'i izlenecek -->
+<html lang="tr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- YENİ: Sayfa başlığı -->
+    <title>MotoLove Forum | Topluluk</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/static/images/favicon.png" type="image/png">
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- SVG İkonları için (Ionicons) -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <!-- YENİ: Dark Mode'u etkinleştirmek için yapılandırma -->
+    <script>
+        // Tailwind'in dark mode'u 'class' bazlı kullanmasını sağlıyoruz
+        tailwind.config = {
+            darkMode: 'class', // 'media' (tarayıcı ayarı) yerine 'class' (manuel toggle)
+            theme: {
+                extend: {
+                    // Tema renklerini buraya ekleyebilirsiniz (isteğe bağlı)
+                }
+            }
+        }
+
+        // Sayfa yüklenir yüklenmez 'dark' class'ını kontrol et
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <!-- index.html'den kopyalanan stil bloğu -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1F2937;
+            /* Tailwind: text-gray-800 */
+            /* Animasyonlu Gradient Arka Plan */
+            background: linear-gradient(-45deg, #f8fafb, #fff7f7, #ffeaea, #f8fafb);
+            background-size: 400% 400%;
+            animation: gradient-background-animation 15s ease infinite;
+
+            /* Dark Mode Geçişi */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* === YENİ: DARK MODE STİLLERİ === */
+        .dark body {
+            color: #E5E7EB;
+            /* Tailwind: text-gray-200 */
+            /* Dark Mode için farklı bir arka plan animasyonu */
+            background: linear-gradient(-45deg, #111827, #1f2937, #111827);
+            background-size: 400% 400%;
+            animation: gradient-background-animation 15s ease infinite;
+        }
+
+        /* Navbar Dark Mode */
+        .dark .navbar-scrolled {
+            background-color: rgba(17, 24, 39, 0.85);
+            /* dark:bg-gray-900/85 */
+            border-bottom: 1px solid #374151;
+            /* dark:border-gray-700 */
+        }
+
+        .dark .nav-link {
+            color: #D1D5DB;
+            /* dark:text-gray-300 */
+        }
+
+        .dark .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .dark #mobile-menu-button {
+            color: #F9FAFB;
+            /* dark:text-gray-50 */
+        }
+
+        .dark #mobile-menu {
+            background-color: rgba(31, 41, 55, 0.95);
+            /* dark:bg-gray-800/95 */
+            border-color: #374151;
+            /* dark:border-gray-700 */
+        }
+
+        .dark #mobile-menu a {
+            color: #F9FAFB;
+            /* dark:text-gray-50 */
+        }
+
+        .dark #mobile-menu a:hover {
+            background-color: #374151;
+            /* dark:bg-gray-700 */
+        }
+
+        /* Kartlar Dark Mode */
+        .dark .bike-card,
+        .dark .category-card,
+        .dark #testimonials .bg-white,
+        .dark #auction-teaser .bg-white {
+            background-color: #1F2937;
+            /* dark:bg-gray-800 */
+            border-color: #374151;
+            /* dark:border-gray-700 */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Bölüm Başlıkları Dark Mode */
+        .dark h2,
+        .dark h3,
+        .dark h4 {
+            color: #FFFFFF;
+        }
+
+        /* Modal Dark Mode */
+        .dark .modal-content {
+            background-color: #1F2937;
+            /* dark:bg-gray-800 */
+            border-color: #374151;
+            /* dark:border-gray-700 */
+        }
+
+        /* Footer Dark Mode */
+        .dark footer {
+            background-color: #1F2937;
+            /* dark:bg-gray-800 */
+            border-color: #374151;
+            /* dark:border-gray-700 */
+        }
+
+        .dark footer,
+        .dark footer p,
+        .dark footer a {
+            color: #9CA3AF;
+            /* dark:text-gray-400 */
+        }
+
+        .dark footer h4,
+        .dark footer a.text-gray-900,
+        .dark footer a:hover {
+            color: #FFFFFF;
+            /* dark:text-white */
+        }
+
+        .dark footer .border-t {
+            border-color: #374151;
+            /* dark:border-gray-700 */
+        }
+
+        @keyframes gradient-background-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        :root {
+            --accent-color: #E11D48;
+            /* Tailwind: rose-600 (Tutkulu Gül) */
+            --accent-color-hover: #BE123C;
+            /* Tailwind: rose-700 */
+        }
+
+        /* Özel Scrollbar (Yeni Tema) */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #E5E7EB;
+            /* Tailwind: bg-gray-200 */
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #374151;
+            /* dark:bg-gray-700 */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 5px;
+            border: 2px solid #E5E7EB;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            border-color: #374151;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color-hover);
+        }
+
+        /* Metin Seçim Rengi (Yeni Tema) */
+        ::selection {
+            background: var(--accent-color);
+            color: #FFFFFF;
+        }
+
+        .navbar-scrolled {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 10px -1px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px -5px rgba(225, 29, 72, 0.4);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-color-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px -5px rgba(225, 29, 72, 0.5);
+        }
+
+        .btn-secondary {
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+
+        .dark .btn-secondary {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .dark .btn-secondary:hover {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+        }
+
+        .btn-primary:disabled,
+        .btn-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Navigasyon linkleri hover */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+            color: #374151;
+            /* text-gray-700 */
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent-color);
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Navbar scroll-up/down */
+        .header-hidden {
+            transform: translateY(-100%);
+        }
+
+        .top-bar-hidden {
+            max-height: 0px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            opacity: 0;
+        }
+
+        /* Gelişmiş "Animate on Scroll" */
+        .animate-in {
+            opacity: 0;
+            transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: opacity, transform;
+            transform: translateY(40px);
+        }
+
+        .animate-in.is-visible {
+            opacity: 1;
+            transform: translateY(0) translateX(0);
+        }
+
+        /* ===== YENİ FORUM STİLLERİ ===== */
+
+        /* Geçiş Animasyonu */
+        .view-section {
+            display: none;
+            /* Başlangıçta gizli */
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .view-section.active {
+            display: block;
+            /* Aktif olunca göster */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Yükleme Animasyonu */
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--accent-color);
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+            margin: 4rem auto;
+            display: block;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Hata Mesajı */
+        .error-message {
+            background-color: #FFF7F7;
+            /* rose-50 */
+            border: 1px solid #FFEAEA;
+            /* rose-100 */
+            color: #BE123C;
+            /* rose-700 */
+            padding: 1rem;
+            border-radius: 0.75rem;
+        }
+
+        .dark .error-message {
+            background-color: #371B21;
+            /* Koyu kırmızımsı */
+            border-color: #7f1d1d;
+            /* Koyu kırmızı */
+            color: #fda4af;
+            /* rose-300 */
+        }
+
+        /* Kategori Kartı */
+        .forum-card {
+            background-color: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .dark .forum-card {
+            background-color: #1F2937;
+            /* dark:bg-gray-800 */
+            border-color: #374151;
+            /* dark:border-gray-700 */
+        }
+
+        .forum-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.07);
+            border-color: var(--accent-color);
+        }
+
+        /* Konu (Thread) Listesi Stili */
+        .thread-item {
+            border-bottom: 1px solid #e5e7eb;
+            /* dark:border-gray-700 */
+            transition: background-color 0.2s ease;
+        }
+
+        .dark .thread-item {
+            border-color: #374151;
+        }
+
+        .thread-item:hover {
+            background-color: #f9fafb;
+            /* dark:bg-gray-800 */
+        }
+
+        .dark .thread-item:hover {
+            background-color: #1F2937;
+        }
+
+        .thread-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Breadcrumbs (Navigasyon Yolu) */
+        .breadcrumb a {
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb span {
+            color: #6b7280;
+            /* dark:text-gray-400 */
+        }
+
+        .dark .breadcrumb span {
+            color: #9ca3af;
+        }
+
+        /* Gönderi (Post) Stili */
+        .forum-post {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            background-color: #fff;
+            overflow: hidden;
+            /* avatarın kenarlığa yapışması için */
+        }
+
+        .dark .forum-post {
+            background-color: #1F2937;
+            /* dark:bg-gray-800 */
+            border-color: #374151;
+            /* dark:border-gray-700 */
+        }
+
+        .post-user-info {
+            background-color: #f9fafb;
+            border-right: 1px solid #e5e7eb;
+        }
+
+        .dark .post-user-info {
+            background-color: #111827;
+            /* dark:bg-gray-900 */
+            border-color: #374151;
+        }
+
+        .post-content pre {
+            background-color: #f3f4f6;
+            /* bg-gray-100 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .dark .post-content pre {
+            background-color: #1f2937;
+            /* dark:bg-gray-800 */
+            color: #e5e7eb;
+            /* dark:text-gray-200 */
+        }
+
+        .dark .post-content {
+            color: #E5E7EB;
+        }
+
+        /* Prose (metin içeriği) için dark mode ayarı */
+        .dark .prose {
+            color: #E5E7EB;
+        }
+
+        .dark .prose :where(a):not(:where([class~="not-prose"] *)) {
+            color: #fda4af;
+        }
+
+        .dark .prose :where(strong):not(:where([class~="not-prose"] *)) {
+            color: #fff;
+        }
+
+        .dark .prose :where(blockquote):not(:where([class~="not-prose"] *)) {
+            border-left-color: #4B5563;
+            color: #D1D5DB;
+        }
+
+        .dark .prose :where(code):not(:where([class~="not-prose"] *)) {
+            color: #fda4af;
+        }
+
+        /* Form Elemanları */
+        .form-input {
+            border: 1px solid #D1D5DB;
+            /* border-gray-300 */
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .dark .form-input {
+            background-color: #374151;
+            /* dark:bg-gray-700 */
+            border-color: #4B5563;
+            /* dark:border-gray-600 */
+            color: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.2);
+        }
+
+        /* Sayfalama */
+        .pagination a,
+        .pagination span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            margin: 0 0.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .pagination a {
+            color: #374151;
+            /* dark:text-gray-300 */
+            border: 1px solid #D1D5DB;
+            /* dark:border-gray-300 */
+        }
+
+        .dark .pagination a {
+            color: #D1D5DB;
+            border-color: #4B5563;
+        }
+
+        .pagination a:hover {
+            background-color: #f9fafb;
+            /* dark:bg-gray-800 */
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .dark .pagination a:hover {
+            background-color: #1F2937;
+        }
+
+        .pagination span.current {
+            background-color: var(--accent-color);
+            color: white;
+            border: 1px solid var(--accent-color);
+        }
+
+        .pagination span.disabled {
+            color: #9CA3AF;
+            /* dark:text-gray-500 */
+            border: 1px solid #E5E7EB;
+            /* dark:border-gray-700 */
+            opacity: 0.6;
+        }
+
+        .dark .pagination span.disabled {
+            color: #6B7280;
+            border-color: #374151;
+        }
+
+        /* === YENİ: Profesyonel Adım Stilleri (Beğeni, Düzenle, Sil) === */
+
+        /* Beğeni Butonu */
+        .btn-like {
+            color: #6B7280;
+            /* text-gray-500 */
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .dark .btn-like {
+            color: #9CA3AF;
+            /* dark:text-gray-400 */
+        }
+
+        .btn-like:hover {
+            color: var(--accent-color);
+            background-color: #FFF7F7;
+            /* rose-50 */
+        }
+
+        .dark .btn-like:hover {
+            background-color: #371B21;
+            /* Koyu rose */
+        }
+
+        .btn-like.liked {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .btn-like.liked ion-icon {
+            fill: var(--accent-color);
+        }
+
+        /* Düzenle/Sil Butonları */
+        .btn-post-action {
+            color: #6B7280;
+            /* text-gray-500 */
+            font-size: 0.875rem;
+            transition: color 0.2s ease;
+        }
+
+        .dark .btn-post-action {
+            color: #9CA3AF;
+            /* dark:text-gray-400 */
+        }
+
+        .btn-post-action:hover {
+            color: var(--accent-color);
+        }
+
+        /* Düzenlenmiş Bilgisi */
+        .edited-info {
+            font-size: 0.75rem;
+            color: #6B7280;
+            /* text-gray-500 */
+            font-style: italic;
+        }
+
+        .dark .edited-info {
+            color: #9CA3AF;
+            /* dark:text-gray-400 */
+        }
+
+        /* Düzenleme Konteynırı (Textarea) */
+        .edit-container textarea {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* === YENİ: Onay Modalı (Silme işlemi için) === */
+        .confirmation-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(17, 24, 39, 0.6);
+            /* dark:bg-gray-900/60 */
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .confirmation-modal {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            animation: zoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .dark .confirmation-modal {
+            background-color: #1F2937;
+            /* dark:bg-gray-800 */
+            border: 1px solid #374151;
+            /* dark:border-gray-700 */
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body class="text-gray-800 dark:bg-gray-900">
+
+    <!-- ===== Header / Navbar (index.html'den kopyalandı) ===== -->
+    <!-- Bu bölüm, `render_template` ile sunucudan gelen `user_name` vb. değişkenleri otomatik olarak alır -->
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-transform duration-300 ease-out">
+
+        <!-- YENİ: Top Bar (Haber Bandı) -->
+        <div id="top-bar"
+            class="bg-rose-100 text-[var(--accent-color)] text-sm font-medium text-center py-2.5 px-6 transition-all duration-300 overflow-hidden max-h-12 opacity-100 dark:bg-rose-900/50 dark:text-rose-300">
+            <p class="flex items-center justify-center">
+                <ion-icon name="sparkles-outline" class="mr-2"></ion-icon>
+                Yeni Sezon Fırsatları! Elektrikli modellerde %15 indirim.
+            </p>
+        </div>
+
+        <!-- Ana Navigasyon Barı -->
+        <nav id="navbar" class="transition-all duration-300 bg-transparent dark:bg-transparent">
+            <div class="container mx-auto px-6 py-5 flex justify-between items-center">
+                <!-- Logo -->
+                <a href="/">
+                    <img src="/static/images/motolove.png" alt="MotoLove Logo" class="h-14 md:h-20 w-auto">
+                </a>
+
+                <!-- Desktop Nav (YENİ - Dinamik Hale Getirildi) -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="font-medium nav-link">Ana Sayfa</a>
+                    <a href="/ilanlar" class="font-medium nav-link">İlanlar</a>
+                    <a href="/ilanver" class="font-medium nav-link">İlan Ver</a>
+                    <a href="/ihale" class="font-medium nav-link active">İhale</a>
+                    <a href="/forum" class="font-medium nav-link active">Forum</a>
+                    <a href="/mesajlarim" class="font-medium nav-link">Mesajlar</a>
+
+                    {% if user_name %}
+                    <!-- GÜNCELLENDİ: Profil ikonu veya fotoğrafı (user_image_url değişkeni ile) -->
+                    <a href="/profile"
+                        class="flex items-center text-gray-700 dark:text-gray-300 transition-colors group font-semibold">
+                        {% if user_image_url %}
+                        <img src="{{ user_image_url }}" alt="Profil"
+                            class="w-8 h-8 rounded-full object-cover mr-2 border-2 border-gray-200 dark:border-gray-600">
+                        {% else %}
+                        <ion-icon name="person-circle" class="text-3xl mr-2 text-[var(--accent-color)]"></ion-icon>
+                        {% endif %}
+                        <span class="font-medium text-sm group-hover:text-[var(--accent-color)]">{{ user_name }}</span>
+                    </a>
+                    <a href="/logout" class="btn-secondary font-semibold px-5 py-2 rounded-lg text-sm ml-4">Çıkış
+                        Yap</a>
+                    {% else %}
+                    <a href="/login" class="btn-primary font-semibold px-5 py-2 rounded-lg text-sm ml-4">Giriş Yap</a>
+                    {% endif %}
+
+
+
+                    <!-- YENİ: Night Mode Toggle Butonu -->
+                    <button id="theme-toggle"
+                        class="text-xl text-gray-700 dark:text-gray-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)] transition-colors duration-200">
+                        <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                        <!-- Ay (Karanlıkta görünür) -->
+                        <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                        <!-- Güneş (Aydınlıkta görünür) -->
+                    </button>
+                </div>
+
+                <!-- Mobil Menu Butonu (YENİ: Toggle'ı da içerir) -->
+                <div class="md:hidden flex items-center space-x-4">
+                    <!-- YENİ: Night Mode Toggle Butonu (Mobil) -->
+                    <button id="theme-toggle-mobile" class="text-2xl text-gray-900 dark:text-gray-100">
+                        <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                        <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                    </button>
+
+                    <button id="mobile-menu-button" class="text-3xl text-gray-900 dark:text-gray-100">
+                        <ion-icon name="menu-outline"></ion-icon>
+                    </button>
+                </div>
+
+            </div>
+        </nav>
+
+        <!-- Mobil Menu (Gizli) (Yeni Tema) -->
+        <div id="mobile-menu"
+            class="hidden md:hidden bg-white/95 backdrop-blur-sm shadow-xl border-t border-gray-200 dark:bg-gray-800/95 dark:border-gray-700">
+            <a href="/" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">Ana
+                Sayfa</a>
+            <a href="/ilanlar"
+                class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">İlanlar</a>
+            <a href="/ilanver"
+                class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">İlan Ver</a>
+            <a href="/ihale"
+                class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">İhale</a>
+            <a href="/forum"
+                class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">Forum</a>
+
+            {% if user_name %}
+            <a href="/profile" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">{{ user_name }} (Profil)</a>
+            <a href="/logout" class="block px-6 py-4">
+                <span class="btn-secondary w-full block text-center font-semibold px-5 py-3 rounded-lg">Çıkış Yap</span>
+            </a>
+            {% else %}
+            <a href="/login" class="block px-6 py-4">
+                <span class="btn-primary w-full block text-center font-semibold px-5 py-3 rounded-lg">Giriş Yap</span>
+            </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- ===== YENİ FORUM İÇERİĞİ ===== -->
+    <main class="container mx-auto px-6 pt-48 pb-24">
+
+        <!-- Dinamik Başlık ve Breadcrumb Alanı -->
+        <div id="forum-header" class="mb-8 animate-in is-visible">
+            <h1 id="forum-title" class="text-4xl md:text-5xl font-bold mb-4 dark:text-white">MotoLove Forum</h1>
+            <nav id="forum-breadcrumb" class="text-sm text-gray-600 dark:text-gray-400">
+                <!-- JS ile doldurulacak -->
+                <a href="/forum">Forum Ana Sayfa</a>
+            </nav>
+        </div>
+
+        <!-- Hata Bildirim Alanı -->
+        <div id="forum-error" class="error-message hidden mb-6"></div>
+
+        <!-- Yükleniyor Göstergesi -->
+        <div id="forum-loader" class="text-center py-12">
+            <div class="loader"></div>
+        </div>
+
+        <!-- Ana Konteynır (Görünümler buraya yüklenir) -->
+        <div id="forum-container">
+            <!-- 1. Kategori Listesi Görünümü -->
+            <section id="view-categories" class="view-section space-y-6">
+                <!-- JS ile doldurulacak -->
+            </section>
+
+            <!-- 2. Konu Listesi Görünümü -->
+            <section id="view-threads" class="view-section">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 id="thread-list-title" class="text-2xl font-bold dark:text-white">Konular</h2>
+                    <button id="btn-new-thread" class="btn-primary font-semibold px-5 py-2 rounded-lg text-sm">
+                        <ion-icon name="add-outline" class="mr-1"></ion-icon>
+                        Yeni Konu Aç
+                    </button>
+                </div>
+                <!-- Konu listesi için başlık satırı -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+                    <div
+                        class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-200 dark:border-gray-700 font-semibold text-gray-500 dark:text-gray-400 text-sm">
+                        <div class="col-span-6">Konu Başlığı</div>
+                        <div class="col-span-2 text-center">Cevaplar / Görüntülenme</div>
+                        <div class="col-span-4">Son Mesaj</div>
+                    </div>
+                    <!-- Konu listesi -->
+                    <div id="thread-list-container">
+                        <!-- JS ile doldurulacak -->
+                    </div>
+                </div>
+                <!-- Sayfalama -->
+                <nav id="thread-list-pagination" class="pagination mt-8 text-center"></nav>
+            </section>
+
+            <!-- 3. Tekil Konu Görünümü (Gönderiler) -->
+            <section id="view-single-thread" class="view-section">
+                <h2 id="post-list-title" class="text-2xl md:text-3xl font-bold mb-6 dark:text-white">Konu Başlığı
+                    Yükleniyor...</h2>
+                <div id="post-list-container" class="space-y-6">
+                    <!-- JS ile doldurulacak -->
+                </div>
+                <!-- Sayfalama -->
+                <nav id="post-list-pagination" class="pagination mt-8 text-center"></nav>
+
+                <!-- Hızlı Cevap Formu -->
+                <div id="quick-reply-container" class="mt-10">
+                    <form id="form-quick-reply">
+                        <h3 class="text-xl font-bold mb-4 dark:text-white">Hızlı Cevap</h3>
+                        <div
+                            class="bg-white dark:bg-gray-800 rounded-lg p-5 border border-gray-200 dark:border-gray-700">
+                            <textarea id="reply-content" class="form-input" rows="6"
+                                placeholder="Cevabınızı buraya yazın..." required></textarea>
+                            <div class="flex justify-between items-center mt-4">
+                                <p id="reply-error" class="text-sm text-red-600"></p>
+                                <button type="submit" id="btn-submit-reply"
+                                    class="btn-primary font-semibold px-6 py-2 rounded-lg">
+                                    Cevabı Gönder
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- Giriş yapılmamışsa göster -->
+                    <div id="reply-login-prompt"
+                        class="hidden text-center mt-6 bg-gray-100 dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+                        <p class="text-lg font-medium dark:text-white">Cevap yazabilmek için giriş yapmalısınız.</p>
+                        <a href="/login" class="btn-primary font-semibold px-6 py-2 rounded-lg mt-4 inline-block">Giriş
+                            Yap</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Yeni Konu Açma Formu -->
+            <section id="view-new-thread-form" class="view-section">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-lg p-8 border border-gray-200 dark:border-gray-700 max-w-2xl mx-auto">
+                    <form id="form-new-thread">
+                        <h2 id="new-thread-title" class="text-2xl font-bold mb-6 dark:text-white">Yeni Konu Aç</h2>
+
+                        <div class="mb-4">
+                            <label for="new-thread-title-input"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Konu
+                                Başlığı</label>
+                            <input type="text" id="new-thread-title-input" class="form-input" required>
+                        </div>
+
+                        <div class="mb-6">
+                            <label for="new-thread-content"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Mesajınız</label>
+                            <textarea id="new-thread-content" class="form-input" rows="10" required></textarea>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <p id="new-thread-error" class="text-sm text-red-600"></p>
+                            <button type="submit" id="btn-submit-new-thread"
+                                class="btn-primary font-semibold px-8 py-3 rounded-lg">
+                                Konuyu Gönder
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Giriş yapılmamışsa göster -->
+                    <div id="new-thread-login-prompt" class="hidden text-center mt-6">
+                        <p class="text-lg font-medium dark:text-white">Konu açabilmek için giriş yapmalısınız.</p>
+                        <a href="/login" class="btn-primary font-semibold px-6 py-2 rounded-lg mt-4 inline-block">Giriş
+                            Yap</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- ===== Footer (index.html'den kopyalandı) ===== -->
+    <footer
+        class="bg-white text-gray-600 py-16 px-6 mt-0 border-t border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Logo & Sosyal -->
+            <div>
+                <a href="#" class="text-3xl font-bold tracking-tighter text-gray-900 dark:text-white">
+                    Moto<span style="color: var(--accent-color);">Love</span>
+                </a>
+                <p class="mt-4 mb-6 dark:text-gray-400">Geleceğin sürüş deneyimi, bugün.</p>
+                <div class="flex space-x-4 text-2xl">
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon
+                            name="logo-instagram"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon
+                            name="logo-facebook"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon
+                            name="logo-youtube"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon
+                            name="logo-twitter"></ion-icon></a>
+                </div>
+            </div>
+
+            <!-- Hızlı Linkler -->
+            <div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4 dark:text-white">Hızlı Linkler</h4>
+                <ul class="space-y-2">
+                    <li><a href="/" class="hover:text-gray-900 dark:hover:text-white">Ana Sayfa</a></li>
+                    <li><a href="/ilanlar" class="hover:text-gray-900 dark:hover:text-white">İlanlar</a></li>
+                    <li><a href="/ilanver" class="hover:text-gray-900 dark:hover:text-white">İlan Ver</a></li>
+                    <li><a href="/ihale" class="hover:text-gray-900 dark:hover:text-white">İhale</a></li>
+                    <li><a href="/forum" class="hover:text-gray-900 dark:hover:text-white">Forum</a></li>
+                </ul>
+            </div>
+
+            <!-- Destek -->
+            <div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4 dark:text-white">Destek</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">S.S.S.</a></li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">İletişim</a></li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">Gizlilik Politikası</a></li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">Kullanım Şartları</a></li>
+                </ul>
+            </div>
+
+            <!-- İletişim -->
+            <div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4 dark:text-white">İletişim</h4>
+                <ul class="space-y-2">
+                    <li><a href="mailto:info@motolove.com"
+                            class="hover:text-gray-900 dark:hover:text-white">emresynsd@gmail.com</a></li>
+                    <li><a href="tel:+905551234567" class="hover:text-gray-900 dark:hover:text-white">+90 552 886 34
+                            42</a></li>
+                    <li>
+                        <p>Love Plaza, İstanbul, Türkiye</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div
+            class="text-center text-gray-500 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 dark:text-gray-400">
+            &copy; 2025 MotoLove. Tüm hakları saklıdır.
+        </div>
+    </footer>
+
+    <!-- index.html'den kopyalanan Sohbet Botu (Forumda olmasın) -->
+    <!-- Sohbet botu, çakışma olmaması için forum sayfasından kaldırıldı -->
+
+    <!-- ===== JavaScript (GÜNCELLENDİ) ===== -->
+    <!-- YENİ: IDE dostu veri aktarımı -->
+    <!-- YENİ: IDE dostu veri aktarımı (Hidden Div Yöntemi) -->
+    <div id="forum-data" data-user-id="{{ user_id | default('') }}" style="display: none;"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- index.html'den Kopyalanan Navbar, Mobil Menu, Scroll ve Dark Mode Mantığı ---
+            const mainHeader = document.getElementById('main-header');
+            const navbar = document.getElementById('navbar');
+            const topBar = document.getElementById('top-bar');
+            let lastScrollY = window.scrollY;
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    if (navbar) navbar.classList.add('navbar-scrolled');
+                    if (topBar) topBar.classList.add('top-bar-hidden');
+                } else {
+                    if (navbar) navbar.classList.remove('navbar-scrolled');
+                    if (topBar) topBar.classList.remove('top-bar-hidden');
+                }
+                if (mainHeader) {
+                    if (window.scrollY > lastScrollY && window.scrollY > 200) {
+                        mainHeader.classList.add('header-hidden');
+                    } else {
+                        mainHeader.classList.remove('header-hidden');
+                    }
+                }
+                lastScrollY = window.scrollY;
+            });
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileMenuButton && mobileMenu) {
+                const mobileMenuIcon = mobileMenuButton.querySelector('ion-icon');
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    if (mobileMenuIcon) {
+                        mobileMenuIcon.setAttribute('name', mobileMenu.classList.contains('hidden') ? 'menu-outline' : 'close-outline');
+                    }
+                });
+            }
+
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeToggleMobileBtn = document.getElementById('theme-toggle-mobile');
+
+            const handleThemeToggle = () => {
+                const isDarkMode = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('color-theme', isDarkMode ? 'dark' : 'light');
+            };
+
+            if (themeToggleBtn) themeToggleBtn.addEventListener('click', handleThemeToggle);
+            if (themeToggleMobileBtn) themeToggleMobileBtn.addEventListener('click', handleThemeToggle);
+
+            const scrollElements = document.querySelectorAll('.animate-in');
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                scrollElements.forEach(el => observer.observe(el));
+            } else {
+                scrollElements.forEach(el => el.classList.add('is-visible'));
+            }
+
+            // ===== YENİ FORUM UYGULAMASI MANTIĞI =====
+
+            // --- Global Değişkenler ve DOM Elementleri ---
+
+            // Sunucudan gelen Jinja2 değişkenlerini JS'e aktar
+            // Flask `user_id`'yi `None` olarak yollarsa, JS'te 0 veya null olur.
+            // YENİ: JSON bloğundan oku
+            // --- YENİ: Veri Okuma (Hidden Div'den) ---
+            const dataEl = document.getElementById('forum-data');
+
+            // user_id: Sayı veya null
+            const rawUserId = dataEl ? dataEl.dataset.userId : null;
+            const CURRENT_USER_ID = rawUserId ? parseInt(rawUserId, 10) : null;
+
+            // Görünüm (View) Elementleri
+            const loader = document.getElementById('forum-loader');
+            const errorContainer = document.getElementById('forum-error');
+            const headerTitle = document.getElementById('forum-title');
+            const breadcrumb = document.getElementById('forum-breadcrumb');
+
+            const viewCategories = document.getElementById('view-categories');
+            const viewThreads = document.getElementById('view-threads');
+            const viewSingleThread = document.getElementById('view-single-thread');
+            const viewNewThreadForm = document.getElementById('view-new-thread-form');
+
+            const allViews = [viewCategories, viewThreads, viewSingleThread, viewNewThreadForm];
+
+            // Konu Listesi Elementleri
+            const threadListTitle = document.getElementById('thread-list-title');
+            const threadListContainer = document.getElementById('thread-list-container');
+            const threadListPagination = document.getElementById('thread-list-pagination');
+            const btnNewThread = document.getElementById('btn-new-thread');
+
+            // Gönderi Listesi Elementleri
+            const postListTitle = document.getElementById('post-list-title');
+            const postListContainer = document.getElementById('post-list-container');
+            const postListPagination = document.getElementById('post-list-pagination');
+
+            // Hızlı Cevap Formu Elementleri
+            const quickReplyContainer = document.getElementById('quick-reply-container');
+            const formQuickReply = document.getElementById('form-quick-reply');
+            const replyContent = document.getElementById('reply-content');
+            const btnSubmitReply = document.getElementById('btn-submit-reply');
+            const replyError = document.getElementById('reply-error');
+            const replyLoginPrompt = document.getElementById('reply-login-prompt');
+
+            // Yeni Konu Formu Elementleri
+            const newThreadTitle = document.getElementById('new-thread-title');
+            const formNewThread = document.getElementById('form-new-thread');
+            const newThreadTitleInput = document.getElementById('new-thread-title-input');
+            const newThreadContent = document.getElementById('new-thread-content');
+            const btnSubmitNewThread = document.getElementById('btn-submit-new-thread');
+            const newThreadError = document.getElementById('new-thread-error');
+            const newThreadLoginPrompt = document.getElementById('new-thread-login-prompt');
+
+            // Geçici durum (state) değişkenleri
+            let currentCategoryId = null;
+            let currentThreadId = null;
+
+            // --- Yardımcı Fonksiyonlar ---
+
+            /**
+             * Belirli bir görünümü (view) aktifleştirir, diğerlerini gizler.
+             * @param {HTMLElement} viewToShow - Gösterilecek olan bölüm (section) elementi.
+             */
+            const switchView = (viewToShow) => {
+                if (loader) loader.style.display = 'none'; // Yükleyiciyi gizle
+
+                allViews.forEach(view => {
+                    if (view) {
+                        view.classList.remove('active');
+                    }
+                });
+                if (viewToShow) {
+                    viewToShow.classList.add('active');
+                }
+            };
+
+            /**
+             * API çağrısı için bir sarmalayıcı (wrapper).
+             * @param {string} url - API endpoint'i.
+             * @param {object} [options] - Fetch için ayarlar (method, body, headers).
+             * @returns {Promise<any>} - Başarılı olursa JSON verisi, başarısız olursa hata fırlatır.
+             */
+            const apiFetch = async (url, options = {}) => {
+                // YENİ: Headers'ı otomatik olarak ayarla (JSON gönderiyorsak)
+                if (options.body && typeof options.body === 'object' && !options.headers) {
+                    options.headers = { 'Content-Type': 'application/json' };
+                    options.body = JSON.stringify(options.body);
+                }
+
+                try {
+                    const response = await fetch(url, options);
+
+                    if (!response.ok) {
+                        // Sunucudan gelen hata mesajını okumaya çalış
+                        let errorData;
+                        try {
+                            errorData = await response.json();
+                        } catch (e) {
+                            errorData = { message: `HTTP Hatası: ${response.status} ${response.statusText}` };
+                        }
+                        throw new Error(errorData.message || 'Bilinmeyen bir hata oluştu.');
+                    }
+
+                    // Cevap boş olabilir (örn: 204 No Content)
+                    const text = await response.text();
+                    return text ? JSON.parse(text) : { success: true };
+
+                } catch (error) {
+                    console.error('API Çağrı Hatası:', error.message);
+                    throw error; // Hatayı tekrar fırlat ki yakalanabilsin
+                }
+            };
+
+            /**
+             * Ana hata gösterim fonksiyonu.
+             * @param {string} message - Gösterilecek hata mesajı.
+             */
+            const showError = (message) => {
+                if (errorContainer) {
+                    errorContainer.textContent = `Hata: ${message}`;
+                    errorContainer.classList.remove('hidden');
+                }
+                if (loader) loader.style.display = 'none'; // Hata varsa yükleyiciyi gizle
+                // Aktif olan tüm görünümleri de gizleyebiliriz
+                allViews.forEach(view => view && view.classList.remove('active'));
+            };
+
+            /**
+             * Hata mesajını temizler.
+             */
+            const clearError = () => {
+                if (errorContainer) {
+                    errorContainer.textContent = '';
+                    errorContainer.classList.add('hidden');
+                }
+            };
+
+            /**
+             * Tarih formatlama fonksiyonu (örn: 2 saat önce, 3 gün önce).
+             * @param {string} dateString - ISO 8601 formatında tarih.
+             * @returns {string} - "2 saat önce" gibi formatlanmış zaman.
+             */
+            const timeAgo = (dateString) => {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                const now = new Date();
+                const seconds = Math.floor((now - date) / 1000);
+
+                let interval = seconds / 31536000;
+                if (interval > 1) return Math.floor(interval) + " yıl önce";
+                interval = seconds / 2592000;
+                if (interval > 1) return Math.floor(interval) + " ay önce";
+                interval = seconds / 86400;
+                if (interval > 1) return Math.floor(interval) + " gün önce";
+                interval = seconds / 3600;
+                if (interval > 1) return Math.floor(interval) + " saat önce";
+                interval = seconds / 60;
+                if (interval > 1) return Math.floor(interval) + " dakika önce";
+                return Math.floor(seconds) + " saniye önce";
+            };
+
+            /**
+             * Sayfalama (Pagination) HTML'ini oluşturur.
+             * @param {HTMLElement} container - Sayfalama linklerinin ekleneceği element.
+             * @param {object} paginationData - API'den gelen { current_page, total_pages } bilgisi.
+             * @param {function} onPageClick - Sayfa linkine tıklandığında çalışacak fonksiyon.
+             */
+            const renderPagination = (container, paginationData, onPageClick) => {
+                if (!container || !paginationData || paginationData.total_pages <= 1) {
+                    if (container) container.innerHTML = ''; // Sayfalama gerekmiyorsa temizle
+                    return;
+                }
+
+                const { current_page, total_pages } = paginationData;
+                let html = '';
+
+                // Önceki Sayfa
+                html += (current_page > 1)
+                    ? `<a href="#" data-page="${current_page - 1}">&laquo;</a>`
+                    : `<span class="disabled">&laquo;</span>`;
+
+                // Sayfa Numaraları (Basit versiyon)
+                for (let i = 1; i <= total_pages; i++) {
+                    if (i === current_page) {
+                        html += `<span class="current">${i}</span>`;
+                    } else {
+                        html += `<a href="#" data-page="${i}">${i}</a>`;
+                    }
+                }
+
+                // Sonraki Sayfa
+                html += (current_page < total_pages)
+                    ? `<a href="#" data-page="${current_page + 1}">&raquo;</a>`
+                    : `<span class="disabled">&raquo;</span>`;
+
+                container.innerHTML = html;
+
+                // Tıklama olaylarını ata
+                container.querySelectorAll('a[data-page]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const page = parseInt(link.dataset.page, 10);
+                        onPageClick(page);
+                    });
+                });
+            };
+
+            /**
+             * YENİ: Silme işlemi için Onay Modalı gösterir.
+             * @param {string} title - Modal başlığı.
+             * @param {string} message - Modal içeriği.
+             * @param {function} onConfirm - "Onayla" butonuna basıldığında çalışacak fonksiyon.
+             */
+            const showConfirmationModal = (title, message, onConfirm) => {
+                // Önceki modalı kaldır (varsa)
+                document.getElementById('confirmation-modal')?.remove();
+
+                const modalOverlay = document.createElement('div');
+                modalOverlay.id = 'confirmation-modal';
+                modalOverlay.className = 'confirmation-modal-overlay';
+
+                modalOverlay.innerHTML = `
+                <div class="confirmation-modal">
+                    <h3 class="text-xl font-bold mb-4 dark:text-white">${title}</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">${message}</p>
+                    <div class="flex justify-end gap-3">
+                        <button id="modal-btn-cancel" class="btn-secondary font-medium px-5 py-2 rounded-lg text-sm">İptal</button>
+                        <button id="modal-btn-confirm" class="btn-primary font-medium px-5 py-2 rounded-lg text-sm">Onayla</button>
+                    </div>
+                </div>
+            `;
+
+                document.body.appendChild(modalOverlay);
+
+                document.getElementById('modal-btn-confirm').onclick = () => {
+                    onConfirm();
+                    modalOverlay.remove();
+                };
+
+                const cancelAndClose = () => modalOverlay.remove();
+                document.getElementById('modal-btn-cancel').onclick = cancelAndClose;
+                modalOverlay.onclick = (e) => {
+                    if (e.target === modalOverlay) cancelAndClose();
+                };
+            };
+
+            // --- Sayfa Yükleme ve Render Fonksiyonları ---
+
+            /**
+             * Ana Kategori görünümünü yükler.
+             */
+            const loadCategories = async () => {
+                switchView(null); // Başlarken tümünü gizle
+                if (loader) loader.style.display = 'block';
+                clearError();
+
+                try {
+                    const data = await apiFetch('/api/forum/categories');
+
+                    if (data.success && viewCategories) {
+                        let html = '';
+                        if (data.categories.length === 0) {
+                            html = '<p class="text-gray-500 dark:text-gray-400">Henüz hiç forum kategorisi oluşturulmamış.</p>';
+                        }
+
+                        data.categories.forEach(category => {
+                            html += `
+                        <div class="forum-card animate-in is-visible">
+                            <div class="flex items-start gap-4">
+                                <ion-icon name="${category.icon || 'chatbubble-outline'}" class="text-4xl text-[var(--accent-color)] mt-1"></ion-icon>
+                                <div class="flex-grow">
+                                    <a href="/forum/category/${category.id}" class="text-xl font-bold hover:text-[var(--accent-color)] dark:text-white dark:hover:text-[var(--accent-color)] transition-colors forum-link">
+                                        ${category.name}
+                                    </a>
+                                    <p class="text-gray-600 dark:text-gray-400 mt-1">${category.description}</p>
+                                </div>
+                                <div class="text-right text-sm text-gray-500 dark:text-gray-400 shrink-0 ml-4">
+                                    <div class="font-medium">${category.thread_count} Konu</div>
+                                    <div>${category.post_count} Mesaj</div>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                        });
+
+                        viewCategories.innerHTML = html;
+                        switchView(viewCategories);
+                        updateBreadcrumb(); // Ana sayfa breadcrumb'ı
+                    } else {
+                        throw new Error(data.message || 'Kategoriler yüklenemedi.');
+                    }
+                } catch (error) {
+                    showError(error.message);
+                }
+            };
+
+            /**
+             * Konu Listesi görünümünü yükler.
+             * @param {number} categoryId - Yüklenecek kategori ID'si.
+             * @param {number} [page=1] - İstenen sayfa numarası.
+             */
+            const loadThreads = async (categoryId, page = 1) => {
+                switchView(null);
+                if (loader) loader.style.display = 'block';
+                clearError();
+
+                try {
+                    const data = await apiFetch(`/api/forum/threads/${categoryId}?page=${page}`);
+
+                    if (data.success && threadListContainer && threadListTitle) {
+                        currentCategoryId = categoryId; // Yeni konu açma formu için sakla
+
+                        // Başlık ve Breadcrumb
+                        threadListTitle.textContent = data.category.name;
+                        updateBreadcrumb(data.category);
+
+                        let html = '';
+                        if (data.threads.length === 0) {
+                            html = '<p class="text-gray-500 dark:text-gray-400 text-center p-6">Bu kategoride henüz hiç konu açılmamış.</p>';
+                        }
+
+                        data.threads.forEach(thread => {
+                            const authorImg = thread.author_image
+                                ? `<img src="${thread.author_image}" alt="${thread.author_name}" class="w-8 h-8 rounded-full object-cover">`
+                                : `<span class="w-8 h-8 rounded-full bg-rose-100 dark:bg-gray-700 flex items-center justify-center text-[var(--accent-color)] font-semibold">
+                                 ${thread.author_name ? thread.author_name[0].toUpperCase() : '?'}
+                               </span>`;
+
+                            html += `
+                        <div class="thread-item grid grid-cols-12 gap-4 px-6 py-4 items-center">
+                            <!-- Mobil Başlık -->
+                            <div class="col-span-12 md:hidden">
+                                <a href="/forum/thread/${thread.id}" class="font-bold text-lg hover:text-[var(--accent-color)] dark:text-white forum-link">${thread.title}</a>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                    ${thread.author_name} tarafından, ${timeAgo(thread.created_at)}
+                                </p>
+                            </div>
+                            <!-- Konu Başlığı (Desktop) -->
+                            <div class="hidden md:flex col-span-6 items-center gap-3">
+                                ${authorImg}
+                                <div>
+                                    <a href="/forum/thread/${thread.id}" class="font-bold hover:text-[var(--accent-color)] dark:text-white forum-link">${thread.title}</a>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                                        ${thread.author_name} tarafından, ${timeAgo(thread.created_at)}
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- İstatistikler -->
+                            <div class="col-span-6 md:col-span-2 text-left md:text-center text-sm text-gray-600 dark:text-gray-300">
+                                <div>Cevaplar: <span class="font-medium">${thread.reply_count}</span></div>
+                                <div>Görülme: <span class="font-medium">${thread.views}</span></div>
+                            </div>
+                            <!-- Son Mesaj -->
+                            <div class="col-span-6 md:col-span-4 text-left md:text-right text-sm text-gray-500 dark:text-gray-400">
+                                <p class="font-medium truncate">${thread.last_reply_author || 'N/A'}</p>
+                                <p>${timeAgo(thread.last_reply_at)}</p>
+                            </div>
+                        </div>
+                        `;
+                        });
+
+                        threadListContainer.innerHTML = html;
+                        // Sayfalamayı render et
+                        renderPagination(threadListPagination, data.pagination, (newPage) => {
+                            loadThreads(categoryId, newPage);
+                        });
+
+                        switchView(viewThreads);
+
+                    } else {
+                        throw new Error(data.message || 'Konular yüklenemedi.');
+                    }
+                } catch (error) {
+                    showError(error.message);
+                }
+            };
+
+            /**
+             * Tekil Konu (Gönderi Listesi) görünümünü yükler.
+             * @param {number} threadId - Yüklenecek konu ID'si.
+             * @param {number} [page=1] - İstenen sayfa numarası.
+             */
+            const loadSingleThread = async (threadId, page = 1) => {
+                switchView(null);
+                if (loader) loader.style.display = 'block';
+                clearError();
+
+                try {
+                    // YENİ: API çağrısı, artık beğenileri ve düzenleme durumunu da getirecek
+                    const data = await apiFetch(`/api/forum/thread/${threadId}?page=${page}`);
+
+                    if (data.success && postListContainer && postListTitle) {
+                        currentThreadId = threadId; // Hızlı cevap formu için sakla
+
+                        // Başlık ve Breadcrumb
+                        postListTitle.textContent = data.thread.title;
+                        updateBreadcrumb(
+                            { id: data.thread.category_id, name: data.thread.category_name },
+                            data.thread
+                        );
+
+                        let html = '';
+                        if (data.posts.length === 0) {
+                            html = '<p class="text-gray-500 dark:text-gray-400 text-center p-6">Bu konuda hiç gönderi yok. (Bu bir hata olabilir, ana gönderi olmalı)</p>';
+                        }
+
+                        data.posts.forEach((post, index) => {
+                            const authorImg = post.author_image
+                                ? `<img src="${post.author_image}" alt="${post.author_name}" class="w-20 h-20 rounded-full object-cover mx-auto">`
+                                : `<span class="w-20 h-20 rounded-full bg-rose-100 dark:bg-gray-700 flex items-center justify-center text-[var(--accent-color)] text-3xl font-semibold mx-auto">
+                                 ${post.author_name ? post.author_name[0].toUpperCase() : '?'}
+                               </span>`;
+
+                            // İlk gönderiyi (Original Post - OP) farklı stillendir
+                            const opClass = (page === 1 && index === 0) ? 'border-2 border-[var(--accent-color)]' : '';
+
+                            // YENİ: Düzenleme ve Silme Butonları (Sadece sahibi ise)
+                            let postActions = '';
+                            if (CURRENT_USER_ID && post.user_id === CURRENT_USER_ID) {
+                                postActions = `
+                                <button class="btn-post-action btn-edit-post" data-post-id="${post.id}" title="Düzenle">
+                                    <ion-icon name="pencil-outline"></ion-icon> Düzenle
+                                </button>
+                                <button class="btn-post-action btn-delete-post" data-post-id="${post.id}" title="Sil">
+                                    <ion-icon name="trash-outline"></ion-icon> Sil
+                                </button>
+                            `;
+                            }
+
+                            // YENİ: Düzenlenme durumu
+                            const editedInfo = post.is_edited
+                                ? `<span class="edited-info ml-4">(Düzenlendi: ${timeAgo(post.edited_at)})</span>`
+                                : '';
+
+                            // YENİ: Beğeni Butonu
+                            const likeButton = `
+                            <button class="btn-like ${post.has_liked ? 'liked' : ''}" data-post-id="${post.id}" ${!CURRENT_USER_ID ? 'disabled' : ''}>
+                                <ion-icon name="${post.has_liked ? 'heart' : 'heart-outline'}"></ion-icon>
+                                <span class="like-count">${post.like_count}</span>
+                                <span class="like-text">${post.has_liked ? 'Beğenildi' : 'Beğen'}</span>
+                            </button>
+                        `;
+
+                            html += `
+                        <div class="forum-post ${opClass} animate-in is-visible" style="transition-delay: ${index * 50}ms" id="post-${post.id}">
+                            <div class="flex flex-col md:flex-row">
+                                <!-- Kullanıcı Bilgisi -->
+                                <div class="w-full md:w-48 shrink-0 p-4 text-center post-user-info">
+                                    ${authorImg}
+                                    <h4 class="font-bold text-lg mt-3 dark:text-white">${post.author_name}</h4>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Mesaj: ${post.author_post_count}</p>
+                                </div>
+                                <!-- Gönderi İçeriği -->
+                                <div class="flex-grow p-6">
+                                    <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-3 mb-4">
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                                            Gönderim Tarihi: ${new Date(post.created_at).toLocaleString('tr-TR')}
+                                            ${editedInfo}
+                                        </p>
+                                        <!-- YENİ: Post Actions (Düzenle/Sil) -->
+                                        <div class="flex gap-4">
+                                            ${postActions}
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 'prose' sınıfı metin formatlaması için (örn: markdown) -->
+                                    <div class="prose dark:prose-dark max-w-none post-content" data-post-id="${post.id}">
+                                        ${
+                                // Güvenlik: Şimdilik sadece metin olarak, HTML'i escape ederek ekliyoruz.
+                                // YENİ: Düzeltme - Metni <pre> içine alarak boşlukları koru
+                                `<pre class="font-sans text-base whitespace-pre-wrap dark:text-gray-200">${post.content.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</pre>`
+                                }
+                                    </div>
+                                    
+                                    <!-- YENİ: Düzenleme Formu (Gizli) -->
+                                    <div class="edit-container mt-4" data-post-id="${post.id}" style="display: none;">
+                                        <textarea class="form-input w-full" rows="8">${post.content}</textarea> <!-- Buraya Ham (raw) metin gelir -->
+                                        <div class="flex justify-end items-center gap-2 mt-2">
+                                            <p class="text-sm text-red-600 mr-auto edit-error"></p>
+                                            <button class="btn-cancel-edit btn-secondary text-sm px-4 py-1 rounded-lg">İptal</button>
+                                            <button class="btn-save-edit btn-primary text-sm px-4 py-1 rounded-lg" data-post-id="${post.id}">Kaydet</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- YENİ: Gönderi Altı (Beğeni) -->
+                                    <div class="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
+                                        ${likeButton}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                        });
+
+                        postListContainer.innerHTML = html;
+
+                        // Sayfalamayı render et
+                        renderPagination(postListPagination, data.pagination, (newPage) => {
+                            loadSingleThread(threadId, newPage);
+                        });
+
+                        // Hızlı Cevap formunu ayarla
+                        if (CURRENT_USER_ID) {
+                            // Kullanıcı giriş yapmış
+                            if (formQuickReply) formQuickReply.style.display = 'block';
+                            if (replyLoginPrompt) replyLoginPrompt.style.display = 'none';
+                        } else {
+                            // Kullanıcı giriş yapmamış
+                            if (formQuickReply) formQuickReply.style.display = 'none';
+                            if (replyLoginPrompt) replyLoginPrompt.style.display = 'block';
+                        }
+
+                        switchView(viewSingleThread);
+
+                    } else {
+                        throw new Error(data.message || 'Konu ve gönderiler yüklenemedi.');
+                    }
+                } catch (error) {
+                    showError(error.message);
+                }
+            };
+
+            /**
+             * "Yeni Konu" formunu gösterir.
+             * @param {number} categoryId - Hangi kategoriye konu açıldığı.
+             */
+            const loadNewThreadForm = (categoryId) => {
+                clearError();
+
+                // Başlığı güncelle (kategori adını almamız lazım ama şimdilik ID ile idare edelim)
+                if (newThreadTitle) newThreadTitle.textContent = `Yeni Konu Aç`; // (Kategori ID: ${categoryId})
+
+                // Formu temizle
+                if (newThreadTitleInput) newThreadTitleInput.value = '';
+                if (newThreadContent) newThreadContent.value = '';
+
+                // Giriş kontrolü
+                if (CURRENT_USER_ID) {
+                    // Kullanıcı giriş yapmış
+                    if (formNewThread) formNewThread.style.display = 'block';
+                    if (newThreadLoginPrompt) newThreadLoginPrompt.style.display = 'none';
+                } else {
+                    // Kullanıcı giriş yapmamış
+                    if (formNewThread) formNewThread.style.display = 'none';
+                    if (newThreadLoginPrompt) newThreadLoginPrompt.style.display = 'block';
+                }
+
+                switchView(viewNewThreadForm);
+
+                // Breadcrumb'ı güncelle
+                // (Kategori adını almak için ekstra bir API çağrısı veya state yönetimi gerekir)
+                // Şimdilik basit tutuyoruz.
+                updateBreadcrumb(null, null, "Yeni Konu");
+            };
+
+            /**
+             * Breadcrumb (navigasyon yolu) elementini günceller.
+             * @param {object} [category] - {id, name}
+             * @param {object} [thread] - {id, title}
+             * @param {string} [custom] - "Yeni Konu" gibi özel bir son ek.
+             */
+            const updateBreadcrumb = (category = null, thread = null, custom = null) => {
+                if (!breadcrumb) return;
+                let html = '<a href="/forum" class="forum-link">Forum Ana Sayfa</a>';
+
+                if (category) {
+                    html += ` <span class="mx-2">&raquo;</span> <a href="/forum/category/${category.id}" class="forum-link">${category.name}</a>`;
+                }
+                if (thread && !custom) { // "Yeni Konu" yazarken konu başlığını gösterme
+                    html += ` <span class="mx-2">&raquo;</span> <a href="/forum/thread/${thread.id}" class="forum-link">${thread.title}</a>`;
+                }
+                if (custom) {
+                    html += ` <span class="mx-2">&raquo;</span> <span>${custom}</span>`;
+                }
+
+                breadcrumb.innerHTML = html;
+
+                // Başlığı da ayarla
+                if (headerTitle) {
+                    if (thread) headerTitle.textContent = thread.title;
+                    else if (category) headerTitle.textContent = category.name;
+                    else if (custom) headerTitle.textContent = custom; // "Yeni Konu" başlığı
+                    else headerTitle.textContent = "MotoLove Forum";
+                }
+            };
+
+            // --- Form Gönderme (Submit) İşleyicileri ---
+
+            /**
+             * Hızlı Cevap formu gönderildiğinde çalışır.
+             */
+            const handleSubmitReply = async (e) => {
+                e.preventDefault();
+                if (!currentThreadId || !replyContent || !btnSubmitReply) return;
+
+                const content = replyContent.value.trim();
+                if (!content) {
+                    if (replyError) replyError.textContent = 'Cevap boş olamaz.';
+                    return;
+                }
+
+                if (replyError) replyError.textContent = '';
+                btnSubmitReply.disabled = true;
+                btnSubmitReply.textContent = 'Gönderiliyor...';
+
+                try {
+                    const data = await apiFetch(`/api/forum/reply/${currentThreadId}`, {
+                        method: 'POST',
+                        body: { content: content } // apiFetch JSON'a çevirecek
+                    });
+
+                    if (data.success) {
+                        replyContent.value = ''; // Formu temizle
+                        // Konuyu yeniden yükle (son sayfaya gitmek daha iyi olabilir)
+                        loadSingleThread(currentThreadId, data.go_to_page); // API'den gelen sayfaya git
+                    } else {
+                        throw new Error(data.message);
+                    }
+
+                } catch (error) {
+                    if (replyError) replyError.textContent = `Hata: ${error.message}`;
+                } finally {
+                    btnSubmitReply.disabled = false;
+                    btnSubmitReply.textContent = 'Cevabı Gönder';
+                }
+            };
+
+            /**
+             * Yeni Konu formu gönderildiğinde çalışır.
+             */
+            const handleSubmitNewThread = async (e) => {
+                e.preventDefault();
+                if (!currentCategoryId || !newThreadTitleInput || !newThreadContent || !btnSubmitNewThread) return;
+
+                const title = newThreadTitleInput.value.trim();
+                const content = newThreadContent.value.trim();
+
+                if (!title || !content) {
+                    if (newThreadError) newThreadError.textContent = 'Başlık ve içerik boş olamaz.';
+                    return;
+                }
+
+                if (newThreadError) newThreadError.textContent = '';
+                btnSubmitNewThread.disabled = true;
+                btnSubmitNewThread.textContent = 'Gönderiliyor...';
+
+                try {
+                    const data = await apiFetch(`/api/forum/new-thread`, {
+                        method: 'POST',
+                        body: {
+                            category_id: currentCategoryId,
+                            title: title,
+                            content: content
+                        }
+                    });
+
+                    if (data.success && data.thread_id) {
+                        // Başarılı. Kullanıcıyı yeni konuya yönlendir.
+                        // URL'i güncelle ve `handleRouting`'i tetikle
+                        history.pushState(null, '', `/forum/thread/${data.thread_id}`);
+                        handleRouting();
+                    } else {
+                        throw new Error(data.message);
+                    }
+
+                } catch (error) {
+                    if (newThreadError) newThreadError.textContent = `Hata: ${error.message}`;
+                } finally {
+                    btnSubmitNewThread.disabled = false;
+                    btnSubmitNewThread.textContent = 'Konuyu Gönder';
+                }
+            };
+
+            // --- Rota (Routing) Yöneticisi ---
+
+            /**
+             * Sayfa URL'ini analiz eder ve uygun fonksiyonu çağırır.
+             * /forum -> loadCategories()
+             * /forum/category/1 -> loadThreads(1)
+             * /forum/thread/12 -> loadSingleThread(12)
+             */
+            const handleRouting = () => {
+                const path = window.location.pathname;
+
+                // YENİ: /forum/new-thread/1 gibi bir yol (henüz yok, ama gelecekte olabilir)
+
+                const threadMatch = path.match(/\/forum\/thread\/(\d+)/);
+                if (threadMatch) {
+                    const threadId = parseInt(threadMatch[1], 10);
+                    // YENİ: Sayfa numarasını URL hash'inden al (örn: /thread/12#page=2)
+                    const pageMatch = window.location.hash.match(/page=(\d+)/);
+                    const page = pageMatch ? parseInt(pageMatch[1], 10) : 1;
+                    loadSingleThread(threadId, page);
+                    return;
+                }
+
+                const categoryMatch = path.match(/\/forum\/category\/(\d+)/);
+                if (categoryMatch) {
+                    const categoryId = parseInt(categoryMatch[1], 10);
+                    const pageMatch = window.location.hash.match(/page=(\d+)/);
+                    const page = pageMatch ? parseInt(pageMatch[1], 10) : 1;
+                    loadThreads(categoryId, page);
+                    return;
+                }
+
+                // Eğer /forum veya başka bir şeyse, ana kategorileri göster
+                if (path.startsWith('/forum')) {
+                    loadCategories();
+                    return;
+                }
+            };
+
+            // --- Olay Dinleyicileri (Event Listeners) ---
+
+            // Sayfa içindeki link tıklamalarını yakala (SPA davranışı için)
+            document.body.addEventListener('click', (e) => {
+                const link = e.target.closest('a.forum-link');
+                if (link) {
+                    e.preventDefault(); // Tarayıcının normal sayfa yüklemesini engelle
+                    const href = link.getAttribute('href');
+                    if (href !== window.location.pathname) {
+                        history.pushState(null, '', href); // URL'i değiştir
+                        handleRouting(); // Yeni URL'e göre içeriği yükle
+                    }
+                }
+            });
+
+            // Tarayıcının geri/ileri butonlarını yakala
+            window.addEventListener('popstate', handleRouting);
+
+            // "Yeni Konu Aç" butonuna tıklama
+            if (btnNewThread) {
+                btnNewThread.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (currentCategoryId) {
+                        // URL'i değiştirmeden sadece formu yükle
+                        loadNewThreadForm(currentCategoryId);
+                    }
+                });
+            }
+
+            // Form gönderme olaylarını bağla
+            if (formQuickReply) formQuickReply.addEventListener('submit', handleSubmitReply);
+            if (formNewThread) formNewThread.addEventListener('submit', handleSubmitNewThread);
+
+
+            // ===== YENİ: Gönderi Aksiyonları için Olay Dinleyicileri (Event Delegation) =====
+
+            if (postListContainer) {
+                postListContainer.addEventListener('click', async (e) => {
+
+                    // --- Beğeni Butonu ---
+                    const likeButton = e.target.closest('.btn-like');
+                    if (likeButton && !likeButton.disabled) {
+                        const postId = likeButton.dataset.postId;
+                        likeButton.disabled = true; // Çift tıklamayı önle
+
+                        try {
+                            const data = await apiFetch('/api/forum/post/like', {
+                                method: 'POST',
+                                body: { post_id: parseInt(postId, 10) }
+                            });
+
+                            // Arayüzü anında güncelle (yeniden yüklemeden)
+                            if (data.success) {
+                                likeButton.classList.toggle('liked', data.has_liked);
+                                const icon = likeButton.querySelector('ion-icon');
+                                icon.setAttribute('name', data.has_liked ? 'heart' : 'heart-outline');
+                                const text = likeButton.querySelector('.like-text');
+                                if (text) text.textContent = data.has_liked ? 'Beğenildi' : 'Beğen';
+                                const count = likeButton.querySelector('.like-count');
+                                if (count) count.textContent = data.like_count;
+                            }
+
+                        } catch (error) {
+                            console.error('Beğeni hatası:', error.message);
+                        } finally {
+                            likeButton.disabled = false;
+                        }
+                    }
+
+                    // --- Düzenle Butonu (Inline editor'ü açar) ---
+                    const editButton = e.target.closest('.btn-edit-post');
+                    if (editButton) {
+                        const postId = editButton.dataset.postId;
+                        const postElement = document.getElementById(`post-${postId}`);
+                        if (!postElement) return;
+
+                        postElement.querySelector('.post-content').style.display = 'none';
+                        postElement.querySelector('.edit-container').style.display = 'block';
+                    }
+
+                    // --- Düzenlemeyi İptal Et Butonu ---
+                    const cancelEditButton = e.target.closest('.btn-cancel-edit');
+                    if (cancelEditButton) {
+                        const postElement = cancelEditButton.closest('.forum-post');
+                        if (!postElement) return;
+
+                        postElement.querySelector('.edit-container').style.display = 'none';
+                        postElement.querySelector('.post-content').style.display = 'block';
+                        const errorEl = postElement.querySelector('.edit-error');
+                        if (errorEl) errorEl.textContent = ''; // Hata mesajını temizle
+                    }
+
+                    // --- Düzenlemeyi Kaydet Butonu ---
+                    const saveEditButton = e.target.closest('.btn-save-edit');
+                    if (saveEditButton) {
+                        const postId = saveEditButton.dataset.postId;
+                        const postElement = saveEditButton.closest('.forum-post');
+                        if (!postElement) return;
+
+                        const textarea = postElement.querySelector('.edit-container textarea');
+                        const newContent = textarea.value;
+                        const errorEl = postElement.querySelector('.edit-error');
+
+                        saveEditButton.disabled = true;
+                        saveEditButton.textContent = 'Kaydediliyor...';
+                        if (errorEl) errorEl.textContent = '';
+
+                        try {
+                            const data = await apiFetch('/api/forum/post/edit', {
+                                method: 'POST',
+                                body: {
+                                    post_id: parseInt(postId, 10),
+                                    content: newContent
+                                }
+                            });
+
+                            if (data.success) {
+                                // Arayüzü güncelle
+                                const contentEl = postElement.querySelector('.post-content');
+                                // <pre> tag'i ile güncelle
+                                contentEl.innerHTML = `<pre class="font-sans text-base whitespace-pre-wrap dark:text-gray-200">${data.content.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</pre>`;
+
+                                // Editör alanını gizle, içeriği göster
+                                postElement.querySelector('.edit-container').style.display = 'none';
+                                contentEl.style.display = 'block';
+
+                                // "Düzenlendi" bilgisini ekle/güncelle
+                                // (Bu kısım için sayfa yenilemesi veya daha karmaşık DOM manipülasyonu gerekir, şimdilik yenileme en kolayı)
+
+                                // YENİ: Sayfayı yenilemek yerine sadece o postu yenileyelim
+                                loadSingleThread(currentThreadId, 1); //TODO: Hangi sayfada olduğumuzu bilmemiz lazım
+                            } else {
+                                throw new Error(data.message);
+                            }
+
+                        } catch (error) {
+                            if (errorEl) errorEl.textContent = error.message;
+                        } finally {
+                            saveEditButton.disabled = false;
+                            saveEditButton.textContent = 'Kaydet';
+                        }
+                    }
+
+                    // --- Sil Butonu ---
+                    const deleteButton = e.target.closest('.btn-delete-post');
+                    if (deleteButton) {
+                        const postId = deleteButton.dataset.postId;
+
+                        showConfirmationModal(
+                            'Gönderiyi Sil',
+                            'Bu gönderiyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.',
+                            async () => {
+                                // Onay verildi, silme işlemini yap
+                                try {
+                                    const data = await apiFetch(`/api/forum/post/delete/${postId}`, {
+                                        method: 'DELETE'
+                                    });
+
+                                    if (data.success) {
+                                        if (data.action === 'thread_deleted') {
+                                            // Konu silindi, kategoriye dön
+                                            history.pushState(null, '', `/forum/category/${currentCategoryId}`);
+                                            handleRouting();
+                                        } else {
+                                            // Sadece gönderi silindi, DOM'dan kaldır
+                                            document.getElementById(`post-${postId}`).remove();
+                                        }
+                                    } else {
+                                        throw new Error(data.message);
+                                    }
+                                } catch (error) {
+                                    // Hata modalı göstermek daha iyi olur ama şimdilik konsol
+                                    console.error('Silme hatası:', error.message);
+                                    if (errorContainer) {
+                                        errorContainer.textContent = `Silme hatası: ${error.message}`;
+                                        errorContainer.classList.remove('hidden');
+                                    }
+                                }
+                            }
+                        );
+                    }
+                });
+            }
+
+
+            // --- UYGULAMAYI BAŞLAT ---
+            handleRouting(); // Sayfa ilk yüklendiğinde rotayı işle
+        });
+    </script>
+</body>
+
+</html>

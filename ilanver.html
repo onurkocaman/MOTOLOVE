@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<!-- index.html'den dark mode uyumluluğu alındı -->
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İlan Ver | MotoLove</title>
+    
+    <!-- index.html'den alınan tüm stil ve scriptler -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/static/images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <!-- index.html'den dark mode yapılandırması -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    // Tema renkleri
+                }
+            }
+        }
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <!-- index.html'den ana stil bloğu alındı ve İlan Ver sayfası için genişletildi -->
+    <style>
+        /* index.html'den temel stiller */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1F2937; /* text-gray-800 */
+            background: linear-gradient(-45deg, #f8fafb, #fff7f7, #ffeaea, #f8fafb);
+            background-size: 400% 400%;
+            animation: gradient-background-animation 15s ease infinite;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        @keyframes gradient-background-animation {
+            0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; }
+        }
+        :root {
+            --accent-color: #E11D48; /* rose-600 */
+            --accent-color-hover: #BE123C; /* rose-700 */
+        }
+        .navbar-scrolled {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 10px -1px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #E5E7EB;
+        }
+        .nav-link {
+            position: relative; transition: color 0.3s ease; color: #374151;
+        }
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 2px;
+            bottom: -5px; left: 50%; transform: translateX(-50%);
+            background-color: var(--accent-color);
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .nav-link:hover { color: var(--accent-color); }
+        .nav-link:hover::after { width: 100%; }
+        .btn-primary {
+            background-color: var(--accent-color); color: #FFFFFF;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px -5px rgba(225, 29, 72, 0.4);
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-color-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px -5px rgba(225, 29, 72, 0.5);
+        }
+        .btn-secondary {
+            border: 1px solid var(--accent-color); color: var(--accent-color);
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: var(--accent-color); color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+        .header-hidden { transform: translateY(-100%); }
+        .top-bar-hidden { max-height: 0px; padding-top: 0px; padding-bottom: 0px; opacity: 0; }
+
+        /* Dark Mode Stilleri (index.html'den) */
+        .dark body {
+            color: #E5E7EB;
+            background: linear-gradient(-45deg, #111827, #1f2937, #111827);
+            background-size: 400% 400%;
+            animation: gradient-background-animation 15s ease infinite;
+        }
+        .dark .navbar-scrolled {
+            background-color: rgba(17, 24, 39, 0.85);
+            border-bottom: 1px solid #374151;
+        }
+        .dark .nav-link { color: #D1D5DB; }
+        .dark .nav-link:hover { color: var(--accent-color); }
+        .dark #mobile-menu-button { color: #F9FAFB; }
+        .dark #mobile-menu { background-color: rgba(31, 41, 55, 0.95); border-color: #374151; }
+        .dark #mobile-menu a { color: #F9FAFB; }
+        .dark #mobile-menu a:hover { background-color: #374151; }
+        .dark footer { background-color: #1F2937; border-color: #374151; }
+        .dark footer, .dark footer p, .dark footer a { color: #9CA3AF; }
+        .dark footer h4, .dark footer a.text-gray-900, .dark footer a:hover { color: #FFFFFF; }
+        .dark footer .border-t { border-color: #374151; }
+        
+        /* ===== YENİ: İLAN VERME SAYFASI ÖZEL STİLLERİ (MODERN) ===== */
+
+        /* Adım Göstergesi (Stepper) - YENİ TASARIM */
+        #stepper-container {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        #stepper-progress {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 4px;
+            background-color: var(--accent-color);
+            transition: width 0.4s ease-in-out;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        #stepper-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #E5E7EB; /* border-gray-200 */
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+        .dark #stepper-line {
+            background-color: #4B5563; /* dark:border-gray-600 */
+        }
+        .stepper-item {
+            position: relative;
+            z-index: 2;
+            display: flex; /* YENİ: Hizalama için eklendi */
+            flex-direction: column; /* YENİ: Hizalama için eklendi */
+            align-items: center; /* YENİ: Hizalama için eklendi */
+        }
+        .step-circle {
+            width: 2.5rem; /* 40px */
+            height: 2.5rem; /* 40px */
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background-color: #FFFFFF; /* bg-white */
+            color: #6B7280; /* text-gray-500 */
+            border: 2px solid #E5E7EB; /* border-gray-200 */
+        }
+        .dark .step-circle {
+            background-color: #374151; /* dark:bg-gray-700 */
+            color: #9CA3AF; /* dark:text-gray-400 */
+            border-color: #4B5563; /* dark:border-gray-600 */
+        }
+        /* Aktif Adım */
+        .stepper-item.active .step-circle {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #FFFFFF;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(225, 29, 72, 0.4);
+        }
+        .stepper-item.active .step-title {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+        /* Tamamlanmış Adım */
+        .stepper-item.completed .step-circle {
+            background-color: #ECFDF5; /* green-50 */
+            border-color: #10B981; /* green-500 */
+            color: #10B981; /* green-500 */
+        }
+        .dark .stepper-item.completed .step-circle {
+            background-color: #1F2937; /* dark:bg-gray-800 */
+            border-color: #34D399; /* green-400 */
+            color: #34D399; /* green-400 */
+        }
+
+        /* Form Adımı Geçiş Animasyonu - YENİ TASARIM (KAYAN) */
+        /* KAYAN YAPI KALDIRILDI - Bu kural artık gereksiz.
+        #form-steps-wrapper {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        */
+        .form-step {
+            width: 100%;
+            /* flex-shrink: 0; KALDIRILDI */
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* Form Elemanları - YENİ TASARIM (İkonsuz) */
+        .form-input-group {
+            position: relative;
+        }
+        /* .form-input-icon stilleri kaldırıldı
+        .form-input-icon {
+            position: absolute;
+            left: 0.75rem; 
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9CA3AF; 
+            font-size: 1.25rem; 
+        }
+        */
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            border-radius: 0.5rem; /* rounded-lg */
+            border: 1px solid #D1D5DB; /* border-gray-300 */
+            padding: 0.75rem 1rem; /* px-4 py-3 */
+            transition: all 0.2s ease;
+        }
+        /* .form-input-group .form-input padding stili kaldırıldı
+        .form-input-group .form-input {
+            padding-left: 2.75rem; 
+        }
+        */
+        .dark .form-input, .dark .form-textarea, .dark .form-select {
+            background-color: #374151; /* dark:bg-gray-700 */
+            border-color: #4B5563; /* dark:border-gray-600 */
+            color: #FFFFFF;
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+        }
+        .dark .form-input:focus, .dark .form-textarea:focus, .dark .form-select:focus {
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.3);
+        }
+        /* Hata Animasyonu */
+        .form-input.invalid, .form-textarea.invalid, .form-select.invalid {
+            border-color: #EF4444; /* red-500 */
+            animation: shake 0.4s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        /* Özel Radio Buttonlar (Durum için) - YENİ TASARIM (KART) */
+        .condition-radio-label {
+            border: 2px solid #D1D5DB; /* border-gray-300 */
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .dark .condition-radio-label {
+            border-color: #4B5563; /* dark:border-gray-600 */
+        }
+        .condition-radio-label ion-icon {
+            font-size: 2.5rem; /* text-4xl */
+            margin-bottom: 0.5rem; /* mb-2 */
+            color: #6B7280; /* text-gray-500 */
+            transition: all 0.2s ease;
+        }
+        .dark .condition-radio-label ion-icon {
+            color: #9CA3AF; /* dark:text-gray-400 */
+        }
+        .condition-radio-input:checked + .condition-radio-label {
+            border-color: var(--accent-color);
+            background-color: #FFF1F2; /* rose-50 */
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+        }
+        .condition-radio-input:checked + .condition-radio-label ion-icon {
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+        .condition-radio-input:checked + .condition-radio-label span {
+            font-weight: 600;
+            color: #1F2937; /* text-gray-800 */
+        }
+        .dark .condition-radio-input:checked + .condition-radio-label {
+            background-color: #1F2937; /* dark:bg-gray-800 */
+            border-color: var(--accent-color);
+        }
+        .dark .condition-radio-input:checked + .condition-radio-label span {
+            color: #FFFFFF;
+        }
+
+        /* Fotoğraf Yükleme Alanı - YENİ TASARIM (Animasyonlu) */
+        #drop-zone {
+            border: 3px dashed #D1D5DB; /* border-gray-300 */
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .dark #drop-zone {
+            border-color: #4B5563; /* dark:border-gray-600 */
+        }
+        #drop-zone ion-icon {
+            animation: pulse-light 2s infinite ease-in-out;
+        }
+        @keyframes pulse-light {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+        #drop-zone.dragover {
+            border-color: var(--accent-color);
+            background-color: #FFF1F2; /* rose-50 */
+        }
+        #drop-zone.dragover ion-icon {
+            animation: none;
+            transform: scale(1.1);
+            color: var(--accent-color);
+        }
+        .dark #drop-zone.dragover {
+            background-color: #1F2937; /* dark:bg-gray-800 */
+        }
+
+        /* Fotoğraf Önizleme - YENİ TASARIM (Silme Butonlu) */
+        #image-preview-container .preview-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            animation: fadeIn 0.3s ease-out;
+        }
+        #image-preview-container .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .remove-image-btn {
+            position: absolute;
+            top: 0.25rem; /* top-1 */
+            right: 0.25rem; /* right-1 */
+            width: 1.5rem; /* w-6 */
+            height: 1.5rem; /* h-6 */
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            opacity: 0.8;
+        }
+        .remove-image-btn:hover {
+            background-color: rgba(225, 29, 72, 0.8); /* --accent-color */
+            transform: scale(1.1);
+            opacity: 1;
+        }
+        
+        /* Başarılı/Hata Mesajı Stili */
+        #form-feedback {
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-weight: 500;
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="text-gray-800 dark:bg-gray-900">
+
+    <!-- ===== Header / Navbar (index.html'den kopyalandı) ===== -->
+    <!-- ... Header içeriği ... (Bu kısım değişmedi) -->
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-transform duration-300 ease-out">
+        <!-- Top Bar (Haber Bandı) -->
+        <div id="top-bar" class="bg-rose-100 text-[var(--accent-color)] text-sm font-medium text-center py-2.5 px-6 transition-all duration-300 overflow-hidden max-h-12 opacity-100 dark:bg-rose-900/50 dark:text-rose-300">
+            <p class="flex items-center justify-center">
+                <ion-icon name="sparkles-outline" class="mr-2"></ion-icon>
+                Yeni Sezon Fırsatları! Elektrikli modellerde %15 indirim.
+            </p>
+        </div>
+
+        <!-- Ana Navigasyon Barı -->
+        <nav id="navbar" class="transition-all duration-300 bg-transparent dark:bg-transparent">
+            <div class="container mx-auto px-6 py-5 flex justify-between items-center">
+                <!-- Logo -->
+                <a href="/">
+                    <img src="/static/images/motolove.png" alt="MotoLove Logo" class="h-14 md:h-20 w-auto">
+                </a>
+                
+                <!-- Desktop Nav (Dinamik) -->
+                <div class="hidden md:flex items-center space-x-8">
+                     <a href="/" class="font-medium nav-link">Ana Sayfa</a>
+                    <a href="/ilanlar" class="font-medium nav-link">İlanlar</a>
+                    <a href="/ilanver" class="font-medium nav-link active">İlan Ver</a>
+                    <a href="/ihale" class="font-medium nav-link">İhale</a>
+                    <a href="/forum" class="font-medium nav-link">Forum</a>
+                    
+                    <!-- Jinja2 ile Kullanıcı Durumu (app.py'den gelen) -->
+                    {% if user_name %}
+                        <a href="/profile" class="flex items-center text-gray-700 dark:text-gray-300 transition-colors group font-semibold">
+                            {% if user_image_url %}
+                                <img src="{{ user_image_url }}" alt="Profil" class="w-8 h-8 rounded-full object-cover mr-2 border-2 border-gray-200 dark:border-gray-600">
+                            {% else %}
+                                <ion-icon name="person-circle" class="text-3xl mr-2 text-[var(--accent-color)]"></ion-icon>
+                            {% endif %}
+                            <span class="font-medium text-sm group-hover:text-[var(--accent-color)]">{{ user_name }}</span>
+                        </a>
+                        <a href="/logout" class="btn-secondary font-semibold px-5 py-2 rounded-lg text-sm ml-4">Çıkış Yap</a>
+                    {% else %}
+                        <a href="/login" class="btn-primary font-semibold px-5 py-2 rounded-lg text-sm ml-4">Giriş Yap</a>
+                    {% endif %}
+                    
+                    <!-- Night Mode Toggle -->
+                    <button id="theme-toggle" class="text-xl text-gray-700 dark:text-gray-300 hover:text-[var(--accent-color)] dark:hover:text-[var(--accent-color)] transition-colors duration-200">
+                        <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                        <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                    </button>
+                </div>
+
+                <!-- Mobil Menu Butonu -->
+                <div class="md:hidden flex items-center space-x-4">
+                    <button id="theme-toggle-mobile" class="text-2xl text-gray-900 dark:text-gray-100">
+                        <ion-icon name="moon-outline" class="hidden dark:block"></ion-icon>
+                        <ion-icon name="sunny-outline" class="block dark:hidden"></ion-icon>
+                    </button>
+                    <button id="mobile-menu-button" class="text-3xl text-gray-900 dark:text-gray-100">
+                        <ion-icon name="menu-outline"></ion-icon>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Mobil Menu (Gizli) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur-sm shadow-xl border-t border-gray-200 dark:bg-gray-800/95 dark:border-gray-700">
+            <a href="/" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">Ana Sayfa</a>
+            <a href="/ilanlar" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">İlanlar</a>
+            <a href="/ilanver" class="block px-6 py-3 text-lg font-semibold bg-rose-50 text-[var(--accent-color)] dark:bg-gray-700">İlan Ver</a> <!-- Aktif Sayfa -->
+            <a href="/ihale" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">İhale</a>
+            <a href="forum.html" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">Forum</a>
+            
+            {% if user_name %}
+                <a href="/profile" class="block px-6 py-3 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">{{ user_name }} (Profil)</a>
+                <a href="/logout" class="block px-6 py-4">
+                    <span class="btn-secondary w-full block text-center font-semibold px-5 py-3 rounded-lg">Çıkış Yap</span>
+                </a>
+            {% else %}
+                <a href="/login" class="block px-6 py-4">
+                    <span class="btn-primary w-full block text-center font-semibold px-5 py-3 rounded-lg">Giriş Yap</span>
+                </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- ===== ANA İÇERİK: İLAN VERME FORMU (YENİ TASARIM) ===== -->
+    <main class="pt-32 pb-24 px-6">
+        <div class="container mx-auto max-w-4xl">
+            
+            <!-- Başlık -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">İlanını Oluştur</h1>
+                <p class="text-lg text-gray-600 dark:text-gray-400">Motosikletini binlerce tutkulu sürücüyle buluştur.</p>
+            </div>
+
+            <!-- Adım Göstergesi (Stepper) - YENİ TASARIM -->
+            <div id="stepper-container" class="max-w-2xl mx-auto mb-12">
+                <div class="relative">
+                    <!-- Arka Plan Çizgisi -->
+                    <div id="stepper-line"></div>
+                    <!-- İlerleme Çizgisi -->
+                    <div id="stepper-progress" class="w-0"></div>
+                    <!-- Adımlar -->
+                    <div class="flex justify-between items-start" id="stepper">
+                        <!-- Adım 1 -->
+                        <div class="stepper-item active flex-1" data-step="1">
+                            <div class="step-circle">
+                                <ion-icon name="list-outline" class="text-xl"></ion-icon>
+                            </div>
+                            <p class="text-sm text-center mt-3 font-medium step-title dark:text-gray-300">Detaylar</p>
+                        </div>
+                        <!-- Adım 2 -->
+                        <div class="stepper-item flex-1" data-step="2">
+                            <div class="step-circle">
+                                <ion-icon name="cash-outline" class="text-xl"></ion-icon>
+                            </div>
+                            <p class="text-sm text-center mt-3 font-medium step-title dark:text-gray-300">Fiyat & İletişim</p>
+                        </div>
+                        <!-- Adım 3 -->
+                        <div class="stepper-item flex-1" data-step="3">
+                            <div class="step-circle">
+                                <ion-icon name="camera-outline" class="text-xl"></ion-icon>
+                            </div>
+                            <p class="text-sm text-center mt-3 font-medium step-title dark:text-gray-300">Fotoğraf & Açıklama</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ana Form -->
+            <form id="ilan-form" class="bg-white dark:bg-gray-800 p-8 md:p-12 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
+
+                <!-- Geri Bildirim Alanı (Hata/Başarı) -->
+                <div id="form-feedback" class="hidden mb-6"></div>
+
+                <!-- Form Adımları Kaydırma Konteyneri KALDIRILDI -->
+                <!-- <div class="flex" id="form-steps-wrapper"> -->
+                
+                    <!-- ===== ADIM 1: DETAYLAR ===== -->
+                    <div id="step-1" class="form-step">
+                        <h3 class="text-2xl font-semibold mb-6 dark:text-white">1. Motosiklet Detayları</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- İlan Başlığı -->
+                            <div class="md:col-span-2 form-input-group">
+                                <label for="ad-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">İlan Başlığı <span class="text-red-500">*</span></label>
+                                <!-- <ion-icon name="text-outline" class="form-input-icon"></ion-icon> -->
+                                <input type="text" id="ad-title" name="ad-title" class="form-input" placeholder="Örn: Sahibinden Tertemiz Honda CBR 650R" required>
+                            </div>
+                            <!-- Marka -->
+                            <div class="form-input-group">
+                                <label for="ad-brand" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Marka <span class="text-red-500">*</span></label>
+                                <!-- <ion-icon name="shield-checkmark-outline" class="form-input-icon"></ion-icon> -->
+                                <input type="text" id="ad-brand" name="ad-brand" class="form-input" placeholder="Örn: Honda" required>
+                            </div>
+                            <!-- Model -->
+                            <div class="form-input-group">
+                                <label for="ad-model" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Model <span class="text-red-500">*</span></label>
+                                <!-- <ion-icon name="pricetag-outline" class="form-input-icon"></ion-icon> -->
+                                <input type="text" id="ad-model" name="ad-model" class="form-input" placeholder="Örn: CBR 650R" required>
+                            </div>
+                            <!-- Yıl -->
+                            <div class="form-input-group">
+                                <label for="ad-year" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Yıl <span class="text-red-500">*</span></label>
+                                <!-- <ion-icon name="calendar-outline" class="form-input-icon"></ion-icon> -->
+                                <input type="number" id="ad-year" name="ad-year" class="form-input" placeholder="Örn: 2023" min="1900" max="2026" required>
+                            </div>
+                            <!-- Kilometre -->
+                            <div class="form-input-group">
+                                <label for="ad-km" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Kilometre <span class="text-red-500">*</span></label>
+                                <!-- <ion-icon name="speedometer-outline" class="form-input-icon"></ion-icon> -->
+                                <input type="number" id="ad-km" name="ad-km" class="form-input" placeholder="Örn: 15000" min="0" required>
+                            </div>
+                            <!-- Durum (YENİ KART TASARIMI) -->
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Durumu <span class="text-red-500">*</span></label>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="radio" id="condition-new" name="ad-condition" value="new" class="hidden condition-radio-input" required>
+                                    <label for="condition-new" class="condition-radio-label flex flex-col items-center justify-center dark:text-white">
+                                        <ion-icon name="sparkles-outline"></ion-icon>
+                                        <span class="font-medium text-gray-700 dark:text-gray-300">Sıfır</span>
+                                    </label>
+                                    <input type="radio" id="condition-used" name="ad-condition" value="used" class="hidden condition-radio-input" checked>
+                                    <label for="condition-used" class="condition-radio-label flex flex-col items-center justify-center dark:text-white">
+                                        <ion-icon name="build-outline"></ion-icon>
+                                        <span class="font-medium text-gray-700 dark:text-gray-300">İkinci El</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== ADIM 2: FİYAT & İLETİŞİM ===== -->
+                    <!-- YENİ: Stabil geçiş için 'hidden' eklendi -->
+                    <div id="step-2" class="form-step hidden">
+                        <h3 class="text-2xl font-semibold mb-6 dark:text-white">2. Fiyat & İletişim</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Fiyat -->
+                            <div class="form-input-group">
+                                <label for="ad-price" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fiyat (TL) <span class="text-red-500">*</span></label>
+                                <!-- <ion-icon name="wallet-outline" class="form-input-icon"></ion-icon> -->
+                                <input type="number" id="ad-price" name="ad-price" class="form-input" placeholder="Örn: 450000" min="0" required>
+                            </div>
+                            <!-- Konum -->
+                            <div class="form-input-group">
+                                <label for="ad-location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Konum <span class="text-red-500">*</span></label>
+                                <!-- <ion-icon name="location-outline" class="form-input-icon"></ion-icon> -->
+                                <input type="text" id="ad-location" name="ad-location" class="form-input" placeholder="Örn: İstanbul / Kadıköy" required>
+                            </div>
+                            <!-- İletişim Bilgisi -->
+                            <div class="md:col-span-2 form-input-group">
+                                <label for="ad-contact" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">İletişim Bilgisi <span class="text-red-500">*</span></label>
+                                <!-- <ion-icon name="call-outline" class="form-input-icon"></ion-icon> -->
+                                <input type="text" id="ad-contact" name="ad-contact" class="form-input" placeholder="Telefon numarası veya e-posta" required>
+                                <p class="text-xs text-gray-500 mt-1 dark:text-gray-400">Bu bilgi ilan detayında gösterilecektir.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== ADIM 3: FOTOĞRAF & AÇIKLAMA ===== -->
+                    <!-- YENİ: Stabil geçiş için 'hidden' eklendi -->
+                    <div id="step-3" class="form-step hidden">
+                        <h3 class="text-2xl font-semibold mb-6 dark:text-white">3. Fotoğraf & Açıklama</h3>
+                        <!-- Fotoğraf Yükleme -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fotoğraflar <span class="text-red-500">*</span></label>
+                            <input type="file" id="ad-photos" name="ad-photos" class="hidden" multiple accept="image/png, image/jpeg, image/webp" required>
+                            <label for="ad-photos" id="drop-zone" class="flex flex-col items-center justify-center text-center dark:bg-gray-700/50">
+                                <ion-icon name="cloud-upload-outline" class="text-5xl text-gray-400 dark:text-gray-500 mb-3"></ion-icon>
+                                <p class="font-semibold text-gray-700 dark:text-gray-300">Fotoğrafları buraya sürükleyin</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">veya tıklayarak seçin (PNG, JPG, WEBP)</p>
+                                <p class="text-xs text-red-500 mt-2">Not: Ana fotoğraf olarak ilk seçtiğiniz resim kullanılacaktır.</p>
+                            </label>
+                            <!-- Önizleme Alanı -->
+                            <div id="image-preview-container" class="mt-4 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                                <!-- YENİ: Önizlemeler buraya JS ile gelecek -->
+                            </div>
+                        </div>
+                        <!-- Açıklama -->
+                        <div class="mt-6">
+                            <label for="ad-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Açıklama</label>
+                            <textarea id="ad-description" name="ad-description" rows="6" class="form-textarea" placeholder="Motosikletinizin durumu, ekstraları, bakımları hakkında detaylı bilgi verin..."></textarea>
+                        </div>
+                    </div>
+                
+                <!-- </div> /form-steps-wrapper KALDIRILDI -->
+
+                <!-- Navigasyon Butonları -->
+                <div class="mt-10 flex justify-between items-center">
+                    <button type="button" id="prev-btn" class="btn-secondary font-semibold px-6 py-3 rounded-lg text-sm hidden flex items-center">
+                        <ion-icon name="arrow-back-outline" class="mr-1 -ml-1"></ion-icon>
+                        Geri
+                    </button>
+                    <!-- Sağ tarafta yer tutucu, butonlar yer değiştirmesin diye -->
+                    <div id="prev-placeholder"></div>
+
+                    <button type="button" id="next-btn" class="btn-primary font-semibold px-6 py-3 rounded-lg text-sm flex items-center">
+                        İleri
+                        <ion-icon name="arrow-forward-outline" class="ml-1 -mr-1"></ion-icon>
+                    </button>
+                    
+                    <button type="submit" id="submit-btn" class="btn-primary font-semibold px-6 py-3 rounded-lg text-sm hidden flex items-center">
+                        <ion-icon name="paper-plane-outline" class="mr-1 -ml-1"></ion-icon>
+                        İlanı Yayınla
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <!-- ===== Footer (index.html'den kopyalandı) ===== -->
+    <!-- ... Footer içeriği ... (Bu kısım değişmedi) -->
+    <footer class="bg-white text-gray-600 py-16 px-6 mt-0 border-t border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Logo & Sosyal -->
+            <div>
+                <a href="/" class="text-3xl font-bold tracking-tighter text-gray-900 dark:text-white">
+                    Moto<span style="color: var(--accent-color);">Love</span>
+                </a>
+                <p class="mt-4 mb-6 dark:text-gray-400">Geleceğin sürüş deneyimi, bugün.</p>
+                <div class="flex space-x-4 text-2xl">
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-instagram"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-facebook"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-youtube"></ion-icon></a>
+                    <a href="#" class="hover:text-[var(--accent-color)] transition-colors"><ion-icon name="logo-twitter"></ion-icon></a>
+                </div>
+            </div>
+            <!-- Hızlı Linkler -->
+            <div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4 dark:text-white">Hızlı Linkler</h4>
+                <ul class="space-y-2">
+                    <li><a href="/" class="hover:text-gray-900 dark:hover:text-white">Ana Sayfa</a></li>
+                    <li><a href="/ilanlar" class="hover:text-gray-900 dark:hover:text-white">İlanlar</a></li>
+                    <li><a href="/ilanver" class="hover:text-gray-900 dark:hover:text-white">İlan Ver</a></li>
+                    <li><a href="/ihale" class="hover:text-gray-900 dark:hover:text-white">İhale</a></li>
+                    <li><a href="forum.html" class="hover:text-gray-900 dark:hover:text-white">Forum</a></li>
+                </ul>
+            </div>
+            <!-- Destek -->
+            <div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4 dark:text-white">Destek</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">S.S.S.</a></li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">İletişim</a></li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">Gizlilik Politikası</a></li>
+                    <li><a href="#" class="hover:text-gray-900 dark:hover:text-white">Kullanım Şartları</a></li>
+                </ul>
+            </div>
+            <!-- İletişim -->
+            <div>
+                <h4 class="font-bold text-lg text-gray-900 mb-4 dark:text-white">İletişim</h4>
+                <ul class="space-y-2">
+                    <li><a href="mailto:info@motolove.com" class="hover:text-gray-900 dark:hover:text-white">emresynsd@gmail.com</a></li>
+                    <li><a href="tel:+905551234567" class="hover:text-gray-900 dark:hover:text-white">+90 552 886 34 42</a></li>
+                    <li><p>Love Plaza, İstanbul, Türkiye</p></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center text-gray-500 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 dark:text-gray-400">
+            &copy; 2025 MotoLove. Tüm hakları saklıdır.
+        </div>
+    </footer>
+
+    <!-- ===== JavaScript (index.html'den temel scriptler + YENİ İlanVerme JS) ===== -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- index.html'den Navbar ve Dark Mode Scriptleri ---
+        const mainHeader = document.getElementById('main-header');
+        const navbar = document.getElementById('navbar');
+        const topBar = document.getElementById('top-bar');
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                if (navbar) navbar.classList.add('navbar-scrolled');
+                if (topBar) topBar.classList.add('top-bar-hidden');
+            } else {
+                if (navbar) navbar.classList.remove('navbar-scrolled');
+                if (topBar) topBar.classList.remove('top-bar-hidden');
+            }
+            if (window.scrollY > lastScrollY && window.scrollY > 200) {
+                if (mainHeader) mainHeader.classList.add('header-hidden');
+            } else {
+                if (mainHeader) mainHeader.classList.remove('header-hidden');
+            }
+            lastScrollY = window.scrollY;
+        });
+
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            const mobileMenuIcon = mobileMenuButton.querySelector('ion-icon');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                if (mobileMenuIcon) {
+                    mobileMenuIcon.setAttribute('name', mobileMenu.classList.contains('hidden') ? 'menu-outline' : 'close-outline');
+                }
+            });
+        }
+
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleMobileBtn = document.getElementById('theme-toggle-mobile');
+        const handleThemeToggle = () => {
+            const isDarkMode = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('color-theme', isDarkMode ? 'dark' : 'light');
+        };
+        if (themeToggleBtn) themeToggleBtn.addEventListener('click', handleThemeToggle);
+        if (themeToggleMobileBtn) themeToggleMobileBtn.addEventListener('click', handleThemeToggle);
+        // --- Navbar ve Dark Mode Scriptleri Bitiş ---
+
+
+        // --- YENİ: İLAN VERME FORMU SCRIPTLERİ (MODERN) ---
+
+        const stepper = document.getElementById('stepper');
+        const stepperProgress = document.getElementById('stepper-progress');
+        // const formStepsWrapper = document.getElementById('form-steps-wrapper'); // KALDIRILDI
+        const formSteps = document.querySelectorAll('.form-step');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const prevPlaceholder = document.getElementById('prev-placeholder');
+        const form = document.getElementById('ilan-form');
+        const feedbackEl = document.getElementById('form-feedback');
+
+        // Fotoğraf Yükleme Elemanları
+        const dropZone = document.getElementById('drop-zone');
+        const photoInput = document.getElementById('ad-photos');
+        const previewContainer = document.getElementById('image-preview-container');
+        
+        let currentStep = 1;
+        const totalSteps = formSteps.length;
+        let uploadedFiles = []; // YENİ: Yüklenen dosyaları yönetmek için dizi
+
+        // Adım geçişlerini yöneten fonksiyon (YENİ - STABİL VERSİYON)
+        function goToStep(stepNumber) {
+            currentStep = stepNumber;
+            
+            // Formu kaydırmak yerine gizle/göster
+            // const offset = (currentStep - 1) * 100; // KAYDIRMA KALDIRILDI
+            // formStepsWrapper.style.transform = `translateX(-${offset}%)`; // KAYDIRMA KALDIRILDI
+
+            // Tüm adımları gizle
+            formSteps.forEach(step => {
+                step.classList.add('hidden');
+            });
+
+            // Sadece ilgili adımı göster
+            const newStepEl = document.getElementById(`step-${currentStep}`);
+            if (newStepEl) {
+                newStepEl.classList.remove('hidden');
+            }
+
+            updateStepperUI();
+            updateButtonUI();
+        }
+
+        // Stepper ikonlarını ve ilerleme çubuğunu güncelle
+        function updateStepperUI() {
+            if (!stepper) return;
+
+            // İlerleme çubuğu animasyonu
+            if (currentStep === 1) {
+                stepperProgress.style.width = '0%';
+            } else if (currentStep === 2) {
+                stepperProgress.style.width = '50%';
+            } else if (currentStep === 3) {
+                stepperProgress.style.width = '100%';
+            }
+
+            stepper.querySelectorAll('.stepper-item').forEach((item, index) => {
+                const step = index + 1;
+                item.classList.remove('active', 'completed');
+                if (step < currentStep) {
+                    item.classList.add('completed');
+                } else if (step === currentStep) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // İleri/Geri/Gönder butonlarını güncelle
+        function updateButtonUI() {
+            if (currentStep === 1) {
+                prevBtn.classList.add('hidden');
+                prevPlaceholder.classList.remove('hidden');
+            } else {
+                prevBtn.classList.remove('hidden');
+                prevPlaceholder.classList.add('hidden');
+            }
+
+            if (currentStep === totalSteps) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+        }
+        
+        // Formda o anki adımda zorunlu alanlar dolu mu?
+        function validateCurrentStep() {
+            const currentStepEl = document.getElementById(`step-${currentStep}`);
+            const inputs = currentStepEl.querySelectorAll('[required]');
+            let isValid = true;
+            
+            // Önceki hataları temizle
+            form.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+            
+            inputs.forEach(input => {
+                if ((input.type === 'radio' && !document.querySelector(`input[name="${input.name}"]:checked`)) ||
+                    (input.type !== 'radio' && !input.value)) {
+                    
+                    isValid = false;
+                    // Hata stili ve animasyonu ekle
+                    input.classList.add('invalid');
+                    // Radio butonlar için label'ı sars
+                    if(input.type === 'radio') {
+                        document.querySelectorAll(`label[for^="condition-"]`).forEach(label => {
+                            label.classList.add('invalid');
+                            label.style.animation = 'shake 0.4s ease-in-out';
+                            label.addEventListener('animationend', () => label.style.animation = '');
+                        });
+                    } else {
+                        input.focus();
+                        input.addEventListener('animationend', () => input.classList.remove('invalid'), { once: true });
+                    }
+                }
+            });
+            
+            // Fotoğraf kontrolü (Adım 3)
+            if (currentStep === totalSteps) {
+                if (uploadedFiles.length === 0) {
+                    isValid = false;
+                    dropZone.classList.add('invalid');
+                    dropZone.style.animation = 'shake 0.4s ease-in-out';
+                    dropZone.addEventListener('animationend', () => {
+                        dropZone.style.animation = '';
+                        dropZone.classList.remove('invalid');
+                    }, { once: true });
+                    showFeedback('Lütfen en az bir fotoğraf yükleyin.', false);
+                } else {
+                     dropZone.classList.remove('invalid');
+                }
+            }
+
+            if (!isValid) {
+                 showFeedback('Lütfen yıldızlı (*) alanları doldurun.', false);
+            } else {
+                hideFeedback();
+            }
+
+            return isValid;
+        }
+
+        // Buton eventleri
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                if (validateCurrentStep()) {
+                    goToStep(currentStep + 1);
+                }
+            });
+        }
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                goToStep(currentStep - 1);
+            });
+        }
+
+        // --- YENİ: Fotoğraf Yükleme ve Sürükle-Bırak ---
+        
+        if (dropZone) {
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                if (e.dataTransfer.files.length) {
+                    // Sadece izin verilen tipleri al
+                    const validFiles = filterFiles(e.dataTransfer.files);
+                    uploadedFiles = [...validFiles]; // Eskileri değiştir
+                    photoInput.files = e.dataTransfer.files; // Input'u da güncelle
+                    renderPreviews();
+                }
+            });
+        }
+        if (photoInput) {
+             photoInput.addEventListener('change', () => {
+                const validFiles = filterFiles(photoInput.files);
+                uploadedFiles = [...validFiles]; // Eskileri değiştir
+                renderPreviews();
+             });
+        }
+
+        function filterFiles(files) {
+             const allowedTypes = ['image/png', 'image/jpeg', 'image/webp'];
+             return Array.from(files).filter(file => allowedTypes.includes(file.type));
+        }
+       
+        function renderPreviews() {
+            if (!previewContainer) return;
+            previewContainer.innerHTML = ''; // Öncekileri temizle
+            
+            if (uploadedFiles.length > 0) {
+                 hideFeedback(); // Fotoğraf seçilince hatayı gizle (varsa)
+                 dropZone.classList.remove('invalid');
+            }
+            
+            uploadedFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item w-24 h-24';
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.alt = file.name;
+                    
+                    // Silme Butonu
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'remove-image-btn';
+                    removeBtn.innerHTML = '<ion-icon name="close-outline" class="text-sm"></ion-icon>';
+                    removeBtn.onclick = () => {
+                        uploadedFiles.splice(index, 1); // Diziden kaldır
+                        renderPreviews(); // Önizlemeyi yeniden oluştur
+                    };
+
+                    previewItem.appendChild(img);
+                    previewItem.appendChild(removeBtn);
+                    
+                    // İlk resmi "Ana Fotoğraf" olarak etiketle
+                    if (index === 0) {
+                        const mainTag = document.createElement('span');
+                        mainTag.className = 'absolute bottom-0 left-0 bg-black/50 text-white text-xs px-2 py-0.5 rounded-tr-md';
+                        mainTag.textContent = 'Ana';
+                        previewItem.appendChild(mainTag);
+                    }
+                    
+                    previewContainer.appendChild(previewItem);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // --- YENİ: Form Gönderme (Submission) ---
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                if (!validateCurrentStep()) return;
+
+                setLoading(true);
+
+                // YENİ: FormData'yı manuel oluştur
+                // Bu, 'uploadedFiles' dizimizin en güncel halini kullanmamızı sağlar
+                const formData = new FormData();
+                
+                // Formdaki tüm text/radio/select girdilerini ekle
+                // 'ad-photos' hariç
+                const formElements = form.querySelectorAll('input, textarea, select');
+                formElements.forEach(el => {
+                    if (el.name === 'ad-photos') return; // Dosyaları atla
+                    
+                    if (el.type === 'radio') {
+                        if (el.checked) {
+                            formData.append(el.name, el.value);
+                        }
+                    } else if (el.type !== 'file') {
+                        formData.append(el.name, el.value);
+                    }
+                });
+
+                // YENİ: 'uploadedFiles' dizisinden dosyaları ekle
+                // app.py 'ad-photos' key'i ile bir liste bekliyor
+                if (uploadedFiles.length > 0) {
+                    uploadedFiles.forEach(file => {
+                        formData.append('ad-photos', file, file.name);
+                    });
+                } else {
+                    // Bu senaryo validateCurrentStep tarafından yakalanmalı, ama 
+                    // çift kontrol iyidir.
+                    showFeedback('Lütfen en az bir fotoğraf yükleyin.', false);
+                    setLoading(false);
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/ilanver/yayinla', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) { // HTTP 200-299
+                        showFeedback(result.message, true);
+                        form.querySelectorAll('input, textarea, button').forEach(el => el.disabled = true);
+                        setTimeout(() => {
+                            window.location.href = '/profile';
+                        }, 3000); 
+
+                    } else { // HTTP 4xx, 5xx
+                        showFeedback(result.message || 'Bir hata oluştu.', false);
+                        setLoading(false);
+                    }
+
+                } catch (error) {
+                    console.error('Form gönderme hatası:', error);
+                    showFeedback('Sunucuyla bağlantı kurulamadı. Lütfen internetinizi kontrol edin.', false);
+                    setLoading(false);
+                }
+            });
+        }
+
+        function setLoading(isLoading) {
+            if (!submitBtn) return;
+            if (isLoading) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Yayınlanıyor...
+                `;
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `
+                    <ion-icon name="paper-plane-outline" class="mr-1 -ml-1"></ion-icon>
+                    İlanı Yayınla
+                `;
+            }
+        }
+
+        function showFeedback(message, isSuccess) {
+            if (!feedbackEl) return;
+            feedbackEl.textContent = message;
+            feedbackEl.className = 'form-feedback'; // Önceki sınıfları sıfırla
+            if (isSuccess) {
+                feedbackEl.classList.add('bg-green-100', 'border', 'border-green-300', 'text-green-800', 'dark:bg-green-900/50', 'dark:border-green-700', 'dark:text-green-300');
+            } else {
+                feedbackEl.classList.add('bg-red-100', 'border', 'border-red-300', 'text-red-800', 'dark:bg-red-900/50', 'dark:border-red-700', 'dark:text-red-300');
+            }
+            feedbackEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        function hideFeedback() {
+             if (feedbackEl) feedbackEl.className = 'form-feedback hidden';
+        }
+
+        // --- Başlangıç UI Güncellemeleri ---
+        updateStepperUI();
+        updateButtonUI();
+
+    });
+    </script>
+</body>
+</html>
+
+
+
