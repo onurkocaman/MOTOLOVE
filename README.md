@@ -22,6 +22,6 @@ Kurulum
 
 pip install flask
 
-python app.py komutu ile uygulamayı ayağa kaldırın.
+python app.py komutu ile yerel sunucuyu başlatın.
 
 Tarayıcıdan localhost:5000 üzerinden erişim sağlayın.
